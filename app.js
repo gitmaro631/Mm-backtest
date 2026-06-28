@@ -345,18 +345,22 @@ function selectNetwork(k) {
 // ── Step 2: 전략 ──────────────────────────────────────
 
 function renderStrategyStep(el, nav) {
-  const opts = [
-    { key: 'orderbook', name: '오더북 마켓메이킹', desc: 'Bid/Ask 주문으로 스프레드 수익 시뮬레이션' },
-    { key: 'amm',       name: 'AMM 유동성 공급',   desc: '풀에 예치 후 거래 수수료 + 비영구적 손실 시뮬레이션' },
-  ];
+  const isPi = state.network === 'pi';
   el.innerHTML = `
     <div class="section-title">전략 선택</div>
-    ${opts.map(o => `
-      <div class="card ${state.strategy === o.key ? 'selected' : ''}" onclick="selectStrategy('${o.key}')">
-        <h3>${o.name}</h3>
-        <p>${o.desc}</p>
-      </div>
-    `).join('')}
+    <div class="card ${state.strategy === 'orderbook' ? 'selected' : ''}" onclick="selectStrategy('orderbook')">
+      <h3>오더북 마켓메이킹</h3>
+      <p>Bid/Ask 주문으로 스프레드 수익 시뮬레이션</p>
+    </div>
+    <div class="card ${isPi ? '' : state.strategy === 'amm' ? 'selected' : ''}"
+         style="${isPi ? 'opacity:0.4;cursor:not-allowed' : ''}"
+         ${isPi ? '' : "onclick=\"selectStrategy('amm')\""}>
+      <h3>AMM 유동성 공급</h3>
+      <p>${isPi
+        ? '⚠️ Pi DEX는 AMM 풀이 없어 사용 불가'
+        : '풀에 예치 후 거래 수수료 + 비영구적 손실 시뮬레이션'
+      }</p>
+    </div>
   `;
   navBtns(nav, true, 'nextStep', '다음 →', !state.strategy);
 }
@@ -366,9 +370,32 @@ function selectStrategy(k) {
   renderApp();
 }
 
-// ── Step 3: 풀 선택 ───────────────────────────────────
+// ── Step 3: 풀 / 페어 선택 ────────────────────────────
+
+const PI_PAIRS = [
+  { id: 'PI/USDC', label: 'PI / USDC', reserves: [{ asset: 'native' }, { asset: 'USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN' }] },
+  { id: 'PI/BTC',  label: 'PI / BTC',  reserves: [{ asset: 'native' }, { asset: 'BTC:GDPJALI4AZKUU2W426U5WKMAT6CN3AJRPIIRYR2YM54TL2GDWO5O2MZM'  }] },
+  { id: 'PI/ETH',  label: 'PI / ETH',  reserves: [{ asset: 'native' }, { asset: 'ETH:GDPJALI4AZKUU2W426U5WKMAT6CN3AJRPIIRYR2YM54TL2GDWO5O2MZM'  }] },
+];
 
 function renderPoolStep(el, nav) {
+  const isPi = state.network === 'pi';
+
+  if (isPi) {
+    el.innerHTML = `
+      <div class="section-title">페어 선택</div>
+      <div class="alert info">Pi DEX는 AMM 풀 없음 · 오더북 거래 데이터 사용</div>
+      ${PI_PAIRS.map(p => `
+        <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${p.id}')">
+          <div class="pool-pair">${p.label}</div>
+          <div class="pool-meta">오더북 거래 데이터</div>
+        </div>
+      `).join('')}
+    `;
+    navBtns(nav, true, 'nextStep', '다음 →', !state.pool);
+    return;
+  }
+
   el.innerHTML = state.pools.length === 0
     ? `<div class="section-title">풀 선택</div><div class="status-text"><span class="spinner"></span> 풀 목록 불러오는 중... <span id="load-timer">0</span>초</div>`
     : `
@@ -378,6 +405,11 @@ function renderPoolStep(el, nav) {
     `;
   navBtns(nav, true, 'nextStep', '다음 →', !state.pool);
   if (state.pools.length === 0) loadPools();
+}
+
+function selectPiPair(id) {
+  state.pool = PI_PAIRS.find(p => p.id === id);
+  renderApp();
 }
 
 function filterPools() {
