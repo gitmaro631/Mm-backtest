@@ -2,12 +2,140 @@
 //  CONSTANTS & STATE
 // ═══════════════════════════════════════════════════════
 
-const NETWORKS = {
-  stellar: { name: 'Stellar 메인넷', horizon: 'https://horizon.stellar.org',    native: 'XLM' },
-  pi:      { name: 'Pi DEX',         horizon: 'https://api.mainnet.minepi.com', native: 'PI'  },
+// ═══════════════════════════════════════════════════════
+//  I18N — 향후 단일 언어 전환 시 LANG 변수만 바꾸면 됨
+// ═══════════════════════════════════════════════════════
+
+const LANG = 'bilingual'; // 'ko' | 'en' | 'bilingual'
+
+const S = {
+  steps:           [{ ko:'네트워크', en:'Network' }, { ko:'전략', en:'Strategy' }, { ko:'풀 선택', en:'Pool' }, { ko:'파라미터', en:'Parameters' }, { ko:'실행', en:'Run' }, { ko:'결과', en:'Results' }],
+  btn_next:        { ko:'다음', en:'Next' },
+  btn_prev:        { ko:'이전', en:'Back' },
+  btn_run:         { ko:'백테스트 시작', en:'Start Backtest' },
+  btn_retry:       { ko:'다시 시도', en:'Retry' },
+  btn_new:         { ko:'새 백테스트', en:'New Backtest' },
+  btn_params:      { ko:'← 파라미터', en:'← Parameters' },
+  btn_net:         { ko:'← 네트워크 변경', en:'← Change Network' },
+
+  net_title:       { ko:'네트워크 선택', en:'Select Network' },
+  stellar_name:    { ko:'Stellar 메인넷', en:'Stellar Mainnet' },
+  stellar_desc:    { ko:'Stellar 공식 메인넷 · XLM/USDC 등 풍부한 유동성', en:'Official Stellar mainnet · Rich liquidity' },
+  pi_name:         { ko:'Pi DEX', en:'Pi DEX' },
+  pi_desc:         { ko:'Pi 네트워크 DEX · Pi 메인넷 기반', en:'Pi Network DEX · Pi mainnet based' },
+
+  str_title:       { ko:'전략 선택', en:'Select Strategy' },
+  ob_name:         { ko:'오더북 마켓메이킹', en:'Orderbook Market Making' },
+  ob_desc:         { ko:'Bid/Ask 주문으로 스프레드 수익 시뮬레이션', en:'Simulate spread profit via bid/ask orders' },
+  amm_name:        { ko:'AMM 유동성 공급', en:'AMM Liquidity Provision' },
+  amm_desc:        { ko:'풀에 예치 후 수수료 + 비영구적 손실 시뮬레이션', en:'Fee income & impermanent loss simulation' },
+  amm_disabled:    { ko:'⚠️ Pi DEX는 AMM 풀이 없어 사용 불가', en:'⚠️ Pi DEX has no AMM pools' },
+
+  pool_title:      { ko:'풀 선택', en:'Select Pool' },
+  pair_title:      { ko:'페어 선택', en:'Select Pair' },
+  loading_pools:   { ko:'풀 목록 불러오는 중', en:'Loading pools' },
+  loading_pairs:   { ko:'거래 페어 불러오는 중', en:'Loading pairs' },
+  sec:             { ko:'초', en:'sec' },
+  search_ph:       { ko:'토큰 이름 검색...', en:'Search token...' },
+  sort_lp:         { ko:'LP 수 많은 순 (거래 활성도)', en:'By LP count (activity)' },
+  sort_tvl:        { ko:'유동성 큰 순 (안정성)', en:'By liquidity (stability)' },
+  pi_info:         { ko:'Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬', en:'Pi DEX · Orderbook data · Sorted by volume' },
+  recommended:     { ko:'추천', en:'Top' },
+  recent_trades:   { ko:'최근 거래', en:'Recent trades' },
+  lp_count:        { ko:'LP 수', en:'LP count' },
+  liquidity:       { ko:'유동성', en:'Liquidity' },
+  no_results:      { ko:'검색 결과 없음', en:'No results' },
+  pool_fail:       { ko:'풀 목록 로드 실패', en:'Pool load failed' },
+  pair_fail:       { ko:'페어 로드 실패', en:'Pair load failed' },
+  no_trade_data:   { ko:'거래 데이터 없음', en:'No trade data' },
+
+  param_title:     { ko:'파라미터 설정', en:'Parameter Settings' },
+  p_records:       { ko:'데이터 건수 (5,000~10,000)', en:'Data count (5,000~10,000)' },
+  p_capital:       { ko:'초기 자본', en:'Initial Capital' },
+  p_split:         { ko:'네이티브 초기 비율 (%)', en:'Native ratio (%)' },
+  p_spread:        { ko:'스프레드 (%)', en:'Spread (%)' },
+  p_order_size:    { ko:'주문 크기 (총자산 %)', en:'Order size (% of total)' },
+  p_layers:        { ko:'주문 레이어 수', en:'Order layers' },
+  p_stop:          { ko:'재고 중단 (%)', en:'Inventory stop (%)' },
+  p_fee:           { ko:'수수료 (%)', en:'Fee (%)' },
+  p_surge_ticks:   { ko:'급변 감지 틱', en:'Surge window (ticks)' },
+  p_surge_pct:     { ko:'급변 감지 (%)', en:'Surge threshold (%)' },
+  p_deposit:       { ko:'예치 금액', en:'Deposit amount' },
+  p_max_il:        { ko:'최대 비영구적 손실 (%)', en:'Max impermanent loss (%)' },
+  p_target_roi:    { ko:'목표 수익률 (%)', en:'Target ROI (%)' },
+
+  run_title:       { ko:'데이터 수집 및 백테스트', en:'Fetching Data & Backtesting' },
+  run_start:       { ko:'시작 중...', en:'Starting...' },
+  run_fetching:    { ko:'건 수신 중...', en:'records fetching...' },
+  run_running:     { ko:'백테스트 실행 중...', en:'Running backtest...' },
+  run_done:        { ko:'완료!', en:'Done!' },
+  run_req:         { ko:'건 요청', en:'records requested' },
+  run_received:    { ko:'건 수신', en:'records received' },
+  run_valid:       { ko:'유효 거래', en:'valid trades' },
+  run_complete:    { ko:'완료', en:'complete' },
+  run_too_few:     { ko:'데이터가 너무 적습니다 (10건 미만)', en:'Too little data (under 10 records)' },
+  run_error:       { ko:'오류', en:'Error' },
+
+  res_summary:     { ko:'종합 결과', en:'Summary' },
+  res_pnl:         { ko:'총 손익', en:'Total P&L' },
+  res_spread:      { ko:'스프레드 수익', en:'Spread profit' },
+  res_inv:         { ko:'재고 평가손익', en:'Inventory P&L' },
+  res_fees:        { ko:'수수료 합계', en:'Total fees' },
+  res_stats:       { ko:'거래 통계', en:'Trade Statistics' },
+  res_fills:       { ko:'체결 횟수', en:'Fill count' },
+  res_ticks:       { ko:'분석 틱 수', en:'Ticks analyzed' },
+  res_price_chg:   { ko:'가격 변화', en:'Price change' },
+  res_stop:        { ko:'중단 사유', en:'Stop reason' },
+  res_log:         { ko:'거래 로그 (최근 20건)', en:'Trade log (last 20)' },
+  res_no_fills:    { ko:'체결 없음', en:'No fills' },
+  res_asset_chart: { ko:'총 자산 추이 (USDC)', en:'Total Asset Trend (USDC)' },
+  res_lp_title:    { ko:'LP 수익 결과', en:'LP Return Summary' },
+  res_lp_pnl:      { ko:'LP 총 손익', en:'LP Total P&L' },
+  res_fee_inc:     { ko:'수수료 수익', en:'Fee income' },
+  res_il:          { ko:'비영구적 손실', en:'Impermanent loss' },
+  res_vs_hodl:     { ko:'HODL 대비', en:'vs HODL' },
+  res_lp_share:    { ko:'내 LP 지분', en:'My LP share' },
+  res_exit:        { ko:'종료 사유', en:'Exit reason' },
+  res_lp_chart:    { ko:'LP vs HODL 자산 추이 (USDC)', en:'LP vs HODL Trend (USDC)' },
+  res_none:        { ko:'결과 없음', en:'No result' },
+
+  ana_no_fills:    { ko:'⚠️ 체결 0회 — 스프레드를 줄이거나 레이어를 늘려보세요', en:'⚠️ 0 fills — Try reducing spread or adding layers' },
+  ana_good:        { ko:'✅ 스프레드 수익과 전체 손익 모두 플러스', en:'✅ Both spread profit and total P&L are positive' },
+  ana_inv_loss:    { ko:'⚠️ 스프레드 수익은 났지만 가격 변동으로 재고 손실이 더 큼', en:'⚠️ Spread profit positive but inventory loss exceeded it' },
+  ana_bad:         { ko:'❌ 체결 부족 또는 수수료가 수익 초과', en:'❌ Too few fills or fees exceeded profit' },
+  ana_amm_good:    { ko:'✅ 수수료 수익이 비영구적 손실을 상쇄', en:'✅ Fee income offsets impermanent loss' },
+  ana_amm_bad:     { ko:'⚠️ 비영구적 손실이 수수료 수익보다 큼', en:'⚠️ Impermanent loss exceeds fee income' },
+
+  chart_total:     { ko:'총 자산', en:'Total Asset' },
+  chart_lp:        { ko:'LP 자산', en:'LP Asset' },
+  chart_hodl:      { ko:'HODL', en:'HODL' },
 };
 
-const STEPS = ['네트워크', '전략', '풀 선택', '파라미터', '실행', '결과'];
+// t(s) — 섹션 타이틀 등 두 줄 병기
+function t(s) {
+  if (LANG === 'ko') return s.ko;
+  if (LANG === 'en') return s.en;
+  return `${s.ko}<span class="t-en">${s.en}</span>`;
+}
+
+// tl(s) — 폼 라벨, 인라인 병기
+function tl(s) {
+  if (LANG === 'ko') return s.ko;
+  if (LANG === 'en') return s.en;
+  return `${s.ko} <span class="t-en-i">· ${s.en}</span>`;
+}
+
+// tp(s) — 일반 텍스트 (차트 라벨 등)
+function tp(s) {
+  if (LANG === 'ko') return s.ko;
+  if (LANG === 'en') return s.en;
+  return `${s.ko} / ${s.en}`;
+}
+
+const NETWORKS = {
+  stellar: { name: tp({ ko:'Stellar 메인넷', en:'Stellar Mainnet' }), horizon: 'https://horizon.stellar.org',    native: 'XLM' },
+  pi:      { name: tp({ ko:'Pi DEX',          en:'Pi DEX'          }), horizon: 'https://api.mainnet.minepi.com', native: 'PI'  },
+};
 
 const state = {
   step:     1,
@@ -307,18 +435,20 @@ function renderApp() {
 }
 
 function renderStepIndicator() {
+  const cur = S.steps[state.step - 1];
   document.getElementById('step-indicator').innerHTML = `
     <div class="steps">
-      ${STEPS.map((_, i) => `<div class="step-dot ${i+1 < state.step ? 'done' : i+1 === state.step ? 'active' : ''}"></div>`).join('')}
+      ${S.steps.map((_, i) => `<div class="step-dot ${i+1 < state.step ? 'done' : i+1 === state.step ? 'active' : ''}"></div>`).join('')}
     </div>
-    <div class="step-label">${state.step}단계 / ${STEPS.length} — ${STEPS[state.step-1]}</div>
+    <div class="step-label">${state.step} / ${S.steps.length} — ${tp(cur)}</div>
   `;
 }
 
-function navBtns(nav, back, nextFn, nextLabel = '다음 →', disabled = false) {
+function navBtns(nav, back, nextFn, nextLabel = null, disabled = false) {
+  const label = nextLabel ?? `${S.btn_next.ko} ${S.btn_next.en} →`;
   nav.innerHTML = `
-    ${back ? `<button class="btn btn-secondary" onclick="prevStep()">← 이전</button>` : ''}
-    ${nextFn ? `<button class="btn btn-primary" onclick="${nextFn}()" ${disabled ? 'disabled' : ''}>${nextLabel}</button>` : ''}
+    ${back ? `<button class="btn btn-secondary" onclick="prevStep()">← ${S.btn_prev.ko} <span class="t-en-i">${S.btn_prev.en}</span></button>` : ''}
+    ${nextFn ? `<button class="btn btn-primary" onclick="${nextFn}()" ${disabled ? 'disabled' : ''}>${label}</button>` : ''}
   `;
 }
 
@@ -326,15 +456,17 @@ function navBtns(nav, back, nextFn, nextLabel = '다음 →', disabled = false) 
 
 function renderNetworkStep(el, nav) {
   el.innerHTML = `
-    <div class="section-title">네트워크 선택</div>
-    ${Object.entries(NETWORKS).map(([k, v]) => `
-      <div class="card ${state.network === k ? 'selected' : ''}" onclick="selectNetwork('${k}')">
-        <h3>${v.name}</h3>
-        <p>${k === 'stellar' ? 'Stellar 공식 메인넷 · XLM/USDC 등 풍부한 유동성' : 'Pi 네트워크 DEX · Pi 메인넷 기반'}</p>
-      </div>
-    `).join('')}
+    <div class="section-title">${t(S.net_title)}</div>
+    <div class="card ${state.network === 'stellar' ? 'selected' : ''}" onclick="selectNetwork('stellar')">
+      <h3>${t(S.stellar_name)}</h3>
+      <p>${tl(S.stellar_desc)}</p>
+    </div>
+    <div class="card ${state.network === 'pi' ? 'selected' : ''}" onclick="selectNetwork('pi')">
+      <h3>${t(S.pi_name)}</h3>
+      <p>${tl(S.pi_desc)}</p>
+    </div>
   `;
-  navBtns(nav, false, 'nextStep', '다음 →', !state.network);
+  navBtns(nav, false, 'nextStep', null, !state.network);
 }
 
 function selectNetwork(k) {
@@ -347,22 +479,19 @@ function selectNetwork(k) {
 function renderStrategyStep(el, nav) {
   const isPi = state.network === 'pi';
   el.innerHTML = `
-    <div class="section-title">전략 선택</div>
+    <div class="section-title">${t(S.str_title)}</div>
     <div class="card ${state.strategy === 'orderbook' ? 'selected' : ''}" onclick="selectStrategy('orderbook')">
-      <h3>오더북 마켓메이킹</h3>
-      <p>Bid/Ask 주문으로 스프레드 수익 시뮬레이션</p>
+      <h3>${t(S.ob_name)}</h3>
+      <p>${tl(S.ob_desc)}</p>
     </div>
     <div class="card ${isPi ? '' : state.strategy === 'amm' ? 'selected' : ''}"
          style="${isPi ? 'opacity:0.4;cursor:not-allowed' : ''}"
          ${isPi ? '' : "onclick=\"selectStrategy('amm')\""}>
-      <h3>AMM 유동성 공급</h3>
-      <p>${isPi
-        ? '⚠️ Pi DEX는 AMM 풀이 없어 사용 불가'
-        : '풀에 예치 후 거래 수수료 + 비영구적 손실 시뮬레이션'
-      }</p>
+      <h3>${t(S.amm_name)}</h3>
+      <p>${isPi ? tl(S.amm_disabled) : tl(S.amm_desc)}</p>
     </div>
   `;
-  navBtns(nav, true, 'nextStep', '다음 →', !state.strategy);
+  navBtns(nav, true, 'nextStep', null, !state.strategy);
 }
 
 function selectStrategy(k) {
@@ -414,8 +543,8 @@ function renderPoolStep(el, nav) {
   if (isPi) {
     if (state.pools.length === 0) {
       el.innerHTML = `
-        <div class="section-title">페어 선택</div>
-        <div class="status-text"><span class="spinner"></span> 거래 페어 불러오는 중... <span id="load-timer">0</span>초</div>
+        <div class="section-title">${t(S.pair_title)}</div>
+        <div class="status-text"><span class="spinner"></span> ${tl(S.loading_pairs)}... <span id="load-timer">0</span>${tp(S.sec)}</div>
       `;
       navBtns(nav, true, null);
       loadPiPairs();
@@ -423,35 +552,33 @@ function renderPoolStep(el, nav) {
     }
 
     el.innerHTML = `
-      <div class="section-title">페어 선택</div>
-      <div class="alert info">Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬</div>
+      <div class="section-title">${t(S.pair_title)}</div>
+      <div class="alert info">${tl(S.pi_info)}</div>
       ${state.pools.map((p, i) => `
         <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
           <div class="pool-pair">
             ${poolLabel(p)}
-            ${i < 3 ? '<span class="badge" style="background:#2a2a1a;color:#f6e05e">추천</span>' : ''}
+            ${i < 3 ? `<span class="badge" style="background:#2a2a1a;color:#f6e05e">${tp(S.recommended)}</span>` : ''}
           </div>
-          <div class="pool-meta">최근 거래 <strong style="color:#e2e8f0">${p.tradeCount}건</strong></div>
+          <div class="pool-meta">${tl(S.recent_trades)} <strong style="color:#e2e8f0">${p.tradeCount}</strong></div>
         </div>
       `).join('')}
     `;
-    navBtns(nav, true, 'nextStep', '다음 →', !state.pool);
+    navBtns(nav, true, 'nextStep', null, !state.pool);
     return;
   }
 
-  const sortDesc = state.strategy === 'orderbook'
-    ? 'LP 수 많은 순 (거래 활성도)'
-    : '유동성 큰 순 (안정성)';
+  const sortDesc = state.strategy === 'orderbook' ? tl(S.sort_lp) : tl(S.sort_tvl);
 
   el.innerHTML = state.pools.length === 0
-    ? `<div class="section-title">풀 선택</div><div class="status-text"><span class="spinner"></span> 풀 목록 불러오는 중... <span id="load-timer">0</span>초</div>`
+    ? `<div class="section-title">${t(S.pool_title)}</div><div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>`
     : `
-      <div class="section-title">풀 선택</div>
-      <div class="alert info" style="margin-bottom:10px">정렬 기준: ${sortDesc}</div>
-      <input class="search-box" id="pool-search" placeholder="토큰 이름 검색..." oninput="filterPools()" value="${poolSearchQuery}">
+      <div class="section-title">${t(S.pool_title)}</div>
+      <div class="alert info" style="margin-bottom:10px">${sortDesc}</div>
+      <input class="search-box" id="pool-search" placeholder="${tp(S.search_ph)}" oninput="filterPools()" value="${poolSearchQuery}">
       <div id="pool-list">${poolListHtml()}</div>
     `;
-  navBtns(nav, true, 'nextStep', '다음 →', !state.pool);
+  navBtns(nav, true, 'nextStep', null, !state.pool);
   if (state.pools.length === 0) loadPools();
 }
 
@@ -465,16 +592,16 @@ async function loadPiPairs() {
   try {
     const pairs = await fetchPiPairs();
     clearInterval(timer);
-    if (!pairs.length) throw new Error('거래 데이터 없음');
+    if (!pairs.length) throw new Error(tp(S.no_trade_data));
     state.pools = pairs;
     renderApp();
   } catch (e) {
     clearInterval(timer);
     document.getElementById('content').innerHTML = `
-      <div class="section-title">페어 선택</div>
-      <div class="alert">페어 로드 실패: ${e.message}</div>
-      <button class="btn btn-secondary" style="margin-top:10px" onclick="goToStep(3)">다시 시도</button>
-      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">← 네트워크 변경</button>
+      <div class="section-title">${t(S.pair_title)}</div>
+      <div class="alert">${tl(S.pair_fail)}: ${e.message}</div>
+      <button class="btn btn-secondary" style="margin-top:10px" onclick="goToStep(3)">${tl(S.btn_retry)}</button>
+      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">${tl(S.btn_net)}</button>
     `;
   }
 }
@@ -492,11 +619,11 @@ function filterPools() {
 
 function poolListHtml() {
   const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
-  if (!filtered.length) return '<div class="status-text">검색 결과 없음</div>';
+  if (!filtered.length) return `<div class="status-text">${tl(S.no_results)}</div>`;
   return filtered.map(p => {
     const meta = state.strategy === 'orderbook'
-      ? `LP 수 <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · 수수료 ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%`
-      : `유동성 <strong style="color:#e2e8f0">${fmt(poolLiquidity(p), 0)}</strong> · LP 수 ${p.total_trustlines ?? '?'}`;
+      ? `${tl(S.lp_count)} <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%`
+      : `${tl(S.liquidity)} <strong style="color:#e2e8f0">${fmt(poolLiquidity(p), 0)}</strong> · LP ${p.total_trustlines ?? '?'}`;
     return `
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
         <div class="pool-pair">${poolLabel(p)}</div>
@@ -517,7 +644,7 @@ async function loadPools() {
   try {
     const pools = await fetchPools();
     clearInterval(timer);
-    if (!pools.length) throw new Error('풀 목록이 비어 있습니다 (0개)');
+    if (!pools.length) throw new Error(`${S.pool_fail.ko} (0개 / 0 pools)`);
     state.pools = pools.sort((a, b) => {
       // XLM 포함 풀 우선 (공통)
       const xlmA = hasNative(a) ? 1 : 0;
@@ -538,10 +665,10 @@ async function loadPools() {
   } catch (e) {
     clearInterval(timer);
     document.getElementById('content').innerHTML = `
-      <div class="section-title">풀 선택</div>
-      <div class="alert">풀 목록 로드 실패: ${e.message}</div>
-      <button class="btn btn-secondary" style="margin-top:10px" onclick="loadPools()">다시 시도</button>
-      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">← 네트워크 변경</button>
+      <div class="section-title">${t(S.pool_title)}</div>
+      <div class="alert">${tl(S.pool_fail)}: ${e.message}</div>
+      <button class="btn btn-secondary" style="margin-top:10px" onclick="loadPools()">${tl(S.btn_retry)}</button>
+      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">${tl(S.btn_net)}</button>
     `;
   }
 }
@@ -557,77 +684,77 @@ function renderParamsStep(el, nav) {
   const isOB = state.strategy === 'orderbook';
   const p    = state.params;
   el.innerHTML = `
-    <div class="section-title">파라미터 설정</div>
+    <div class="section-title">${t(S.param_title)}</div>
     <div class="alert info">📊 ${poolLabel(state.pool)} · ${NETWORKS[state.network].name}</div>
 
     <div class="form-group">
-      <label>데이터 건수 (5,000 ~ 10,000)</label>
+      <label>${tl(S.p_records)}</label>
       <input type="number" id="p-records" value="${p.records || 5000}" min="5000" max="10000" step="1000">
     </div>
 
     ${isOB ? `
     <div class="form-group">
-      <label>초기 자본 (USDC)</label>
+      <label>${tl(S.p_capital)} (USDC)</label>
       <input type="number" id="p-totalUsdc" value="${p.totalUsdc || 500}" min="10">
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>네이티브 초기 비율 (%)</label>
+        <label>${tl(S.p_split)}</label>
         <input type="number" id="p-splitRatio" value="${p.splitRatio || 50}" min="10" max="90">
       </div>
       <div class="form-group">
-        <label>스프레드 (%)</label>
+        <label>${tl(S.p_spread)}</label>
         <input type="number" id="p-spreadPct" value="${p.spreadPct || 0.5}" step="0.1" min="0.1">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>주문 크기 (총자산 %)</label>
+        <label>${tl(S.p_order_size)}</label>
         <input type="number" id="p-orderSizePct" value="${p.orderSizePct || 3}" step="0.5" min="0.5">
       </div>
       <div class="form-group">
-        <label>주문 레이어 수</label>
+        <label>${tl(S.p_layers)}</label>
         <input type="number" id="p-layers" value="${p.layers || 1}" min="1" max="5">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>재고 중단 (%)</label>
+        <label>${tl(S.p_stop)}</label>
         <input type="number" id="p-stopRatio" value="${p.stopRatio || 70}" min="51" max="99">
       </div>
       <div class="form-group">
-        <label>수수료 (%)</label>
+        <label>${tl(S.p_fee)}</label>
         <input type="number" id="p-feePct" value="${p.feePct || 0.1}" step="0.05" min="0">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>급변 감지 틱</label>
+        <label>${tl(S.p_surge_ticks)}</label>
         <input type="number" id="p-surgeTicks" value="${p.surgeTicks || 3}" min="2" max="20">
       </div>
       <div class="form-group">
-        <label>급변 감지 (%)</label>
+        <label>${tl(S.p_surge_pct)}</label>
         <input type="number" id="p-surgePct" value="${p.surgePct || 1.5}" step="0.1" min="0.1">
       </div>
     </div>
     ` : `
     <div class="form-group">
-      <label>예치 금액 (USDC)</label>
+      <label>${tl(S.p_deposit)} (USDC)</label>
       <input type="number" id="p-depositUsdc" value="${p.depositUsdc || 500}" min="10">
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>최대 비영구적 손실 (%)</label>
+        <label>${tl(S.p_max_il)}</label>
         <input type="number" id="p-maxILPct" value="${p.maxILPct || 10}" min="1" max="50">
       </div>
       <div class="form-group">
-        <label>목표 수익률 (%)</label>
+        <label>${tl(S.p_target_roi)}</label>
         <input type="number" id="p-targetRoiPct" value="${p.targetRoiPct || 5}" min="0.1">
       </div>
     </div>
     `}
   `;
-  navBtns(nav, true, 'goToRun', '▶ 백테스트 시작');
+  navBtns(nav, true, 'goToRun', `▶ ${S.btn_run.ko} <span class="t-en-i">${S.btn_run.en}</span>`);
 }
 
 function goToRun() {
@@ -660,8 +787,8 @@ function goToRun() {
 
 function renderRunStep(el, nav) {
   el.innerHTML = `
-    <div class="section-title">데이터 수집 및 백테스트</div>
-    <div id="run-status" class="status-text"><span class="spinner"></span> 시작 중...</div>
+    <div class="section-title">${t(S.run_title)}</div>
+    <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.run_start)}</div>
     <div class="progress-bar"><div class="progress-fill" id="run-prog" style="width:0%"></div></div>
     <div class="result-card" style="margin-top:12px">
       <div class="log-list" id="run-log"></div>
@@ -683,40 +810,40 @@ async function runBacktest() {
   const progress = (cur, tot) => {
     const el = document.getElementById('run-prog');
     if (el) el.style.width = `${Math.min(100, cur / tot * 100)}%`;
-    status(`<span class="spinner"></span> ${cur} / ${tot}건 수신 중...`);
+    status(`<span class="spinner"></span> ${cur} / ${tot} ${tl(S.run_received)}`);
   };
 
   try {
     const total = state.params.records;
-    log(`→ ${poolLabel(state.pool)} · ${total}건 요청`);
+    log(`→ ${poolLabel(state.pool)} · ${total} ${tp(S.run_req)}`);
 
     const fetchFn = state.strategy === 'amm' ? fetchTradesForPool : fetchTradesForPair;
     const records = await fetchFn(state.pool, total, progress);
-    log(`✓ ${records.length}건 수신`);
+    log(`✓ ${records.length} ${tp(S.run_received)}`);
 
     const trades = parseTrades(records);
-    log(`✓ 유효 거래 ${trades.length}건`);
+    log(`✓ ${tp(S.run_valid)} ${trades.length}`);
 
-    if (trades.length < 10) throw new Error('데이터가 너무 적습니다 (10건 미만)');
+    if (trades.length < 10) throw new Error(tp(S.run_too_few));
 
-    status('<span class="spinner"></span> 백테스트 실행 중...');
+    status(`<span class="spinner"></span> ${tl(S.run_running)}`);
     await sleep(30);
 
     state.result = state.strategy === 'orderbook'
       ? runOrderbookBacktest(trades, state.params)
       : runAMMBacktest(state.pool, trades, state.params);
 
-    log('✓ 완료');
+    log(`✓ ${tp(S.run_complete)}`);
     document.getElementById('run-prog').style.width = '100%';
-    status('완료!');
+    status(tl(S.run_done));
     await sleep(400);
     nextStep();
 
   } catch (e) {
-    status(`<div class="alert">오류: ${e.message}</div>`);
+    status(`<div class="alert">${tl(S.run_error)}: ${e.message}</div>`);
     document.getElementById('nav-buttons').innerHTML = `
-      <button class="btn btn-secondary" onclick="goToStep(4)">← 파라미터</button>
-      <button class="btn btn-primary" onclick="goToStep(5)">다시 시도</button>
+      <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
+      <button class="btn btn-primary" onclick="goToStep(5)">${tl(S.btn_retry)}</button>
     `;
   }
 }
@@ -725,13 +852,13 @@ async function runBacktest() {
 
 function renderResultStep(el, nav) {
   const r = state.result;
-  if (!r) { el.innerHTML = '<div class="alert">결과 없음</div>'; return; }
+  if (!r) { el.innerHTML = `<div class="alert">${tl(S.res_none)}</div>`; return; }
 
   el.innerHTML = r.type === 'orderbook' ? obResultHtml(r) : ammResultHtml(r);
   navBtns(nav, false, null);
   document.getElementById('nav-buttons').innerHTML = `
-    <button class="btn btn-secondary" onclick="goToStep(4)">← 파라미터</button>
-    <button class="btn btn-primary" onclick="goToStep(1)">새 백테스트</button>
+    <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
+    <button class="btn btn-primary" onclick="goToStep(1)">${tl(S.btn_new)}</button>
   `;
 
   requestAnimationFrame(() => drawChart(r));
@@ -740,27 +867,27 @@ function renderResultStep(el, nav) {
 function obResultHtml(r) {
   return `
     <div class="result-card">
-      <h3>종합 결과</h3>
-      <div class="stat-row"><span class="label">총 손익</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
-      <div class="stat-row"><span class="label">스프레드 수익</span>${fmtUsdc(r.spreadProfit)}</div>
-      <div class="stat-row"><span class="label">재고 평가손익</span>${fmtUsdc(r.inventoryPnl)}</div>
-      <div class="stat-row"><span class="label">수수료 합계</span><span class="value negative">-${fmt(r.fees)} USDC</span></div>
+      <h3>${t(S.res_summary)}</h3>
+      <div class="stat-row"><span class="label">${tl(S.res_pnl)}</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
+      <div class="stat-row"><span class="label">${tl(S.res_spread)}</span>${fmtUsdc(r.spreadProfit)}</div>
+      <div class="stat-row"><span class="label">${tl(S.res_inv)}</span>${fmtUsdc(r.inventoryPnl)}</div>
+      <div class="stat-row"><span class="label">${tl(S.res_fees)}</span><span class="value negative">-${fmt(r.fees)} USDC</span></div>
     </div>
     <div class="result-card">
-      <h3>거래 통계</h3>
-      <div class="stat-row"><span class="label">체결 횟수</span><span class="value neutral">${r.fills}회</span></div>
-      <div class="stat-row"><span class="label">분석 틱 수</span><span class="value neutral">${r.ticks}건</span></div>
-      <div class="stat-row"><span class="label">가격 변화</span>${fmtPct(r.priceChg)}</div>
-      ${r.stopped ? `<div class="stat-row"><span class="label">중단 사유</span><span class="value negative">${r.stopReason}</span></div>` : ''}
+      <h3>${t(S.res_stats)}</h3>
+      <div class="stat-row"><span class="label">${tl(S.res_fills)}</span><span class="value neutral">${r.fills}</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_ticks)}</span><span class="value neutral">${r.ticks}</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_price_chg)}</span>${fmtPct(r.priceChg)}</div>
+      ${r.stopped ? `<div class="stat-row"><span class="label">${tl(S.res_stop)}</span><span class="value negative">${r.stopReason}</span></div>` : ''}
     </div>
     <div class="chart-container">
-      <div class="chart-title">총 자산 추이 (USDC)</div>
+      <div class="chart-title">${t(S.res_asset_chart)}</div>
       <canvas id="result-chart"></canvas>
     </div>
     <div class="result-card">
-      <h3>거래 로그 (최근 20건)</h3>
+      <h3>${t(S.res_log)}</h3>
       <div class="log-list">
-        ${r.log.slice(-20).map(l => `<div class="log-${l.type}">${l.msg}</div>`).join('') || '<div>체결 없음</div>'}
+        ${r.log.slice(-20).map(l => `<div class="log-${l.type}">${l.msg}</div>`).join('') || `<div>${tp(S.res_no_fills)}</div>`}
       </div>
     </div>
     ${analysisHtml(r)}
@@ -771,21 +898,21 @@ function ammResultHtml(r) {
   const hodlRoi = (r.hodlFinal - r.totalStart) / r.totalStart * 100;
   return `
     <div class="result-card">
-      <h3>LP 수익 결과</h3>
-      <div class="stat-row"><span class="label">LP 총 손익</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
-      <div class="stat-row"><span class="label">수수료 수익</span><span class="value positive">+${fmt(r.feeIncome)} USDC</span></div>
-      <div class="stat-row"><span class="label">비영구적 손실</span><span class="value ${r.il < 0 ? 'negative' : 'neutral'}">${fmt(r.il)}%</span></div>
-      <div class="stat-row"><span class="label">HODL 대비</span>${fmtPct(r.roi - hodlRoi)}</div>
+      <h3>${t(S.res_lp_title)}</h3>
+      <div class="stat-row"><span class="label">${tl(S.res_lp_pnl)}</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
+      <div class="stat-row"><span class="label">${tl(S.res_fee_inc)}</span><span class="value positive">+${fmt(r.feeIncome)} USDC</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_il)}</span><span class="value ${r.il < 0 ? 'negative' : 'neutral'}">${fmt(r.il)}%</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_vs_hodl)}</span>${fmtPct(r.roi - hodlRoi)}</div>
     </div>
     <div class="result-card">
-      <h3>거래 통계</h3>
-      <div class="stat-row"><span class="label">분석 틱 수</span><span class="value neutral">${r.ticks}건</span></div>
-      <div class="stat-row"><span class="label">가격 변화</span>${fmtPct(r.priceChg)}</div>
-      <div class="stat-row"><span class="label">내 LP 지분</span><span class="value neutral">${fmt(r.lpShare, 4)}%</span></div>
-      ${r.exitReason ? `<div class="stat-row"><span class="label">종료 사유</span><span class="value neutral">${r.exitReason}</span></div>` : ''}
+      <h3>${t(S.res_stats)}</h3>
+      <div class="stat-row"><span class="label">${tl(S.res_ticks)}</span><span class="value neutral">${r.ticks}</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_price_chg)}</span>${fmtPct(r.priceChg)}</div>
+      <div class="stat-row"><span class="label">${tl(S.res_lp_share)}</span><span class="value neutral">${fmt(r.lpShare, 4)}%</span></div>
+      ${r.exitReason ? `<div class="stat-row"><span class="label">${tl(S.res_exit)}</span><span class="value neutral">${r.exitReason}</span></div>` : ''}
     </div>
     <div class="chart-container">
-      <div class="chart-title">LP vs HODL 자산 추이 (USDC)</div>
+      <div class="chart-title">${t(S.res_lp_chart)}</div>
       <canvas id="result-chart"></canvas>
     </div>
     ${analysisHtml(r)}
@@ -793,17 +920,16 @@ function ammResultHtml(r) {
 }
 
 function analysisHtml(r) {
-  let msg;
+  let s;
   if (r.type === 'orderbook') {
-    if (r.fills === 0)                         msg = '⚠️ 체결 0회 — 스프레드를 줄이거나 레이어를 늘려보세요';
-    else if (r.roi > 0 && r.spreadProfit > 0) msg = '✅ 스프레드 수익과 전체 손익 모두 플러스';
-    else if (r.spreadProfit > 0 && r.roi < 0) msg = '⚠️ 스프레드 수익은 났지만 가격 변동으로 재고 손실이 더 큼';
-    else                                       msg = '❌ 체결 부족 또는 수수료가 수익 초과';
+    if (r.fills === 0)                         s = S.ana_no_fills;
+    else if (r.roi > 0 && r.spreadProfit > 0) s = S.ana_good;
+    else if (r.spreadProfit > 0 && r.roi < 0) s = S.ana_inv_loss;
+    else                                       s = S.ana_bad;
   } else {
-    if (r.feeIncome > Math.abs(r.il / 100 * r.totalStart)) msg = '✅ 수수료 수익이 비영구적 손실을 상쇄';
-    else                                                     msg = '⚠️ 비영구적 손실이 수수료 수익보다 큼';
+    s = r.feeIncome > Math.abs(r.il / 100 * r.totalStart) ? S.ana_amm_good : S.ana_amm_bad;
   }
-  return `<div class="alert info" style="margin-top:4px">${msg}</div>`;
+  return `<div class="alert info" style="margin-top:4px">${tl(s)}</div>`;
 }
 
 function drawChart(r) {
@@ -812,10 +938,10 @@ function drawChart(r) {
 
   const labels = r.snapshots.map(s => s.i);
   const datasets = r.type === 'orderbook'
-    ? [{ label: '총 자산', data: r.snapshots.map(s => s.totalVal), borderColor: '#667eea', tension: 0.3, pointRadius: 0 }]
+    ? [{ label: tp(S.chart_total), data: r.snapshots.map(s => s.totalVal), borderColor: '#667eea', tension: 0.3, pointRadius: 0 }]
     : [
-        { label: 'LP 자산', data: r.snapshots.map(s => s.lpVal),   borderColor: '#667eea', tension: 0.3, pointRadius: 0 },
-        { label: 'HODL',    data: r.snapshots.map(s => s.hodlVal), borderColor: '#f6ad55', tension: 0.3, pointRadius: 0, borderDash: [5,5] },
+        { label: tp(S.chart_lp),   data: r.snapshots.map(s => s.lpVal),   borderColor: '#667eea', tension: 0.3, pointRadius: 0 },
+        { label: tp(S.chart_hodl), data: r.snapshots.map(s => s.hodlVal), borderColor: '#f6ad55', tension: 0.3, pointRadius: 0, borderDash: [5,5] },
       ];
 
   if (activeChart) activeChart.destroy();
