@@ -439,10 +439,15 @@ function renderPoolStep(el, nav) {
     return;
   }
 
+  const sortDesc = state.strategy === 'orderbook'
+    ? 'LP 수 많은 순 (거래 활성도)'
+    : '유동성 큰 순 (안정성)';
+
   el.innerHTML = state.pools.length === 0
     ? `<div class="section-title">풀 선택</div><div class="status-text"><span class="spinner"></span> 풀 목록 불러오는 중... <span id="load-timer">0</span>초</div>`
     : `
       <div class="section-title">풀 선택</div>
+      <div class="alert info" style="margin-bottom:10px">정렬 기준: ${sortDesc}</div>
       <input class="search-box" id="pool-search" placeholder="토큰 이름 검색..." oninput="filterPools()" value="${poolSearchQuery}">
       <div id="pool-list">${poolListHtml()}</div>
     `;
@@ -488,14 +493,17 @@ function filterPools() {
 function poolListHtml() {
   const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
   if (!filtered.length) return '<div class="status-text">검색 결과 없음</div>';
-  return filtered.map(p => `
-    <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
-      <div class="pool-pair">${poolLabel(p)}</div>
-      <div class="pool-meta">
-        LP 수 <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · 수수료 ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%
+  return filtered.map(p => {
+    const meta = state.strategy === 'orderbook'
+      ? `LP 수 <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · 수수료 ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%`
+      : `유동성 <strong style="color:#e2e8f0">${fmt(poolLiquidity(p), 0)}</strong> · LP 수 ${p.total_trustlines ?? '?'}`;
+    return `
+      <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
+        <div class="pool-pair">${poolLabel(p)}</div>
+        <div class="pool-meta">${meta}</div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 async function loadPools() {
@@ -511,12 +519,20 @@ async function loadPools() {
     clearInterval(timer);
     if (!pools.length) throw new Error('풀 목록이 비어 있습니다 (0개)');
     state.pools = pools.sort((a, b) => {
+      // XLM 포함 풀 우선 (공통)
       const xlmA = hasNative(a) ? 1 : 0;
       const xlmB = hasNative(b) ? 1 : 0;
       if (xlmB !== xlmA) return xlmB - xlmA;
-      const tA = parseInt(a.total_trustlines || 0);
-      const tB = parseInt(b.total_trustlines || 0);
-      return tB - tA;
+
+      if (state.strategy === 'orderbook') {
+        // 오더북 MM: LP 수 많은 순 (거래 활성도 지표)
+        const tA = parseInt(a.total_trustlines || 0);
+        const tB = parseInt(b.total_trustlines || 0);
+        return tB - tA;
+      } else {
+        // AMM LP: 총 유동성(TVL) 큰 순 (안정성 지표)
+        return poolLiquidity(b) - poolLiquidity(a);
+      }
     });
     renderApp();
   } catch (e) {
