@@ -409,12 +409,11 @@ async function loadPools() {
   try {
     const pools = await fetchPools();
     clearInterval(timer);
+    if (!pools.length) throw new Error('풀 목록이 비어 있습니다 (0개)');
     state.pools = pools.sort((a, b) => {
-      // 1순위: XLM 포함 풀 우선
       const xlmA = hasNative(a) ? 1 : 0;
       const xlmB = hasNative(b) ? 1 : 0;
       if (xlmB !== xlmA) return xlmB - xlmA;
-      // 2순위: LP 수 많은 순
       const tA = parseInt(a.total_trustlines || 0);
       const tB = parseInt(b.total_trustlines || 0);
       return tB - tA;
@@ -422,12 +421,9 @@ async function loadPools() {
     renderApp();
   } catch (e) {
     clearInterval(timer);
-    const isCors = e.message === 'Failed to fetch' || e.name === 'TypeError';
     document.getElementById('content').innerHTML = `
-      <div class="alert">
-        풀 목록 로드 실패: ${e.message}<br><br>
-        ${isCors ? '⚠️ Pi DEX Horizon이 브라우저 직접 요청을 차단하고 있습니다 (CORS 미지원).<br>현재 브라우저 환경에서는 Pi DEX를 사용할 수 없습니다.' : ''}
-      </div>
+      <div class="section-title">풀 선택</div>
+      <div class="alert">풀 목록 로드 실패: ${e.message}</div>
       <button class="btn btn-secondary" style="margin-top:10px" onclick="loadPools()">다시 시도</button>
       <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">← 네트워크 변경</button>
     `;
