@@ -235,3 +235,19 @@ h1 {
 /* ── Bilingual labels ── */
 .t-en   { display: block; font-size: 0.75em; color: #718096; font-weight: normal; margin-top: 1px; }
 .t-en-i { font-size: 0.8em; color: #718096; }
+
+/* ── Language switcher ── */
+#lang-switch { display: flex; gap: 4px; }
+.lang-btn {
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  color: #a0aec0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lang-btn:hover  { border-color: #667eea; color: #e2e8f0; }
+.lang-btn.active { background: #667eea; border-color: #667eea; color: #fff; }
