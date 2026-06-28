@@ -372,23 +372,56 @@ function selectStrategy(k) {
 
 // ── Step 3: 풀 / 페어 선택 ────────────────────────────
 
-const PI_PAIRS = [
-  { id: 'PI/USDC', label: 'PI / USDC', reserves: [{ asset: 'native' }, { asset: 'USDC:GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN' }] },
-  { id: 'PI/BTC',  label: 'PI / BTC',  reserves: [{ asset: 'native' }, { asset: 'BTC:GDPJALI4AZKUU2W426U5WKMAT6CN3AJRPIIRYR2YM54TL2GDWO5O2MZM'  }] },
-  { id: 'PI/ETH',  label: 'PI / ETH',  reserves: [{ asset: 'native' }, { asset: 'ETH:GDPJALI4AZKUU2W426U5WKMAT6CN3AJRPIIRYR2YM54TL2GDWO5O2MZM'  }] },
-];
+async function fetchPiPairs() {
+  const r = await apiFetch(`${horizonBase()}/trades?limit=200&order=desc`);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const records = (await r.json())._embedded?.records || [];
+
+  const counts = {};
+  const pairMap = {};
+
+  for (const rec of records) {
+    const baseAsset  = rec.base_asset_type  === 'native' ? 'native' : `${rec.base_asset_code}:${rec.base_asset_issuer}`;
+    const counterAsset = rec.counter_asset_type === 'native' ? 'native' : `${rec.counter_asset_code}:${rec.counter_asset_issuer}`;
+    const id = [baseAsset, counterAsset].sort().join('|');
+    counts[id] = (counts[id] || 0) + 1;
+    if (!pairMap[id]) {
+      pairMap[id] = {
+        id,
+        reserves: [{ asset: baseAsset }, { asset: counterAsset }],
+        tradeCount: 0,
+      };
+    }
+    pairMap[id].tradeCount = counts[id];
+  }
+
+  return Object.values(pairMap).sort((a, b) => b.tradeCount - a.tradeCount);
+}
 
 function renderPoolStep(el, nav) {
   const isPi = state.network === 'pi';
 
   if (isPi) {
+    if (state.pools.length === 0) {
+      el.innerHTML = `
+        <div class="section-title">페어 선택</div>
+        <div class="status-text"><span class="spinner"></span> 거래 페어 불러오는 중... <span id="load-timer">0</span>초</div>
+      `;
+      navBtns(nav, true, null);
+      loadPiPairs();
+      return;
+    }
+
     el.innerHTML = `
       <div class="section-title">페어 선택</div>
-      <div class="alert info">Pi DEX는 AMM 풀 없음 · 오더북 거래 데이터 사용</div>
-      ${PI_PAIRS.map(p => `
-        <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${p.id}')">
-          <div class="pool-pair">${p.label}</div>
-          <div class="pool-meta">오더북 거래 데이터</div>
+      <div class="alert info">Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬</div>
+      ${state.pools.map((p, i) => `
+        <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
+          <div class="pool-pair">
+            ${poolLabel(p)}
+            ${i < 3 ? '<span class="badge" style="background:#2a2a1a;color:#f6e05e">추천</span>' : ''}
+          </div>
+          <div class="pool-meta">최근 거래 <strong style="color:#e2e8f0">${p.tradeCount}건</strong></div>
         </div>
       `).join('')}
     `;
@@ -407,8 +440,33 @@ function renderPoolStep(el, nav) {
   if (state.pools.length === 0) loadPools();
 }
 
-function selectPiPair(id) {
-  state.pool = PI_PAIRS.find(p => p.id === id);
+async function loadPiPairs() {
+  let sec = 0;
+  const timer = setInterval(() => {
+    sec++;
+    const el = document.getElementById('load-timer');
+    if (el) el.textContent = sec;
+  }, 1000);
+  try {
+    const pairs = await fetchPiPairs();
+    clearInterval(timer);
+    if (!pairs.length) throw new Error('거래 데이터 없음');
+    state.pools = pairs;
+    renderApp();
+  } catch (e) {
+    clearInterval(timer);
+    document.getElementById('content').innerHTML = `
+      <div class="section-title">페어 선택</div>
+      <div class="alert">페어 로드 실패: ${e.message}</div>
+      <button class="btn btn-secondary" style="margin-top:10px" onclick="goToStep(3)">다시 시도</button>
+      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">← 네트워크 변경</button>
+    `;
+  }
+}
+
+function selectPiPair(encodedId) {
+  const id = decodeURIComponent(encodedId);
+  state.pool = state.pools.find(p => p.id === id);
   renderApp();
 }
 
