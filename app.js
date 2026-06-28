@@ -373,12 +373,22 @@ function selectStrategy(k) {
 // ── Step 3: 풀 / 페어 선택 ────────────────────────────
 
 async function fetchPiPairs() {
-  const r = await apiFetch(`${horizonBase()}/trades?limit=200&order=desc`);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const records = (await r.json())._embedded?.records || [];
+  const allRecords = [];
+  let cursor = null;
+  for (let i = 0; i < 5; i++) {
+    const url = `${horizonBase()}/trades?limit=200&order=desc${cursor ? `&cursor=${cursor}` : ''}`;
+    const r = await apiFetch(url);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const records = (await r.json())._embedded?.records || [];
+    if (!records.length) break;
+    allRecords.push(...records);
+    cursor = records.at(-1).paging_token;
+    await sleep(150);
+  }
 
   const counts = {};
   const pairMap = {};
+  const records = allRecords;
 
   for (const rec of records) {
     const baseAsset  = rec.base_asset_type  === 'native' ? 'native' : `${rec.base_asset_code}:${rec.base_asset_issuer}`;
