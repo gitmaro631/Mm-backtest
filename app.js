@@ -28,7 +28,12 @@ let activeChart = null;
 
 function horizonBase() { return NETWORKS[state.network].horizon; }
 
-function apiFetch(url) { return fetch(url); }
+function apiFetch(url) {
+  if (state.network === 'pi') {
+    return fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
+  }
+  return fetch(url);
+}
 
 async function fetchPools() {
   const base = horizonBase();
