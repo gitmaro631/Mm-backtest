@@ -370,7 +370,7 @@ function selectStrategy(k) {
 
 function renderPoolStep(el, nav) {
   el.innerHTML = state.pools.length === 0
-    ? `<div class="section-title">풀 선택</div><div class="status-text"><span class="spinner"></span> 풀 목록 불러오는 중...</div>`
+    ? `<div class="section-title">풀 선택</div><div class="status-text"><span class="spinner"></span> 풀 목록 불러오는 중... <span id="load-timer">0</span>초</div>`
     : `
       <div class="section-title">풀 선택</div>
       <input class="search-box" id="pool-search" placeholder="토큰 이름 검색..." oninput="filterPools()" value="${poolSearchQuery}">
@@ -399,8 +399,16 @@ function poolListHtml() {
 }
 
 async function loadPools() {
+  let sec = 0;
+  const timer = setInterval(() => {
+    sec++;
+    const el = document.getElementById('load-timer');
+    if (el) el.textContent = sec;
+  }, 1000);
+
   try {
     const pools = await fetchPools();
+    clearInterval(timer);
     state.pools = pools.sort((a, b) => {
       // 1순위: XLM 포함 풀 우선
       const xlmA = hasNative(a) ? 1 : 0;
@@ -413,6 +421,7 @@ async function loadPools() {
     });
     renderApp();
   } catch (e) {
+    clearInterval(timer);
     const isCors = e.message === 'Failed to fetch' || e.name === 'TypeError';
     document.getElementById('content').innerHTML = `
       <div class="alert">
