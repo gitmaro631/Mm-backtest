@@ -1266,7 +1266,7 @@ function renderAutoPoolSelectStep(el, nav) {
       <div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>
     `;
     navBtns(nav, true, null);
-    loadPools();
+    if (state.network === 'pi') loadPiPairs(); else loadPools();
     return;
   }
   if (scanSelectedIds.size === 0) {
@@ -1297,7 +1297,10 @@ function autoPoolListHtml() {
         <input type="checkbox" ${scanSelectedIds.has(p.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#667eea;flex-shrink:0;pointer-events:none">
         <div>
           <div class="pool-pair">${poolLabel(p)}</div>
-          <div class="pool-meta">7d거래 <strong style="color:#e2e8f0">${(p._trades7d||0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${p._accounts||'?'}</strong></div>
+          <div class="pool-meta">${state.network === 'pi'
+            ? `${tl(S.recent_trades)}: <strong style="color:#e2e8f0">${p.tradeCount}</strong> / ${piTotalFetched.toLocaleString()}`
+            : `7d거래 <strong style="color:#e2e8f0">${(p._trades7d||0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${p._accounts||'?'}</strong>`
+          }</div>
         </div>
       </div>
     </div>`).join('') + pagerHtml(filtered.length);
