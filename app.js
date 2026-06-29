@@ -1330,15 +1330,17 @@ function toggleScanPool(id) {
   navBtns(document.getElementById('nav-buttons'), true, 'nextStep', null, scanSelectedIds.size === 0);
 }
 
-function scanSelectAll() {
+function currentPagePools() {
   const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
-  filtered.forEach(p => scanSelectedIds.add(p.id));
+  return filtered.slice(poolPage * POOL_PAGE_SIZE, (poolPage + 1) * POOL_PAGE_SIZE);
+}
+function scanSelectAll() {
+  currentPagePools().forEach(p => scanSelectedIds.add(p.id));
   scanSelectionSet = true;
   renderApp();
 }
 function scanDeselectAll() {
-  const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
-  filtered.forEach(p => scanSelectedIds.delete(p.id));
+  currentPagePools().forEach(p => scanSelectedIds.delete(p.id));
   scanSelectionSet = true;
   renderApp();
 }
