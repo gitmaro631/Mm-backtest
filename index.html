@@ -10,13 +10,20 @@
   <div id="app">
     <header>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <h1 style="margin-bottom:0;">MM 백테스트</h1>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <h1 style="margin-bottom:0;">MM 백테스트</h1>
+          <button class="ip-btn" onclick="toggleInfo()">ℹ️</button>
+        </div>
         <div id="lang-switch"></div>
       </div>
       <div id="step-indicator"></div>
     </header>
     <main id="content"></main>
     <footer id="nav-buttons"></footer>
+  </div>
+
+  <div id="info-overlay" class="ip-hidden">
+    <div id="info-panel"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="app.js"></script>

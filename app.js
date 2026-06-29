@@ -123,6 +123,28 @@ const S = {
   chart_total:  { ko:'총 자산', en:'Total Asset', id:'Total Aset', zh:'总资产', ja:'総資産', es:'Activos Totales', vi:'Tổng tài sản', hi:'कुल संपत्ति', pt:'Ativos Totais', tl:'Kabuuang asset', fr:'Actifs Totaux' },
   chart_lp:     { ko:'LP 자산', en:'LP Asset', id:'Aset LP', zh:'LP 资产', ja:'LP資産', es:'Activos LP', vi:'Tài sản LP', hi:'LP संपत्ति', pt:'Ativos LP', tl:'LP asset', fr:'Actifs LP' },
   chart_hodl:   { ko:'HODL', en:'HODL', id:'HODL', zh:'HODL', ja:'HODL', es:'HODL', vi:'HODL', hi:'HODL', pt:'HODL', tl:'HODL', fr:'HODL' },
+
+  // ── Info panel ──
+  ip_title:       { ko:'앱 소개 / 사용법', en:'About & How to Use', id:'Tentang & Cara Pakai', zh:'关于 / 使用说明', ja:'アプリ紹介 / 使い方', es:'Acerca de / Cómo usar', vi:'Giới thiệu & Hướng dẫn', hi:'जानकारी / उपयोग', pt:'Sobre / Como usar', tl:'Tungkol at Paano Gamitin', fr:'À propos / Utilisation' },
+  ip_about:       { ko:'DEX 마켓메이킹 전략 백테스터입니다. Stellar 메인넷과 Pi DEX의 실제 거래 데이터를 기반으로 오더북 마켓메이킹과 AMM 유동성 공급 시뮬레이션을 제공합니다.', en:'A DEX market-making strategy backtester. Simulates orderbook market making and AMM liquidity provision using real historical trade data from Stellar Mainnet and Pi DEX.', id:'Backtester strategi market-making DEX. Mensimulasikan market making orderbook dan suplai likuiditas AMM menggunakan data perdagangan historis nyata dari Stellar Mainnet dan Pi DEX.', zh:'DEX 做市策略回测工具。基于 Stellar 主网和 Pi DEX 的真实历史交易数据，提供订单簿做市和 AMM 流动性提供的模拟。', ja:'DEXマーケットメイキング戦略バックテスターです。StellarメインネットとPi DEXの実際の取引データを使用して、オーダーブックマーケットメイキングとAMM流動性プロビジョニングのシミュレーションを提供します。', es:'Backtester de estrategias de market-making en DEX. Simula market making de orderbook y provisión de liquidez AMM usando datos históricos reales de Stellar Mainnet y Pi DEX.', vi:'Công cụ backtest chiến lược market-making trên DEX. Mô phỏng market making orderbook và cung cấp thanh khoản AMM dựa trên dữ liệu giao dịch lịch sử thực từ Stellar Mainnet và Pi DEX.', hi:'DEX मार्केट-मेकिंग रणनीति बैकटेस्टर। Stellar Mainnet और Pi DEX के वास्तविक ऐतिहासिक ट्रेड डेटा का उपयोग करके ऑर्डरबुक मार्केट मेकिंग और AMM तरलता प्रावधान का अनुकरण।', pt:'Backtester de estratégias de market-making em DEX. Simula market making de orderbook e provisão de liquidez AMM usando dados históricos reais do Stellar Mainnet e Pi DEX.', tl:'Backtester ng DEX market-making strategy. Sine-simulate ang orderbook market making at AMM liquidity provision gamit ang tunay na datos ng nakaraang trade mula sa Stellar Mainnet at Pi DEX.', fr:"Backtesteur de stratégies de market-making sur DEX. Simule le market making en carnet d'ordres et la fourniture de liquidité AMM en utilisant des données historiques réelles de Stellar Mainnet et Pi DEX." },
+  ip_how:         { ko:'사용법', en:'How to Use', id:'Cara Pakai', zh:'使用说明', ja:'使い方', es:'Cómo usar', vi:'Hướng dẫn sử dụng', hi:'उपयोग कैसे करें', pt:'Como usar', tl:'Paano Gamitin', fr:'Comment utiliser' },
+  ip_s1:          { ko:'Stellar 메인넷 또는 Pi DEX를 선택합니다.', en:'Choose Stellar Mainnet or Pi DEX.', id:'Pilih Stellar Mainnet atau Pi DEX.', zh:'选择 Stellar 主网或 Pi DEX。', ja:'Stellar メインネットまたは Pi DEX を選択します。', es:'Elija Stellar Mainnet o Pi DEX.', vi:'Chọn Stellar Mainnet hoặc Pi DEX.', hi:'Stellar Mainnet या Pi DEX चुनें।', pt:'Escolha Stellar Mainnet ou Pi DEX.', tl:'Piliin ang Stellar Mainnet o Pi DEX.', fr:'Choisissez Stellar Mainnet ou Pi DEX.' },
+  ip_s2:          { ko:'오더북 마켓메이킹 또는 AMM 유동성 공급 전략을 선택합니다.', en:'Choose Orderbook Market Making or AMM Liquidity Provision.', id:'Pilih strategi Market Making Orderbook atau Suplai Likuiditas AMM.', zh:'选择订单簿做市或 AMM 流动性提供策略。', ja:'オーダーブック マーケットメイキングまたは AMM 流動性プロビジョニングを選択します。', es:'Elija Market Making de Orderbook o Provisión de Liquidez AMM.', vi:'Chọn chiến lược Market Making Orderbook hoặc cung cấp thanh khoản AMM.', hi:'Orderbook Market Making या AMM Liquidity Provision रणनीति चुनें।', pt:'Escolha Market Making de Orderbook ou Provisão de Liquidez AMM.', tl:'Piliin ang Orderbook Market Making o AMM Liquidity Provision na estratehiya.', fr:"Choisissez le Market Making Orderbook ou la Fourniture de Liquidité AMM." },
+  ip_s3:          { ko:'시뮬레이션할 거래 풀 또는 페어를 선택합니다.', en:'Select the trading pool or pair to simulate.', id:'Pilih pool atau pasangan trading untuk disimulasikan.', zh:'选择要模拟的交易池或交易对。', ja:'シミュレートする取引プールまたはペアを選択します。', es:'Seleccione el pool o par de trading para simular.', vi:'Chọn pool hoặc cặp giao dịch để mô phỏng.', hi:'सिमुलेट करने के लिए ट्रेडिंग पूल या पेयर चुनें।', pt:'Selecione o pool ou par de trading para simular.', tl:'Piliin ang trading pool o pair para i-simulate.', fr:'Sélectionnez le pool ou la paire de trading à simuler.' },
+  ip_s4:          { ko:'초기 자본, 스프레드, 레이어 수 등 전략 파라미터를 설정합니다.', en:'Set parameters: initial capital, spread, layer count, etc.', id:'Atur parameter: modal awal, spread, jumlah layer, dll.', zh:'设置参数：初始资金、价差、层数等。', ja:'初期資本・スプレッド・レイヤー数などのパラメータを設定します。', es:'Configure los parámetros: capital inicial, spread, número de capas, etc.', vi:'Đặt tham số: vốn ban đầu, spread, số lớp lệnh, v.v.', hi:'पैरामीटर सेट करें: प्रारंभिक पूंजी, स्प्रेड, लेयर संख्या आदि।', pt:'Configure os parâmetros: capital inicial, spread, número de camadas, etc.', tl:'I-set ang mga parametro: panimulang kapital, spread, bilang ng layer, atbp.', fr:'Configurez les paramètres : capital initial, spread, nombre de couches, etc.' },
+  ip_s5:          { ko:'과거 실제 거래 데이터를 불러와 전략을 시뮬레이션합니다.', en:'Fetches real historical trade data and simulates your strategy.', id:'Mengambil data perdagangan historis nyata dan mensimulasikan strategi.', zh:'获取真实历史交易数据并模拟您的策略。', ja:'実際の過去取引データを取得し、戦略をシミュレートします。', es:'Obtiene datos históricos reales y simula su estrategia.', vi:'Tải dữ liệu giao dịch lịch sử thực và mô phỏng chiến lược.', hi:'वास्तविक ऐतिहासिक ट्रेड डेटा लाता है और आपकी रणनीति का अनुकरण करता है।', pt:'Busca dados históricos reais e simula sua estratégia.', tl:'Kumukuha ng tunay na datos ng nakaraang trade at sine-simulate ang iyong estratehiya.', fr:'Récupère les données historiques réelles et simule votre stratégie.' },
+  ip_s6:          { ko:'손익, 체결 횟수, 자산 추이 차트로 전략 성과를 평가합니다.', en:'Evaluate performance via P&L, fill count and asset trend chart.', id:'Evaluasi performa melalui P&L, jumlah fill, dan grafik tren aset.', zh:'通过损益、成交次数和资产趋势图评估策略表现。', ja:'損益・約定回数・資産推移チャートで戦略パフォーマンスを評価します。', es:'Evalúe el rendimiento a través de P&L, número de fills y gráfico de activos.', vi:'Đánh giá hiệu suất qua P&L, số lần khớp lệnh và biểu đồ tài sản.', hi:'P&L, फिल संख्या और संपत्ति प्रवृत्ति चार्ट से रणनीति का मूल्यांकन करें।', pt:'Avalie o desempenho através de P&L, quantidade de fills e gráfico de ativos.', tl:'Suriin ang performance sa pamamagitan ng P&L, bilang ng fill at asset trend chart.', fr:'Évaluez la performance via le P&L, le nombre de fills et le graphique des actifs.' },
+  ip_tips:        { ko:'💡 파라미터 팁', en:'💡 Parameter Tips', id:'💡 Tips Parameter', zh:'💡 参数小提示', ja:'💡 パラメータのヒント', es:'💡 Consejos de parámetros', vi:'💡 Mẹo tham số', hi:'💡 पैरामीटर टिप्स', pt:'💡 Dicas de parâmetros', tl:'💡 Mga Tip sa Parametro', fr:'💡 Conseils sur les paramètres' },
+  ip_t1:          { ko:'스프레드를 줄이면 체결이 늘지만 건당 수익이 줄어듭니다.', en:'Narrower spread → more fills, but lower profit per fill.', id:'Spread lebih kecil → lebih banyak fill, tapi profit per fill lebih kecil.', zh:'缩小价差 → 成交增多，但单笔收益减少。', ja:'スプレッドを縮めると約定が増えるが、1回あたりの収益は減ります。', es:'Spread más estrecho → más fills, pero menor ganancia por fill.', vi:'Spread hẹp hơn → nhiều khớp lệnh hơn, nhưng lợi nhuận mỗi lần thấp hơn.', hi:'संकरा स्प्रेड → अधिक फिल, लेकिन प्रति फिल कम लाभ।', pt:'Spread mais estreito → mais fills, mas menor lucro por fill.', tl:'Mas makitid na spread → mas maraming fill, ngunit mas mababa ang kita bawat fill.', fr:'Spread plus étroit → plus de fills, mais moins de profit par fill.' },
+  ip_t2:          { ko:'레이어를 늘리면 더 넓은 가격 범위에 주문이 분산됩니다.', en:'More layers spread orders across a wider price range.', id:'Lebih banyak layer menyebarkan order ke rentang harga yang lebih luas.', zh:'增加层数可将订单分散到更宽的价格区间。', ja:'レイヤーを増やすとより広い価格帯に注文が分散されます。', es:'Más capas distribuyen las órdenes en un rango de precios más amplio.', vi:'Nhiều lớp lệnh hơn phân tán lệnh trên phạm vi giá rộng hơn.', hi:'अधिक लेयर से ऑर्डर व्यापक मूल्य श्रेणी में फैलते हैं।', pt:'Mais camadas distribuem ordens por uma faixa de preço mais ampla.', tl:'Mas maraming layer ang nagpapakalat ng mga order sa mas malawak na hanay ng presyo.', fr:'Plus de couches répartissent les ordres sur une plage de prix plus large.' },
+  ip_t3:          { ko:'데이터 건수를 늘리면 시뮬레이션 정확도가 높아집니다.', en:'More data records give more accurate simulation results.', id:'Lebih banyak data meningkatkan akurasi simulasi.', zh:'增加数据条数可提高模拟精确度。', ja:'データ件数を増やすとシミュレーション精度が上がります。', es:'Más registros de datos dan resultados de simulación más precisos.', vi:'Nhiều bản ghi dữ liệu hơn cho kết quả mô phỏng chính xác hơn.', hi:'अधिक डेटा रिकॉर्ड से सिमुलेशन परिणाम अधिक सटीक होते हैं।', pt:'Mais registros de dados fornecem resultados de simulação mais precisos.', tl:'Mas maraming rekord ng datos ang nagbibigay ng mas tumpak na resulta ng simulation.', fr:"Plus d'enregistrements donnent des résultats de simulation plus précis." },
+  ip_contact:     { ko:'문의 / 피드백', en:'Contact / Feedback', id:'Kontak / Masukan', zh:'联系 / 反馈', ja:'お問い合わせ / フィードバック', es:'Contacto / Comentarios', vi:'Liên hệ / Phản hồi', hi:'संपर्क / फीडबैक', pt:'Contato / Feedback', tl:'Makipag-ugnayan / Feedback', fr:'Contact / Retours' },
+  ip_contact_desc:{ ko:'사용 중 문의사항이나 피드백은 유튜브 채널 댓글로 남겨주세요.', en:'Leave questions or feedback in the YouTube channel comments.', id:'Tinggalkan pertanyaan atau masukan di kolom komentar YouTube.', zh:'如有使用问题或反馈，请在YouTube频道评论区留言。', ja:'ご不明な点やフィードバックはYouTubeチャンネルのコメント欄にお寄せください。', es:'Deje preguntas o comentarios en los comentarios del canal de YouTube.', vi:'Hãy để lại câu hỏi hoặc phản hồi trong phần bình luận kênh YouTube.', hi:'YouTube चैनल के कमेंट में प्रश्न या फीडबैक छोड़ें।', pt:'Deixe perguntas ou feedback nos comentários do canal do YouTube.', tl:'Mag-iwan ng mga tanong o feedback sa mga komento ng YouTube channel.', fr:'Laissez vos questions ou commentaires dans les commentaires de la chaîne YouTube.' },
+  ip_disclaimer:  { ko:'⚠️ 시뮬레이션 전용 — 실제 거래 결과를 보장하지 않습니다.', en:'⚠️ Simulation only — does not guarantee real trading results.', id:'⚠️ Hanya simulasi — tidak menjamin hasil trading nyata.', zh:'⚠️ 仅供模拟 — 不保证实际交易结果。', ja:'⚠️ シミュレーション専用 — 実際の取引結果を保証しません。', es:'⚠️ Solo simulación — no garantiza resultados reales de trading.', vi:'⚠️ Chỉ mô phỏng — không đảm bảo kết quả giao dịch thực tế.', hi:'⚠️ केवल सिमुलेशन — वास्तविक ट्रेडिंग परिणामों की गारंटी नहीं।', pt:'⚠️ Somente simulação — não garante resultados reais de trading.', tl:'⚠️ Simulation lamang — hindi ginagarantiyahan ang mga tunay na resulta ng trading.', fr:'⚠️ Simulation uniquement — ne garantit pas les résultats de trading réels.' },
+  ip_copy:        { ko:'복사', en:'Copy', id:'Salin', zh:'复制', ja:'コピー', es:'Copiar', vi:'Sao chép', hi:'कॉपी', pt:'Copiar', tl:'Kopyahin', fr:'Copier' },
+  ip_copied:      { ko:'복사됨!', en:'Copied!', id:'Tersalin!', zh:'已复制!', ja:'コピーしました!', es:'¡Copiado!', vi:'Đã sao chép!', hi:'कॉपी हो गया!', pt:'Copiado!', tl:'Nakopya na!', fr:'Copié !' },
+  ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
+  ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
 };
 
 function t(s)  { return s[LANG] ?? s.ko; }
@@ -423,6 +445,78 @@ function fmtUsdc(n) {
 // ═══════════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════════
+
+function renderInfoPanel() {
+  const STEPS = [
+    { icon:'1', label: t(S.steps[0]), desc: t(S.ip_s1) },
+    { icon:'2', label: t(S.steps[1]), desc: t(S.ip_s2) },
+    { icon:'3', label: t(S.steps[2]), desc: t(S.ip_s3) },
+    { icon:'4', label: t(S.steps[3]), desc: t(S.ip_s4) },
+    { icon:'5', label: t(S.steps[4]), desc: t(S.ip_s5) },
+    { icon:'6', label: t(S.steps[5]), desc: t(S.ip_s6) },
+  ];
+  document.getElementById('info-panel').innerHTML = `
+    <div class="ip-header">
+      <span class="ip-title">${t(S.ip_title)}</span>
+      <button class="ip-close-btn" onclick="toggleInfo()">${t(S.ip_close)} ✕</button>
+    </div>
+
+    <div class="ip-card">
+      <p class="ip-about">${t(S.ip_about)}</p>
+    </div>
+
+    <div class="ip-section-title">${t(S.ip_how)}</div>
+    <div class="ip-card">
+      ${STEPS.map(s => `
+        <div class="ip-step">
+          <span class="ip-step-num">${s.icon}</span>
+          <div class="ip-step-body">
+            <div class="ip-step-label">${s.label}</div>
+            <div class="ip-step-desc">${s.desc}</div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <div class="ip-section-title">${t(S.ip_tips)}</div>
+    <div class="ip-card ip-tips-card">
+      <div class="ip-tip">· ${t(S.ip_t1)}</div>
+      <div class="ip-tip">· ${t(S.ip_t2)}</div>
+      <div class="ip-tip">· ${t(S.ip_t3)}</div>
+    </div>
+
+    <div class="ip-section-title">${t(S.ip_contact)}</div>
+    <div class="ip-card">
+      <p class="ip-contact-desc">${t(S.ip_contact_desc)}</p>
+      <div class="ip-yt-row">
+        <span class="ip-yt-icon">▶</span>
+        <div class="ip-yt-body">
+          <div class="ip-yt-name">Hidden Strokes</div>
+          <div class="ip-yt-url" id="ip-yt-url-text">youtube.com/@hiddenstrokes-j5w</div>
+        </div>
+      </div>
+      <div class="ip-copy-row">
+        <span class="ip-copy-url">youtube.com/@hiddenstrokes-j5w</span>
+        <button class="btn btn-secondary ip-copy-btn" id="ip-copy-btn" style="font-size:0.8rem;padding:6px 12px;">${t(S.ip_copy)}</button>
+      </div>
+      <p class="ip-copy-note">${t(S.ip_copy_note)}</p>
+    </div>
+
+    <div class="alert info" style="margin-top:10px;">${t(S.ip_disclaimer)}</div>
+  `;
+  document.getElementById('ip-copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText('youtube.com/@hiddenstrokes-j5w').then(() => {
+      const btn = document.getElementById('ip-copy-btn');
+      btn.textContent = t(S.ip_copied);
+      setTimeout(() => { btn.textContent = t(S.ip_copy); }, 2000);
+    });
+  });
+}
+
+function toggleInfo() {
+  const overlay = document.getElementById('info-overlay');
+  const hidden  = overlay.classList.toggle('ip-hidden');
+  if (!hidden) renderInfoPanel();
+}
 
 function renderLangSwitch() {
   const langs = [
