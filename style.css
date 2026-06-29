@@ -232,12 +232,8 @@ h1 {
 }
 .alert.info { background: #1a2744; border-color: #667eea; color: #90cdf4; }
 
-/* ── Bilingual labels ── */
-.t-en   { display: block; font-size: 0.75em; color: #718096; font-weight: normal; margin-top: 1px; }
-.t-en-i { font-size: 0.8em; color: #718096; }
-
 /* ── Language switcher ── */
-#lang-switch { display: flex; gap: 4px; }
+#lang-switch { display: flex; flex-wrap: wrap; gap: 4px; }
 .lang-btn {
   background: #2d3748;
   border: 1px solid #4a5568;

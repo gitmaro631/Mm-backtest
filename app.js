@@ -6,134 +6,128 @@
 //  I18N — 향후 단일 언어 전환 시 LANG 변수만 바꾸면 됨
 // ═══════════════════════════════════════════════════════
 
-let LANG = localStorage.getItem('mm_lang') || 'bilingual'; // 'ko' | 'en' | 'id' | 'bilingual'
+function _detectLang() {
+  const supported = ['ko','en','id','zh','ja','es','vi','hi','pt','tl','fr'];
+  const nav = (navigator.languages?.[0] || navigator.language || 'en').toLowerCase();
+  const primary = nav.split('-')[0];
+  if (primary === 'fil') return 'tl';
+  return supported.includes(primary) ? primary : 'en';
+}
+let LANG = localStorage.getItem('mm_lang') || _detectLang(); // ko|en|id|zh|ja|es|vi|hi|pt|tl|fr
 
 const S = {
-  steps:           [{ ko:'네트워크', en:'Network', id:'Jaringan' }, { ko:'전략', en:'Strategy', id:'Strategi' }, { ko:'풀 선택', en:'Pool', id:'Pool' }, { ko:'파라미터', en:'Parameters', id:'Parameter' }, { ko:'실행', en:'Run', id:'Jalankan' }, { ko:'결과', en:'Results', id:'Hasil' }],
-  btn_next:        { ko:'다음', en:'Next', id:'Berikutnya' },
-  btn_prev:        { ko:'이전', en:'Back', id:'Kembali' },
-  btn_run:         { ko:'백테스트 시작', en:'Start Backtest', id:'Mulai Backtest' },
-  btn_retry:       { ko:'다시 시도', en:'Retry', id:'Coba Lagi' },
-  btn_new:         { ko:'새 백테스트', en:'New Backtest', id:'Backtest Baru' },
-  btn_params:      { ko:'← 파라미터', en:'← Parameters', id:'← Parameter' },
-  btn_net:         { ko:'← 네트워크 변경', en:'← Change Network', id:'← Ganti Jaringan' },
+  steps: [
+    { ko:'네트워크', en:'Network',    id:'Jaringan',  zh:'网络',     ja:'ネットワーク', es:'Red',        vi:'Mạng',       hi:'नेटवर्क',    pt:'Rede',       tl:'Network',    fr:'Réseau' },
+    { ko:'전략',     en:'Strategy',   id:'Strategi',  zh:'策略',     ja:'戦略',         es:'Estrategia', vi:'Chiến lược', hi:'रणनीति',     pt:'Estratégia', tl:'Estratehiya',fr:'Stratégie' },
+    { ko:'풀 선택',  en:'Pool',       id:'Pool',      zh:'选择池',   ja:'プール選択',   es:'Pool',       vi:'Chọn Pool',  hi:'पूल',        pt:'Pool',       tl:'Pool',       fr:'Pool' },
+    { ko:'파라미터', en:'Parameters', id:'Parameter', zh:'参数',     ja:'パラメータ',   es:'Parámetros', vi:'Tham số',    hi:'पैरामीटर',   pt:'Parâmetros', tl:'Parametro',  fr:'Paramètres' },
+    { ko:'실행',     en:'Run',        id:'Jalankan',  zh:'执行',     ja:'実行',         es:'Ejecutar',   vi:'Chạy',       hi:'चलाएं',      pt:'Executar',   tl:'Patakbuhin', fr:'Exécuter' },
+    { ko:'결과',     en:'Results',    id:'Hasil',     zh:'结果',     ja:'結果',         es:'Resultados', vi:'Kết quả',    hi:'परिणाम',     pt:'Resultados', tl:'Resulta',    fr:'Résultats' },
+  ],
+  btn_next:     { ko:'다음',          en:'Next',              id:'Berikutnya',      zh:'下一步',        ja:'次へ',              es:'Siguiente',        vi:'Tiếp',               hi:'अगला',           pt:'Próximo',         tl:'Susunod',           fr:'Suivant' },
+  btn_prev:     { ko:'이전',          en:'Back',              id:'Kembali',         zh:'上一步',        ja:'戻る',              es:'Atrás',            vi:'Quay lại',           hi:'पिछला',          pt:'Voltar',          tl:'Bumalik',           fr:'Retour' },
+  btn_run:      { ko:'백테스트 시작', en:'Start Backtest',    id:'Mulai Backtest',  zh:'开始回测',      ja:'バックテスト開始',  es:'Iniciar Backtest', vi:'Bắt đầu Backtest',   hi:'बैकटेस्ट शुरू',  pt:'Iniciar Backtest', tl:'Simulan ang Backtest', fr:'Lancer Backtest' },
+  btn_retry:    { ko:'다시 시도',     en:'Retry',             id:'Coba Lagi',       zh:'重试',          ja:'再試行',            es:'Reintentar',       vi:'Thử lại',            hi:'पुनः प्रयास',    pt:'Tentar novamente', tl:'Subukan ulit',      fr:'Réessayer' },
+  btn_new:      { ko:'새 백테스트',   en:'New Backtest',      id:'Backtest Baru',   zh:'新回测',        ja:'新バックテスト',    es:'Nuevo Backtest',   vi:'Backtest mới',       hi:'नया बैकटेस्ट',   pt:'Novo Backtest',    tl:'Bagong Backtest',   fr:'Nouveau Backtest' },
+  btn_params:   { ko:'← 파라미터',   en:'← Parameters',     id:'← Parameter',     zh:'← 参数',        ja:'← パラメータ',     es:'← Parámetros',     vi:'← Tham số',          hi:'← पैरामीटर',     pt:'← Parâmetros',     tl:'← Parametro',       fr:'← Paramètres' },
+  btn_net:      { ko:'← 네트워크 변경', en:'← Change Network', id:'← Ganti Jaringan', zh:'← 更换网络', ja:'← ネットワーク変更', es:'← Cambiar Red',  vi:'← Đổi mạng',         hi:'← नेटवर्क बदलें', pt:'← Mudar Rede',    tl:'← Baguhin ang Network', fr:'← Changer Réseau' },
 
-  net_title:       { ko:'네트워크 선택', en:'Select Network', id:'Pilih Jaringan' },
-  stellar_name:    { ko:'Stellar 메인넷', en:'Stellar Mainnet', id:'Stellar Mainnet' },
-  stellar_desc:    { ko:'Stellar 공식 메인넷 · XLM/USDC 등 풍부한 유동성', en:'Official Stellar mainnet · Rich liquidity', id:'Mainnet resmi Stellar · Likuiditas tinggi' },
-  pi_name:         { ko:'Pi DEX', en:'Pi DEX', id:'Pi DEX' },
-  pi_desc:         { ko:'Pi 네트워크 DEX · Pi 메인넷 기반', en:'Pi Network DEX · Pi mainnet based', id:'DEX Jaringan Pi · Berbasis mainnet Pi' },
+  net_title:    { ko:'네트워크 선택',  en:'Select Network',    id:'Pilih Jaringan',  zh:'选择网络',      ja:'ネットワーク選択',  es:'Seleccionar Red',  vi:'Chọn mạng',          hi:'नेटवर्क चुनें',  pt:'Selecionar Rede',  tl:'Piliin ang Network', fr:'Choisir Réseau' },
+  stellar_name: { ko:'Stellar 메인넷', en:'Stellar Mainnet',   id:'Stellar Mainnet', zh:'Stellar 主网',  ja:'Stellar メインネット', es:'Stellar Mainnet', vi:'Stellar Mainnet',    hi:'Stellar मेनेट',  pt:'Stellar Mainnet',  tl:'Stellar Mainnet',   fr:'Stellar Mainnet' },
+  stellar_desc: { ko:'Stellar 공식 메인넷 · XLM/USDC 등 풍부한 유동성', en:'Official Stellar mainnet · Rich liquidity', id:'Mainnet resmi Stellar · Likuiditas tinggi', zh:'Stellar 官方主网 · XLM/USDC 流动性丰富', ja:'Stellar公式メインネット · 豊富な流動性', es:'Mainnet oficial Stellar · Alta liquidez', vi:'Mainnet Stellar · Thanh khoản cao', hi:'Stellar आधिकारिक मेनेट · उच्च तरलता', pt:'Mainnet oficial Stellar · Alta liquidez', tl:'Opisyal na Stellar mainnet · Mataas na likido', fr:'Mainnet officiel Stellar · Liquidité élevée' },
+  pi_name:      { ko:'Pi DEX',         en:'Pi DEX',            id:'Pi DEX',          zh:'Pi DEX',        ja:'Pi DEX',            es:'Pi DEX',           vi:'Pi DEX',             hi:'Pi DEX',         pt:'Pi DEX',           tl:'Pi DEX',             fr:'Pi DEX' },
+  pi_desc:      { ko:'Pi 네트워크 DEX · Pi 메인넷 기반', en:'Pi Network DEX · Pi mainnet based', id:'DEX Jaringan Pi · Berbasis mainnet Pi', zh:'Pi 网络 DEX · 基于 Pi 主网', ja:'Pi ネットワーク DEX · Pi メインネットベース', es:'DEX de Pi Network · Basado en mainnet Pi', vi:'Pi Network DEX · Trên mainnet Pi', hi:'Pi Network DEX · Pi मेनेट आधारित', pt:'Pi Network DEX · Baseado no mainnet Pi', tl:'Pi Network DEX · Nakabase sa Pi mainnet', fr:'Pi Network DEX · Basé sur Pi mainnet' },
 
-  str_title:       { ko:'전략 선택', en:'Select Strategy', id:'Pilih Strategi' },
-  ob_name:         { ko:'오더북 마켓메이킹', en:'Orderbook Market Making', id:'Market Making Orderbook' },
-  ob_desc:         { ko:'Bid/Ask 주문으로 스프레드 수익 시뮬레이션', en:'Simulate spread profit via bid/ask orders', id:'Simulasi profit spread via order bid/ask' },
-  amm_name:        { ko:'AMM 유동성 공급', en:'AMM Liquidity Provision', id:'Suplai Likuiditas AMM' },
-  amm_desc:        { ko:'풀에 예치 후 수수료 + 비영구적 손실 시뮬레이션', en:'Fee income & impermanent loss simulation', id:'Simulasi pendapatan fee & kerugian impermanent' },
-  amm_disabled:    { ko:'⚠️ Pi DEX는 AMM 풀이 없어 사용 불가', en:'⚠️ Pi DEX has no AMM pools', id:'⚠️ Pi DEX tidak memiliki pool AMM' },
+  str_title:    { ko:'전략 선택',      en:'Select Strategy',   id:'Pilih Strategi',  zh:'选择策略',      ja:'戦略選択',          es:'Seleccionar Estrategia', vi:'Chọn chiến lược', hi:'रणनीति चुनें',  pt:'Selecionar Estratégia', tl:'Piliin ang Estratehiya', fr:'Choisir Stratégie' },
+  ob_name:      { ko:'오더북 마켓메이킹', en:'Orderbook Market Making', id:'Market Making Orderbook', zh:'订单簿做市', ja:'オーダーブック マーケットメイキング', es:'Creación de mercado (Orderbook)', vi:'Tạo lập thị trường Orderbook', hi:'ऑर्डरबुक मार्केट मेकिंग', pt:'Market Making (Orderbook)', tl:'Orderbook Market Making', fr:"Market Making (Carnet d'ordres)" },
+  ob_desc:      { ko:'Bid/Ask 주문으로 스프레드 수익 시뮬레이션', en:'Simulate spread profit via bid/ask orders', id:'Simulasi profit spread via order bid/ask', zh:'通过买卖单模拟价差收益', ja:'買い/売り注文でスプレッド収益をシミュレート', es:'Simular ganancias de spread con órdenes bid/ask', vi:'Mô phỏng lợi nhuận chênh lệch giá qua lệnh mua/bán', hi:'Bid/Ask ऑर्डर से स्प्रेड लाभ का अनुकरण', pt:'Simular lucro de spread com ordens bid/ask', tl:'I-simulate ang kita sa spread sa pamamagitan ng bid/ask orders', fr:'Simuler les profits de spread via ordres bid/ask' },
+  amm_name:     { ko:'AMM 유동성 공급', en:'AMM Liquidity Provision', id:'Suplai Likuiditas AMM', zh:'AMM 流动性提供', ja:'AMM 流動性プロビジョニング', es:'Provisión de Liquidez AMM', vi:'Cung cấp thanh khoản AMM', hi:'AMM तरलता प्रावधान', pt:'Provisão de Liquidez AMM', tl:'AMM Liquidity Provision', fr:'Fourniture de Liquidité AMM' },
+  amm_desc:     { ko:'풀에 예치 후 수수료 + 비영구적 손실 시뮬레이션', en:'Fee income & impermanent loss simulation', id:'Simulasi pendapatan fee & kerugian impermanent', zh:'存入池后模拟手续费收益和无常损失', ja:'プールに預けた後の手数料収益＋無常損失をシミュレート', es:'Simular ingresos por comisión y pérdida impermanente', vi:'Mô phỏng thu nhập phí & tổn thất vô thường', hi:'पूल में जमा के बाद शुल्क + अस्थायी हानि का अनुकरण', pt:'Simular renda de taxa e perda impermanente', tl:'Simulate ang kita mula sa bayad at impermanent loss', fr:'Simuler revenus de frais et perte impermanente' },
+  amm_disabled: { ko:'⚠️ Pi DEX는 AMM 풀이 없어 사용 불가', en:'⚠️ Pi DEX has no AMM pools', id:'⚠️ Pi DEX tidak memiliki pool AMM', zh:'⚠️ Pi DEX 没有 AMM 池', ja:'⚠️ Pi DEX に AMM プールがありません', es:'⚠️ Pi DEX no tiene pools AMM', vi:'⚠️ Pi DEX không có pool AMM', hi:'⚠️ Pi DEX में AMM पूल नहीं है', pt:'⚠️ Pi DEX não tem pools AMM', tl:'⚠️ Walang AMM pool ang Pi DEX', fr:"⚠️ Pi DEX n'a pas de pools AMM" },
 
-  pool_title:      { ko:'풀 선택', en:'Select Pool', id:'Pilih Pool' },
-  pair_title:      { ko:'페어 선택', en:'Select Pair', id:'Pilih Pasangan' },
-  loading_pools:   { ko:'풀 목록 불러오는 중', en:'Loading pools', id:'Memuat daftar pool' },
-  loading_pairs:   { ko:'거래 페어 불러오는 중', en:'Loading pairs', id:'Memuat pasangan trading' },
-  sec:             { ko:'초', en:'sec', id:'dtk' },
-  search_ph:       { ko:'토큰 이름 검색...', en:'Search token...', id:'Cari nama token...' },
-  sort_lp:         { ko:'LP 수 많은 순 (거래 활성도)', en:'By LP count (activity)', id:'Urut LP terbanyak (aktivitas)' },
-  sort_tvl:        { ko:'유동성 큰 순 (안정성)', en:'By liquidity (stability)', id:'Urut likuiditas terbesar (stabilitas)' },
-  pi_info:         { ko:'Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬', en:'Pi DEX · Orderbook data · Sorted by volume', id:'Pi DEX · Data orderbook · Urut volume' },
-  recommended:     { ko:'추천', en:'Top', id:'Unggulan' },
-  recent_trades:   { ko:'최근 거래', en:'Recent trades', id:'Transaksi terkini' },
-  lp_count:        { ko:'LP 수', en:'LP count', id:'Jml LP' },
-  liquidity:       { ko:'유동성', en:'Liquidity', id:'Likuiditas' },
-  no_results:      { ko:'검색 결과 없음', en:'No results', id:'Tidak ada hasil' },
-  pool_fail:       { ko:'풀 목록 로드 실패', en:'Pool load failed', id:'Gagal memuat pool' },
-  pair_fail:       { ko:'페어 로드 실패', en:'Pair load failed', id:'Gagal memuat pasangan' },
-  no_trade_data:   { ko:'거래 데이터 없음', en:'No trade data', id:'Tidak ada data trading' },
+  pool_title:   { ko:'풀 선택',        en:'Select Pool',       id:'Pilih Pool',      zh:'选择池',        ja:'プール選択',        es:'Seleccionar Pool',  vi:'Chọn Pool',         hi:'पूल चुनें',      pt:'Selecionar Pool',  tl:'Piliin ang Pool',    fr:'Choisir Pool' },
+  pair_title:   { ko:'페어 선택',      en:'Select Pair',       id:'Pilih Pasangan',  zh:'选择交易对',    ja:'ペア選択',          es:'Seleccionar Par',   vi:'Chọn cặp',          hi:'पेयर चुनें',     pt:'Selecionar Par',   tl:'Piliin ang Pares',   fr:'Choisir la Paire' },
+  loading_pools:{ ko:'풀 목록 불러오는 중', en:'Loading pools', id:'Memuat daftar pool', zh:'加载池列表中', ja:'プールリスト読込中', es:'Cargando pools',  vi:'Đang tải danh sách pool', hi:'पूल सूची लोड हो रही है', pt:'Carregando pools', tl:'Nilo-load ang mga pool', fr:'Chargement des pools' },
+  loading_pairs:{ ko:'거래 페어 불러오는 중', en:'Loading pairs', id:'Memuat pasangan trading', zh:'加载交易对中', ja:'取引ペア読込中', es:'Cargando pares', vi:'Đang tải cặp giao dịch', hi:'ट्रेडिंग पेयर लोड हो रहे हैं', pt:'Carregando pares', tl:'Nilo-load ang mga pares', fr:'Chargement des paires' },
+  sec:          { ko:'초', en:'sec', id:'dtk', zh:'秒', ja:'秒', es:'seg', vi:'giây', hi:'सेकंड', pt:'seg', tl:'seg', fr:'sec' },
+  search_ph:    { ko:'토큰 이름 검색...', en:'Search token...', id:'Cari nama token...', zh:'搜索代币...', ja:'トークン検索...', es:'Buscar token...', vi:'Tìm kiếm token...', hi:'टोकन खोजें...', pt:'Buscar token...', tl:'Hanapin ang token...', fr:'Rechercher token...' },
+  sort_lp:      { ko:'LP 수 많은 순 (거래 활성도)', en:'By LP count (activity)', id:'Urut LP terbanyak (aktivitas)', zh:'按 LP 数量排序（活跃度）', ja:'LP数順（取引活発）', es:'Por cantidad LP (actividad)', vi:'Theo số LP (hoạt động)', hi:'LP संख्या से (सक्रियता)', pt:'Por quantidade de LP (atividade)', tl:'Ayon sa LP count (aktibidad)', fr:'Par nombre de LP (activité)' },
+  sort_tvl:     { ko:'유동성 큰 순 (안정성)', en:'By liquidity (stability)', id:'Urut likuiditas terbesar (stabilitas)', zh:'按流动性排序（稳定性）', ja:'流動性順（安定性）', es:'Por liquidez (estabilidad)', vi:'Theo thanh khoản (ổn định)', hi:'तरलता से (स्थिरता)', pt:'Por liquidez (estabilidade)', tl:'Ayon sa liquidity (katatagan)', fr:'Par liquidité (stabilité)' },
+  pi_info:      { ko:'Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬', en:'Pi DEX · Orderbook data · Sorted by volume', id:'Pi DEX · Data orderbook · Urut volume', zh:'Pi DEX · 订单簿交易数据 · 按交易量排序', ja:'Pi DEX · オーダーブックデータ · 取引量順', es:'Pi DEX · Datos orderbook · Ordenado por volumen', vi:'Pi DEX · Dữ liệu orderbook · Sắp xếp theo khối lượng', hi:'Pi DEX · ऑर्डरबुक डेटा · वॉल्यूम के अनुसार', pt:'Pi DEX · Dados orderbook · Ordenado por volume', tl:'Pi DEX · Orderbook data · Nakaayos ayon sa volume', fr:'Pi DEX · Données orderbook · Trié par volume' },
+  recommended:  { ko:'추천', en:'Top', id:'Unggulan', zh:'推荐', ja:'おすすめ', es:'Top', vi:'Nổi bật', hi:'अनुशंसित', pt:'Top', tl:'Inirerekomenda', fr:'Top' },
+  recent_trades:{ ko:'최근 거래', en:'Recent trades', id:'Transaksi terkini', zh:'最近交易', ja:'最近の取引', es:'Operaciones recientes', vi:'Giao dịch gần đây', hi:'हालिया ट्रेड', pt:'Negociações recentes', tl:'Kamakailang trades', fr:'Transactions récentes' },
+  lp_count:     { ko:'LP 수', en:'LP count', id:'Jml LP', zh:'LP 数', ja:'LP数', es:'LP count', vi:'Số LP', hi:'LP संख्या', pt:'Qtd LP', tl:'LP count', fr:'Nb LP' },
+  liquidity:    { ko:'유동성', en:'Liquidity', id:'Likuiditas', zh:'流动性', ja:'流動性', es:'Liquidez', vi:'Thanh khoản', hi:'तरलता', pt:'Liquidez', tl:'Liquidity', fr:'Liquidité' },
+  no_results:   { ko:'검색 결과 없음', en:'No results', id:'Tidak ada hasil', zh:'无结果', ja:'結果なし', es:'Sin resultados', vi:'Không có kết quả', hi:'कोई परिणाम नहीं', pt:'Sem resultados', tl:'Walang resulta', fr:'Aucun résultat' },
+  pool_fail:    { ko:'풀 목록 로드 실패', en:'Pool load failed', id:'Gagal memuat pool', zh:'池列表加载失败', ja:'プールリスト読み込み失敗', es:'Error al cargar pools', vi:'Lỗi tải danh sách pool', hi:'पूल सूची लोड विफल', pt:'Falha ao carregar pools', tl:'Nabigo ang pag-load ng pool', fr:'Échec chargement pools' },
+  pair_fail:    { ko:'페어 로드 실패', en:'Pair load failed', id:'Gagal memuat pasangan', zh:'交易对加载失败', ja:'ペア読み込み失敗', es:'Error al cargar pares', vi:'Lỗi tải cặp giao dịch', hi:'पेयर लोड विफल', pt:'Falha ao carregar pares', tl:'Nabigo ang pag-load ng pares', fr:'Échec chargement paires' },
+  no_trade_data:{ ko:'거래 데이터 없음', en:'No trade data', id:'Tidak ada data trading', zh:'无交易数据', ja:'取引データなし', es:'Sin datos de trading', vi:'Không có dữ liệu giao dịch', hi:'कोई ट्रेड डेटा नहीं', pt:'Sem dados de trading', tl:'Walang datos sa trade', fr:'Pas de données de trading' },
 
-  param_title:     { ko:'파라미터 설정', en:'Parameter Settings', id:'Pengaturan Parameter' },
-  p_records:       { ko:'데이터 건수 (5,000~10,000)', en:'Data count (5,000~10,000)', id:'Jumlah data (5.000~10.000)' },
-  p_capital:       { ko:'초기 자본', en:'Initial Capital', id:'Modal Awal' },
-  p_split:         { ko:'네이티브 초기 비율 (%)', en:'Native ratio (%)', id:'Rasio awal native (%)' },
-  p_spread:        { ko:'스프레드 (%)', en:'Spread (%)', id:'Spread (%)' },
-  p_order_size:    { ko:'주문 크기 (총자산 %)', en:'Order size (% of total)', id:'Ukuran order (% total)' },
-  p_layers:        { ko:'주문 레이어 수', en:'Order layers', id:'Jumlah layer order' },
-  p_stop:          { ko:'재고 중단 (%)', en:'Inventory stop (%)', id:'Batas inventori (%)' },
-  p_fee:           { ko:'수수료 (%)', en:'Fee (%)', id:'Biaya (%)' },
-  p_surge_ticks:   { ko:'급변 감지 틱', en:'Surge window (ticks)', id:'Tik deteksi lonjakan' },
-  p_surge_pct:     { ko:'급변 감지 (%)', en:'Surge threshold (%)', id:'Ambang lonjakan (%)' },
-  p_deposit:       { ko:'예치 금액', en:'Deposit amount', id:'Jumlah deposit' },
-  p_max_il:        { ko:'최대 비영구적 손실 (%)', en:'Max impermanent loss (%)', id:'Maks. kerugian impermanent (%)' },
-  p_target_roi:    { ko:'목표 수익률 (%)', en:'Target ROI (%)', id:'Target ROI (%)' },
+  param_title:  { ko:'파라미터 설정', en:'Parameter Settings', id:'Pengaturan Parameter', zh:'参数设置', ja:'パラメータ設定', es:'Ajustes de Parámetros', vi:'Cài đặt tham số', hi:'पैरामीटर सेटिंग', pt:'Configurações de Parâmetros', tl:'Mga Setting ng Parametro', fr:'Réglages des Paramètres' },
+  p_records:    { ko:'데이터 건수 (5,000~10,000)', en:'Data count (5,000~10,000)', id:'Jumlah data (5.000~10.000)', zh:'数据条数 (5,000~10,000)', ja:'データ件数 (5,000~10,000)', es:'Cantidad de datos (5.000~10.000)', vi:'Số bản ghi (5.000~10.000)', hi:'डेटा गणना (5,000~10,000)', pt:'Qtd dados (5.000~10.000)', tl:'Bilang ng data (5,000~10,000)', fr:'Nb de données (5 000~10 000)' },
+  p_capital:    { ko:'초기 자본', en:'Initial Capital', id:'Modal Awal', zh:'初始资金', ja:'初期資本', es:'Capital inicial', vi:'Vốn ban đầu', hi:'प्रारंभिक पूंजी', pt:'Capital inicial', tl:'Panimulang kapital', fr:'Capital initial' },
+  p_split:      { ko:'네이티브 초기 비율 (%)', en:'Native ratio (%)', id:'Rasio awal native (%)', zh:'原生代币初始比例 (%)', ja:'ネイティブ初期比率 (%)', es:'Ratio inicial nativo (%)', vi:'Tỷ lệ ban đầu native (%)', hi:'नेटिव प्रारंभिक अनुपात (%)', pt:'Proporção inicial nativa (%)', tl:'Native initial ratio (%)', fr:'Ratio natif initial (%)' },
+  p_spread:     { ko:'스프레드 (%)', en:'Spread (%)', id:'Spread (%)', zh:'价差 (%)', ja:'スプレッド (%)', es:'Spread (%)', vi:'Chênh lệch (%)', hi:'स्प्रेड (%)', pt:'Spread (%)', tl:'Spread (%)', fr:'Écart (%)' },
+  p_order_size: { ko:'주문 크기 (총자산 %)', en:'Order size (% of total)', id:'Ukuran order (% total)', zh:'订单大小 (总资产 %)', ja:'注文サイズ（総資産 %）', es:'Tamaño de orden (% total)', vi:'Kích thước lệnh (% tổng)', hi:'ऑर्डर साइज (कुल %)', pt:'Tamanho da ordem (% total)', tl:'Laki ng order (% ng total)', fr:"Taille d'ordre (% total)" },
+  p_layers:     { ko:'주문 레이어 수', en:'Order layers', id:'Jumlah layer order', zh:'订单层数', ja:'注文レイヤー数', es:'Capas de orden', vi:'Số lớp lệnh', hi:'ऑर्डर लेयर्स', pt:'Camadas de ordem', tl:'Bilang ng order layer', fr:"Couches d'ordres" },
+  p_stop:       { ko:'재고 중단 (%)', en:'Inventory stop (%)', id:'Batas inventori (%)', zh:'库存中断 (%)', ja:'在庫停止 (%)', es:'Parada por inventario (%)', vi:'Dừng tồn kho (%)', hi:'इन्वेंटरी स्टॉप (%)', pt:'Parada de inventário (%)', tl:'Inventory stop (%)', fr:'Arrêt inventaire (%)' },
+  p_fee:        { ko:'수수료 (%)', en:'Fee (%)', id:'Biaya (%)', zh:'手续费 (%)', ja:'手数料 (%)', es:'Comisión (%)', vi:'Phí (%)', hi:'शुल्क (%)', pt:'Taxa (%)', tl:'Bayad (%)', fr:'Frais (%)' },
+  p_surge_ticks:{ ko:'급변 감지 틱', en:'Surge window (ticks)', id:'Tik deteksi lonjakan', zh:'价格急变检测间隔', ja:'急変検出ティック', es:'Ticks de detección de pico', vi:'Ticks phát hiện biến động', hi:'उछाल विंडो (टिक)', pt:'Janela de surto (ticks)', tl:'Surge detection ticks', fr:'Fenêtre de pic (ticks)' },
+  p_surge_pct:  { ko:'급변 감지 (%)', en:'Surge threshold (%)', id:'Ambang lonjakan (%)', zh:'价格急变检测 (%)', ja:'急変検出 (%)', es:'Umbral de pico (%)', vi:'Ngưỡng biến động (%)', hi:'उछाल सीमा (%)', pt:'Limiar de surto (%)', tl:'Surge threshold (%)', fr:'Seuil de pic (%)' },
+  p_deposit:    { ko:'예치 금액', en:'Deposit amount', id:'Jumlah deposit', zh:'存款金额', ja:'預入金額', es:'Monto de depósito', vi:'Số tiền gửi', hi:'जमा राशि', pt:'Valor do depósito', tl:'Halaga ng deposit', fr:'Montant du dépôt' },
+  p_max_il:     { ko:'최대 비영구적 손실 (%)', en:'Max impermanent loss (%)', id:'Maks. kerugian impermanent (%)', zh:'最大无常损失 (%)', ja:'最大無常損失 (%)', es:'Pérdida impermanente máx. (%)', vi:'Tổn thất vô thường tối đa (%)', hi:'अधिकतम अस्थायी हानि (%)', pt:'Perda impermanente máx. (%)', tl:'Max impermanent loss (%)', fr:'Perte impermanente max. (%)' },
+  p_target_roi: { ko:'목표 수익률 (%)', en:'Target ROI (%)', id:'Target ROI (%)', zh:'目标收益率 (%)', ja:'目標ROI (%)', es:'ROI objetivo (%)', vi:'ROI mục tiêu (%)', hi:'लक्ष्य ROI (%)', pt:'ROI alvo (%)', tl:'Target ROI (%)', fr:'ROI cible (%)' },
 
-  run_title:       { ko:'데이터 수집 및 백테스트', en:'Fetching Data & Backtesting', id:'Pengambilan Data & Backtest' },
-  run_start:       { ko:'시작 중...', en:'Starting...', id:'Memulai...' },
-  run_fetching:    { ko:'건 수신 중...', en:'records fetching...', id:'data sedang diambil...' },
-  run_running:     { ko:'백테스트 실행 중...', en:'Running backtest...', id:'Menjalankan backtest...' },
-  run_done:        { ko:'완료!', en:'Done!', id:'Selesai!' },
-  run_req:         { ko:'건 요청', en:'records requested', id:'data diminta' },
-  run_received:    { ko:'건 수신', en:'records received', id:'data diterima' },
-  run_valid:       { ko:'유효 거래', en:'valid trades', id:'transaksi valid' },
-  run_complete:    { ko:'완료', en:'complete', id:'selesai' },
-  run_too_few:     { ko:'데이터가 너무 적습니다 (10건 미만)', en:'Too little data (under 10 records)', id:'Data terlalu sedikit (kurang dari 10)' },
-  run_error:       { ko:'오류', en:'Error', id:'Kesalahan' },
+  run_title:    { ko:'데이터 수집 및 백테스트', en:'Fetching Data & Backtesting', id:'Pengambilan Data & Backtest', zh:'数据采集与回测', ja:'データ収集＆バックテスト', es:'Recopilación de datos y Backtest', vi:'Thu thập dữ liệu & Backtest', hi:'डेटा संग्रह और बैकटेस्ट', pt:'Coleta de dados e Backtest', tl:'Pagkuha ng data at Backtest', fr:'Collecte de données et Backtest' },
+  run_start:    { ko:'시작 중...', en:'Starting...', id:'Memulai...', zh:'启动中...', ja:'開始中...', es:'Iniciando...', vi:'Đang bắt đầu...', hi:'शुरू हो रहा है...', pt:'Iniciando...', tl:'Nagsisimula...', fr:'Démarrage...' },
+  run_fetching: { ko:'건 수신 중...', en:'records fetching...', id:'data sedang diambil...', zh:'条接收中...', ja:'件取得中...', es:'registros descargando...', vi:'bản ghi đang tải...', hi:'रिकॉर्ड प्राप्त हो रहे हैं...', pt:'registros buscando...', tl:'mga rekord kinukuha...', fr:'enregistrements reçus...' },
+  run_running:  { ko:'백테스트 실행 중...', en:'Running backtest...', id:'Menjalankan backtest...', zh:'回测运行中...', ja:'バックテスト実行中...', es:'Ejecutando backtest...', vi:'Đang chạy backtest...', hi:'बैकटेस्ट चल रहा है...', pt:'Executando backtest...', tl:'Nagpapatakbo ng backtest...', fr:'Exécution du backtest...' },
+  run_done:     { ko:'완료!', en:'Done!', id:'Selesai!', zh:'完成！', ja:'完了！', es:'¡Listo!', vi:'Hoàn thành!', hi:'हो गया!', pt:'Concluído!', tl:'Tapos na!', fr:'Terminé !' },
+  run_req:      { ko:'건 요청', en:'records requested', id:'data diminta', zh:'条已请求', ja:'件リクエスト', es:'registros solicitados', vi:'bản ghi đã yêu cầu', hi:'रिकॉर्ड अनुरोधित', pt:'registros solicitados', tl:'mga rekord hiniling', fr:'enregistrements demandés' },
+  run_received: { ko:'건 수신', en:'records received', id:'data diterima', zh:'条已接收', ja:'件受信', es:'registros recibidos', vi:'bản ghi đã nhận', hi:'रिकॉर्ड प्राप्त', pt:'registros recebidos', tl:'mga rekord natanggap', fr:'enregistrements reçus' },
+  run_valid:    { ko:'유효 거래', en:'valid trades', id:'transaksi valid', zh:'有效交易', ja:'有効取引', es:'operaciones válidas', vi:'giao dịch hợp lệ', hi:'वैध ट्रेड', pt:'negociações válidas', tl:'valid na trades', fr:'transactions valides' },
+  run_complete: { ko:'완료', en:'complete', id:'selesai', zh:'完成', ja:'完了', es:'completo', vi:'hoàn thành', hi:'पूर्ण', pt:'completo', tl:'kumpleto', fr:'complet' },
+  run_too_few:  { ko:'데이터가 너무 적습니다 (10건 미만)', en:'Too little data (under 10 records)', id:'Data terlalu sedikit (kurang dari 10)', zh:'数据太少（不足10条）', ja:'データが少なすぎます（10件未満）', es:'Datos insuficientes (menos de 10)', vi:'Dữ liệu quá ít (dưới 10 bản ghi)', hi:'डेटा बहुत कम है (10 से कम)', pt:'Dados insuficientes (menos de 10)', tl:'Napakaliit ng data (wala pang 10)', fr:'Données insuffisantes (moins de 10)' },
+  run_error:    { ko:'오류', en:'Error', id:'Kesalahan', zh:'错误', ja:'エラー', es:'Error', vi:'Lỗi', hi:'त्रुटि', pt:'Erro', tl:'Error', fr:'Erreur' },
 
-  res_summary:     { ko:'종합 결과', en:'Summary', id:'Ringkasan' },
-  res_pnl:         { ko:'총 손익', en:'Total P&L', id:'Total P&L' },
-  res_spread:      { ko:'스프레드 수익', en:'Spread profit', id:'Profit spread' },
-  res_inv:         { ko:'재고 평가손익', en:'Inventory P&L', id:'P&L inventori' },
-  res_fees:        { ko:'수수료 합계', en:'Total fees', id:'Total biaya' },
-  res_stats:       { ko:'거래 통계', en:'Trade Statistics', id:'Statistik Trading' },
-  res_fills:       { ko:'체결 횟수', en:'Fill count', id:'Jumlah fill' },
-  res_ticks:       { ko:'분석 틱 수', en:'Ticks analyzed', id:'Tik dianalisis' },
-  res_price_chg:   { ko:'가격 변화', en:'Price change', id:'Perubahan harga' },
-  res_stop:        { ko:'중단 사유', en:'Stop reason', id:'Alasan berhenti' },
-  res_log:         { ko:'거래 로그 (최근 20건)', en:'Trade log (last 20)', id:'Log trading (20 terakhir)' },
-  res_no_fills:    { ko:'체결 없음', en:'No fills', id:'Tidak ada fill' },
-  res_asset_chart: { ko:'총 자산 추이 (USDC)', en:'Total Asset Trend (USDC)', id:'Tren Total Aset (USDC)' },
-  res_lp_title:    { ko:'LP 수익 결과', en:'LP Return Summary', id:'Ringkasan Return LP' },
-  res_lp_pnl:      { ko:'LP 총 손익', en:'LP Total P&L', id:'Total P&L LP' },
-  res_fee_inc:     { ko:'수수료 수익', en:'Fee income', id:'Pendapatan biaya' },
-  res_il:          { ko:'비영구적 손실', en:'Impermanent loss', id:'Kerugian impermanent' },
-  res_vs_hodl:     { ko:'HODL 대비', en:'vs HODL', id:'vs HODL' },
-  res_lp_share:    { ko:'내 LP 지분', en:'My LP share', id:'Bagian LP saya' },
-  res_exit:        { ko:'종료 사유', en:'Exit reason', id:'Alasan keluar' },
-  res_lp_chart:    { ko:'LP vs HODL 자산 추이 (USDC)', en:'LP vs HODL Trend (USDC)', id:'Tren LP vs HODL (USDC)' },
-  res_none:        { ko:'결과 없음', en:'No result', id:'Tidak ada hasil' },
+  res_summary:  { ko:'종합 결과', en:'Summary', id:'Ringkasan', zh:'综合结果', ja:'総合結果', es:'Resumen', vi:'Tổng kết', hi:'सारांश', pt:'Resumo', tl:'Buod', fr:'Résumé' },
+  res_pnl:      { ko:'총 손익', en:'Total P&L', id:'Total P&L', zh:'总盈亏', ja:'総損益', es:'P&L Total', vi:'Tổng P&L', hi:'कुल P&L', pt:'P&L Total', tl:'Kabuuang P&L', fr:'P&L Total' },
+  res_spread:   { ko:'스프레드 수익', en:'Spread profit', id:'Profit spread', zh:'价差收益', ja:'スプレッド収益', es:'Ganancia de spread', vi:'Lợi nhuận spread', hi:'स्प्रेड लाभ', pt:'Lucro de spread', tl:'Kita sa spread', fr:'Profit de spread' },
+  res_inv:      { ko:'재고 평가손익', en:'Inventory P&L', id:'P&L inventori', zh:'库存评估损益', ja:'在庫評価損益', es:'P&L de inventario', vi:'P&L tồn kho', hi:'इन्वेंटरी P&L', pt:'P&L de inventário', tl:'Inventory P&L', fr:"P&L d'inventaire" },
+  res_fees:     { ko:'수수료 합계', en:'Total fees', id:'Total biaya', zh:'总手续费', ja:'手数料合計', es:'Total comisiones', vi:'Tổng phí', hi:'कुल शुल्क', pt:'Total de taxas', tl:'Kabuuang bayad', fr:'Total frais' },
+  res_stats:    { ko:'거래 통계', en:'Trade Statistics', id:'Statistik Trading', zh:'交易统计', ja:'取引統計', es:'Estadísticas de Trading', vi:'Thống kê giao dịch', hi:'ट्रेड आँकड़े', pt:'Estatísticas de Trading', tl:'Mga Istatistika sa Trade', fr:'Statistiques de Trading' },
+  res_fills:    { ko:'체결 횟수', en:'Fill count', id:'Jumlah fill', zh:'成交次数', ja:'約定回数', es:'Cantidad de fills', vi:'Số lần khớp lệnh', hi:'फिल की संख्या', pt:'Qtd de fills', tl:'Bilang ng fill', fr:'Nombre de fills' },
+  res_ticks:    { ko:'분석 틱 수', en:'Ticks analyzed', id:'Tik dianalisis', zh:'分析周期数', ja:'分析ティック数', es:'Ticks analizados', vi:'Số ticks phân tích', hi:'विश्लेषित टिक्स', pt:'Ticks analisados', tl:'Mga tick na sinuri', fr:'Ticks analysés' },
+  res_price_chg:{ ko:'가격 변화', en:'Price change', id:'Perubahan harga', zh:'价格变化', ja:'価格変化', es:'Cambio de precio', vi:'Thay đổi giá', hi:'मूल्य परिवर्तन', pt:'Variação de preço', tl:'Pagbabago ng presyo', fr:'Variation de prix' },
+  res_stop:     { ko:'중단 사유', en:'Stop reason', id:'Alasan berhenti', zh:'中断原因', ja:'停止理由', es:'Razón de parada', vi:'Lý do dừng', hi:'रोकने का कारण', pt:'Motivo de parada', tl:'Dahilan ng paghinto', fr:"Raison d'arrêt" },
+  res_log:      { ko:'거래 로그 (최근 20건)', en:'Trade log (last 20)', id:'Log trading (20 terakhir)', zh:'交易日志（最近20条）', ja:'取引ログ（最近20件）', es:'Registro de operaciones (últimas 20)', vi:'Nhật ký giao dịch (20 gần nhất)', hi:'ट्रेड लॉग (अंतिम 20)', pt:'Log de negociações (últimas 20)', tl:'Trade log (huling 20)', fr:'Journal de trading (20 derniers)' },
+  res_no_fills: { ko:'체결 없음', en:'No fills', id:'Tidak ada fill', zh:'无成交', ja:'約定なし', es:'Sin fills', vi:'Không có khớp lệnh', hi:'कोई फिल नहीं', pt:'Sem fills', tl:'Walang fill', fr:'Pas de fills' },
+  res_asset_chart:{ ko:'총 자산 추이 (USDC)', en:'Total Asset Trend (USDC)', id:'Tren Total Aset (USDC)', zh:'总资产趋势 (USDC)', ja:'総資産推移 (USDC)', es:'Tendencia de activos totales (USDC)', vi:'Xu hướng tổng tài sản (USDC)', hi:'कुल संपत्ति प्रवृत्ति (USDC)', pt:'Tendência de ativos totais (USDC)', tl:'Trend ng kabuuang asset (USDC)', fr:'Tendance des actifs totaux (USDC)' },
+  res_lp_title: { ko:'LP 수익 결과', en:'LP Return Summary', id:'Ringkasan Return LP', zh:'LP 收益结果', ja:'LP 収益結果', es:'Resumen de retorno LP', vi:'Kết quả lợi nhuận LP', hi:'LP रिटर्न सारांश', pt:'Resumo de retorno LP', tl:'LP Return Summary', fr:'Résumé du rendement LP' },
+  res_lp_pnl:   { ko:'LP 총 손익', en:'LP Total P&L', id:'Total P&L LP', zh:'LP 总盈亏', ja:'LP 総損益', es:'P&L Total LP', vi:'Tổng P&L LP', hi:'LP कुल P&L', pt:'P&L Total LP', tl:'LP Total P&L', fr:'P&L Total LP' },
+  res_fee_inc:  { ko:'수수료 수익', en:'Fee income', id:'Pendapatan biaya', zh:'手续费收益', ja:'手数料収益', es:'Ingresos por comisiones', vi:'Thu nhập phí', hi:'शुल्क आय', pt:'Renda de taxas', tl:'Kita sa bayad', fr:'Revenus de frais' },
+  res_il:       { ko:'비영구적 손실', en:'Impermanent loss', id:'Kerugian impermanent', zh:'无常损失', ja:'無常損失', es:'Pérdida impermanente', vi:'Tổn thất vô thường', hi:'अस्थायी हानि', pt:'Perda impermanente', tl:'Impermanent loss', fr:'Perte impermanente' },
+  res_vs_hodl:  { ko:'HODL 대비', en:'vs HODL', id:'vs HODL', zh:'相比 HODL', ja:'HODL 対比', es:'vs HODL', vi:'so với HODL', hi:'HODL की तुलना में', pt:'vs HODL', tl:'kumpara sa HODL', fr:'vs HODL' },
+  res_lp_share: { ko:'내 LP 지분', en:'My LP share', id:'Bagian LP saya', zh:'我的 LP 份额', ja:'私のLP持分', es:'Mi parte LP', vi:'Phần LP của tôi', hi:'मेरा LP हिस्सा', pt:'Minha cota LP', tl:'Aking LP share', fr:'Ma part LP' },
+  res_exit:     { ko:'종료 사유', en:'Exit reason', id:'Alasan keluar', zh:'退出原因', ja:'終了理由', es:'Razón de salida', vi:'Lý do thoát', hi:'बाहर निकलने का कारण', pt:'Motivo de saída', tl:'Dahilan ng paglabas', fr:'Raison de sortie' },
+  res_lp_chart: { ko:'LP vs HODL 자산 추이 (USDC)', en:'LP vs HODL Trend (USDC)', id:'Tren LP vs HODL (USDC)', zh:'LP vs HODL 资产趋势 (USDC)', ja:'LP vs HODL 資産推移 (USDC)', es:'Tendencia LP vs HODL (USDC)', vi:'Xu hướng LP vs HODL (USDC)', hi:'LP vs HODL संपत्ति प्रवृत्ति (USDC)', pt:'Tendência LP vs HODL (USDC)', tl:'LP vs HODL trend (USDC)', fr:'Tendance LP vs HODL (USDC)' },
+  res_none:     { ko:'결과 없음', en:'No result', id:'Tidak ada hasil', zh:'无结果', ja:'結果なし', es:'Sin resultado', vi:'Không có kết quả', hi:'कोई परिणाम नहीं', pt:'Sem resultado', tl:'Walang resulta', fr:'Aucun résultat' },
 
-  ana_no_fills:    { ko:'⚠️ 체결 0회 — 스프레드를 줄이거나 레이어를 늘려보세요', en:'⚠️ 0 fills — Try reducing spread or adding layers', id:'⚠️ 0 fill — Kurangi spread atau tambah layer' },
-  ana_good:        { ko:'✅ 스프레드 수익과 전체 손익 모두 플러스', en:'✅ Both spread profit and total P&L are positive', id:'✅ Profit spread dan total P&L keduanya positif' },
-  ana_inv_loss:    { ko:'⚠️ 스프레드 수익은 났지만 가격 변동으로 재고 손실이 더 큼', en:'⚠️ Spread profit positive but inventory loss exceeded it', id:'⚠️ Profit spread ada tapi kerugian inventori lebih besar' },
-  ana_bad:         { ko:'❌ 체결 부족 또는 수수료가 수익 초과', en:'❌ Too few fills or fees exceeded profit', id:'❌ Fill kurang atau biaya melebihi profit' },
-  ana_amm_good:    { ko:'✅ 수수료 수익이 비영구적 손실을 상쇄', en:'✅ Fee income offsets impermanent loss', id:'✅ Pendapatan biaya mengimbangi kerugian impermanent' },
-  ana_amm_bad:     { ko:'⚠️ 비영구적 손실이 수수료 수익보다 큼', en:'⚠️ Impermanent loss exceeds fee income', id:'⚠️ Kerugian impermanent melebihi pendapatan biaya' },
+  ana_no_fills: { ko:'⚠️ 체결 0회 — 스프레드를 줄이거나 레이어를 늘려보세요', en:'⚠️ 0 fills — Try reducing spread or adding layers', id:'⚠️ 0 fill — Kurangi spread atau tambah layer', zh:'⚠️ 成交0次 — 请缩小价差或增加层数', ja:'⚠️ 約定0回 — スプレッドを縮めるかレイヤーを増やしてください', es:'⚠️ 0 fills — Reduzca el spread o añada capas', vi:'⚠️ 0 lần khớp — Giảm spread hoặc thêm lớp lệnh', hi:'⚠️ 0 फिल — स्प्रेड कम करें या लेयर बढ़ाएं', pt:'⚠️ 0 fills — Reduza o spread ou adicione camadas', tl:'⚠️ 0 fill — Bawasan ang spread o dagdagan ang layer', fr:'⚠️ 0 fills — Réduisez le spread ou ajoutez des couches' },
+  ana_good:     { ko:'✅ 스프레드 수익과 전체 손익 모두 플러스', en:'✅ Both spread profit and total P&L are positive', id:'✅ Profit spread dan total P&L keduanya positif', zh:'✅ 价差收益和总盈亏均为正', ja:'✅ スプレッド収益と総損益がともにプラス', es:'✅ Ganancia de spread y P&L total ambos positivos', vi:'✅ Lợi nhuận spread và tổng P&L đều dương', hi:'✅ स्प्रेड लाभ और कुल P&L दोनों सकारात्मक', pt:'✅ Lucro de spread e P&L total ambos positivos', tl:'✅ Parehong positibo ang spread profit at kabuuang P&L', fr:'✅ Profit de spread et P&L total tous deux positifs' },
+  ana_inv_loss: { ko:'⚠️ 스프레드 수익은 났지만 가격 변동으로 재고 손실이 더 큼', en:'⚠️ Spread profit positive but inventory loss exceeded it', id:'⚠️ Profit spread ada tapi kerugian inventori lebih besar', zh:'⚠️ 价差收益为正但价格波动导致库存损失更大', ja:'⚠️ スプレッド収益はプラスだが価格変動で在庫損失が大きい', es:'⚠️ Spread positivo pero pérdida de inventario superó las ganancias', vi:'⚠️ Lợi nhuận spread dương nhưng tổn thất tồn kho lớn hơn', hi:'⚠️ स्प्रेड लाभ था लेकिन इन्वेंटरी हानि अधिक', pt:'⚠️ Spread positivo mas perda de inventário foi maior', tl:'⚠️ Positibo ang spread profit ngunit mas malaki ang inventory loss', fr:"⚠️ Spread positif mais la perte d'inventaire l'a dépassé" },
+  ana_bad:      { ko:'❌ 체결 부족 또는 수수료가 수익 초과', en:'❌ Too few fills or fees exceeded profit', id:'❌ Fill kurang atau biaya melebihi profit', zh:'❌ 成交不足或手续费超过收益', ja:'❌ 約定不足または手数料が収益超え', es:'❌ Fills insuficientes o comisiones superaron ganancias', vi:'❌ Quá ít khớp lệnh hoặc phí vượt lợi nhuận', hi:'❌ बहुत कम फिल या शुल्क लाभ से अधिक', pt:'❌ Poucos fills ou taxas superaram o lucro', tl:'❌ Kulang ang fill o mas mataas ang bayad kaysa kita', fr:'❌ Trop peu de fills ou frais ont dépassé les profits' },
+  ana_amm_good: { ko:'✅ 수수료 수익이 비영구적 손실을 상쇄', en:'✅ Fee income offsets impermanent loss', id:'✅ Pendapatan biaya mengimbangi kerugian impermanent', zh:'✅ 手续费收益抵消了无常损失', ja:'✅ 手数料収益が無常損失を相殺', es:'✅ Los ingresos por comisiones compensaron la pérdida impermanente', vi:'✅ Thu nhập phí bù đắp tổn thất vô thường', hi:'✅ शुल्क आय ने अस्थायी हानि की भरपाई की', pt:'✅ Renda de taxas compensou a perda impermanente', tl:'✅ Nayosi ng kita sa bayad ang impermanent loss', fr:'✅ Les revenus de frais ont compensé la perte impermanente' },
+  ana_amm_bad:  { ko:'⚠️ 비영구적 손실이 수수료 수익보다 큼', en:'⚠️ Impermanent loss exceeds fee income', id:'⚠️ Kerugian impermanent melebihi pendapatan biaya', zh:'⚠️ 无常损失超过手续费收益', ja:'⚠️ 無常損失が手数料収益を超えた', es:'⚠️ La pérdida impermanente superó los ingresos por comisiones', vi:'⚠️ Tổn thất vô thường vượt thu nhập phí', hi:'⚠️ अस्थायी हानि शुल्क आय से अधिक', pt:'⚠️ Perda impermanente superou renda de taxas', tl:'⚠️ Mas mataas ang impermanent loss kaysa kita sa bayad', fr:'⚠️ La perte impermanente a dépassé les revenus de frais' },
 
-  chart_total:     { ko:'총 자산', en:'Total Asset', id:'Total Aset' },
-  chart_lp:        { ko:'LP 자산', en:'LP Asset', id:'Aset LP' },
-  chart_hodl:      { ko:'HODL', en:'HODL', id:'HODL' },
+  chart_total:  { ko:'총 자산', en:'Total Asset', id:'Total Aset', zh:'总资产', ja:'総資産', es:'Activos Totales', vi:'Tổng tài sản', hi:'कुल संपत्ति', pt:'Ativos Totais', tl:'Kabuuang asset', fr:'Actifs Totaux' },
+  chart_lp:     { ko:'LP 자산', en:'LP Asset', id:'Aset LP', zh:'LP 资产', ja:'LP資産', es:'Activos LP', vi:'Tài sản LP', hi:'LP संपत्ति', pt:'Ativos LP', tl:'LP asset', fr:'Actifs LP' },
+  chart_hodl:   { ko:'HODL', en:'HODL', id:'HODL', zh:'HODL', ja:'HODL', es:'HODL', vi:'HODL', hi:'HODL', pt:'HODL', tl:'HODL', fr:'HODL' },
 };
 
-// t(s) — 섹션 타이틀: bilingual 모드에서 두 줄 병기
-function t(s) {
-  if (LANG === 'ko') return s.ko;
-  if (LANG === 'en') return s.en;
-  if (LANG === 'id') return s.id;
-  return `${s.ko}<span class="t-en">${s.en}</span>`;
-}
-
-// tl(s) — 폼 라벨: bilingual 모드에서 인라인 병기
-function tl(s) {
-  if (LANG === 'ko') return s.ko;
-  if (LANG === 'en') return s.en;
-  if (LANG === 'id') return s.id;
-  return `${s.ko} <span class="t-en-i">· ${s.en}</span>`;
-}
-
-// tp(s) — 일반 텍스트: bilingual 모드에서 / 구분 병기
-function tp(s) {
-  if (LANG === 'ko') return s.ko;
-  if (LANG === 'en') return s.en;
-  if (LANG === 'id') return s.id;
-  return `${s.ko} / ${s.en}`;
-}
+function t(s)  { return s[LANG] ?? s.ko; }
+function tl(s) { return s[LANG] ?? s.ko; }
+function tp(s) { return s[LANG] ?? s.ko; }
 
 function setLang(lang) {
   LANG = lang;
@@ -142,8 +136,8 @@ function setLang(lang) {
 }
 
 const NETWORKS = {
-  stellar: { name: tp({ ko:'Stellar 메인넷', en:'Stellar Mainnet' }), horizon: 'https://horizon.stellar.org',    native: 'XLM' },
-  pi:      { name: tp({ ko:'Pi DEX',          en:'Pi DEX'          }), horizon: 'https://api.mainnet.minepi.com', native: 'PI'  },
+  stellar: { name: tp(S.stellar_name), horizon: 'https://horizon.stellar.org',    native: 'XLM' },
+  pi:      { name: tp(S.pi_name),      horizon: 'https://api.mainnet.minepi.com', native: 'PI'  },
 };
 
 const state = {
@@ -431,7 +425,12 @@ function fmtUsdc(n) {
 // ═══════════════════════════════════════════════════════
 
 function renderLangSwitch() {
-  const langs = [{ code:'bilingual', label:'한/EN' }, { code:'id', label:'ID' }, { code:'ko', label:'한' }, { code:'en', label:'EN' }];
+  const langs = [
+    { code:'ko', label:'한' }, { code:'en', label:'EN' }, { code:'id', label:'ID' },
+    { code:'zh', label:'中' }, { code:'ja', label:'日' }, { code:'es', label:'ES' },
+    { code:'vi', label:'VI' }, { code:'hi', label:'हि' }, { code:'pt', label:'PT' },
+    { code:'tl', label:'TL' }, { code:'fr', label:'FR' },
+  ];
   document.getElementById('lang-switch').innerHTML = langs.map(l =>
     `<button class="lang-btn${LANG === l.code ? ' active' : ''}" onclick="setLang('${l.code}')">${l.label}</button>`
   ).join('');
@@ -771,7 +770,7 @@ function renderParamsStep(el, nav) {
     </div>
     `}
   `;
-  navBtns(nav, true, 'goToRun', `▶ ${S.btn_run.ko} <span class="t-en-i">${S.btn_run.en}</span>`);
+  navBtns(nav, true, 'goToRun', `▶ ${t(S.btn_run)}`);
 }
 
 function goToRun() {
