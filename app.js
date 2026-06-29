@@ -895,7 +895,7 @@ function piPairsHtml() {
     return `
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
         <div class="pool-pair">${poolLabel(p)}</div>
-        <div class="pool-meta">${tl(S.recent_trades)}: <strong style="color:#e2e8f0">${p.tradeCount}</strong> / ${piTotalFetched.toLocaleString()}건</div>
+        <div class="pool-meta">${tl(S.recent_trades)}: <strong style="color:#e2e8f0">${p.tradeCount}</strong> / ${piTotalFetched.toLocaleString()}</div>
       </div>`;
   }).join('') + pagerHtml(items.length);
 }
