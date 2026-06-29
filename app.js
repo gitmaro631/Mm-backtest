@@ -524,16 +524,39 @@ function toggleInfo() {
   if (!hidden) renderInfoPanel();
 }
 
+const _LANG_META = {
+  ko: { flag: '🇰🇷', name: '한국어' },
+  en: { flag: '🇺🇸', name: 'English' },
+  id: { flag: '🇮🇩', name: 'Indonesia' },
+  zh: { flag: '🇨🇳', name: '中文' },
+  ja: { flag: '🇯🇵', name: '日本語' },
+  es: { flag: '🇪🇸', name: 'Español' },
+  vi: { flag: '🇻🇳', name: 'Tiếng Việt' },
+  hi: { flag: '🇮🇳', name: 'हिन्दी' },
+  pt: { flag: '🇧🇷', name: 'Português' },
+  tl: { flag: '🇵🇭', name: 'Filipino' },
+  fr: { flag: '🇫🇷', name: 'Français' },
+};
+document.addEventListener('click', e => {
+  if (!e.target.closest('.lang-dropdown')) document.getElementById('lang-menu')?.classList.remove('open');
+});
+function toggleLangMenu() { document.getElementById('lang-menu')?.classList.toggle('open'); }
 function renderLangSwitch() {
-  const langs = [
-    { code:'ko', label:'한' }, { code:'en', label:'EN' }, { code:'id', label:'ID' },
-    { code:'zh', label:'中' }, { code:'ja', label:'日' }, { code:'es', label:'ES' },
-    { code:'vi', label:'VI' }, { code:'hi', label:'हि' }, { code:'pt', label:'PT' },
-    { code:'tl', label:'TL' }, { code:'fr', label:'FR' },
-  ];
-  document.getElementById('lang-switch').innerHTML = langs.map(l =>
-    `<button class="lang-btn${LANG === l.code ? ' active' : ''}" onclick="setLang('${l.code}')">${l.label}</button>`
-  ).join('');
+  const el = document.getElementById('lang-switch');
+  if (!el) return;
+  const m = _LANG_META[LANG] || _LANG_META.en;
+  el.innerHTML = `<div class="lang-dropdown">
+    <button class="lang-selected" onclick="toggleLangMenu()">
+      <span class="lang-flag">${m.flag}</span><span>${m.name}</span><span class="lang-arrow">▾</span>
+    </button>
+    <div class="lang-menu" id="lang-menu">
+      ${Object.keys(_LANG_META).map(l => {
+        const lm = _LANG_META[l];
+        return `<div class="lang-option${l === LANG ? ' active' : ''}" onclick="setLang('${l}')">
+          <span class="lang-flag">${lm.flag}</span><span>${lm.name}</span></div>`;
+      }).join('')}
+    </div>
+  </div>`;
 }
 
 function renderApp() {
