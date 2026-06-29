@@ -218,12 +218,8 @@ async function fetchPools() {
         };
       })
       .filter(p => p.reserves.length === 2 && p.reserves.some(r => r.asset === 'native'));
-  } catch (_) {
-    // Horizon 폴백
-    const base = horizonBase();
-    const r = await apiFetch(`${base}/liquidity_pools?reserves_asset_type=native&limit=200&order=desc`);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return (await r.json())._embedded?.records || [];
+  } catch (e) {
+    throw new Error(`Stellar Expert API 연결 실패: ${e.message}`);
   }
 }
 
