@@ -270,6 +270,7 @@ function runOrderbookBacktest(trades, p) {
   let profit = 0, fees = 0, fills = 0;
   let stopped = false, stopReason = '';
   const log = [], snapshots = [], priceWin = [];
+  let stopIdx = trades.length - 1;
 
   for (let i = 0; i < trades.length; i++) {
     if (stopped) break;
@@ -281,6 +282,7 @@ function runOrderbookBacktest(trades, p) {
       const chg = Math.abs(priceWin.at(-1) - priceWin[0]) / priceWin[0] * 100;
       if (chg >= p.surgePct) {
         stopped = true; stopReason = `급변 감지 (${chg.toFixed(2)}%)`;
+        stopIdx = i;
         log.push({ type: 'stop', msg: stopReason }); break;
       }
     }
@@ -290,12 +292,16 @@ function runOrderbookBacktest(trades, p) {
 
     if (nativeRatio > p.stopRatio) {
       stopped = true; stopReason = `네이티브 재고 ${nativeRatio.toFixed(1)}% 초과`;
+      stopIdx = i;
       log.push({ type: 'stop', msg: stopReason }); break;
     }
     if (nativeRatio < (100 - p.stopRatio)) {
       stopped = true; stopReason = `USDC 재고 ${(100-nativeRatio).toFixed(1)}% 초과`;
+      stopIdx = i;
       log.push({ type: 'stop', msg: stopReason }); break;
     }
+
+    stopIdx = i;
 
     if (i > 0) {
       const priceUp  = mid >= trades[i-1].price;
@@ -329,13 +335,13 @@ function runOrderbookBacktest(trades, p) {
     }
   }
 
-  const finalPx  = trades.at(-1).price;
+  const finalPx  = trades[stopIdx].price;
   const totalNow = usdc + native * finalPx;
   const pnl      = totalNow - p.totalUsdc;
 
   return {
     type: 'orderbook',
-    ticks: trades.length, fills,
+    ticks: stopIdx + 1, fills,
     priceStart: trades[0].price, priceEnd: finalPx,
     priceChg: (finalPx - trades[0].price) / trades[0].price * 100,
     totalStart: p.totalUsdc, totalNow,
@@ -981,7 +987,7 @@ function obResultHtml(r) {
       <div class="stat-row"><span class="label">${tl(S.res_pnl)}</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
       <div class="stat-row"><span class="label">${tl(S.res_spread)}</span>${fmtUsdc(r.spreadProfit)}</div>
       <div class="stat-row"><span class="label">${tl(S.res_inv)}</span>${fmtUsdc(r.inventoryPnl)}</div>
-      <div class="stat-row"><span class="label">${tl(S.res_fees)}</span><span class="value negative">-${fmt(r.fees)} USDC</span></div>
+      <div class="stat-row"><span class="label">${tl(S.res_fees)}</span><span class="value ${r.fees >= 0.005 ? 'negative' : 'neutral'}">${r.fees >= 0.005 ? '-' : ''}${fmt(r.fees)} USDC</span></div>
     </div>
     <div class="result-card">
       <h3>${t(S.res_stats)}</h3>
