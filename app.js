@@ -320,12 +320,12 @@ async function fetchTradesForPool(pool, total, onProgress) {
   return paginate(`${horizonBase()}/liquidity_pools/${pool.id}/trades`, params, total, onProgress);
 }
 
-async function fetchWithRetry(url, retries = 3) {
+async function fetchWithRetry(url, retries = 5) {
   for (let i = 0; i < retries; i++) {
     const r = await apiFetch(url);
     if (r.ok) return r;
     if (r.status === 503 || r.status === 429) {
-      await sleep(1500 * (i + 1));
+      await sleep(2000 * (i + 1));
       continue;
     }
     throw new Error(`HTTP ${r.status}`);
@@ -1487,6 +1487,8 @@ async function runAutoScan() {
           : `IL ${bestParams.maxILPct}% · 목표ROI ${bestParams.targetRoiPct}%`;
         log(`✓ ${label}: ROI <strong style="color:${bestRoi>=0?'#68d391':'#fc8181'}">${roiStr}%</strong> (${hint})`);
       }
+
+      if (i < selected.length - 1) await sleep(800);
     }
 
     state.scanResults.sort((a, b) => b.roi - a.roi);
