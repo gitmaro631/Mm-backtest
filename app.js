@@ -28,6 +28,7 @@ const S = {
   btn_prev:     { ko:'이전',          en:'Back',              id:'Kembali',         zh:'上一步',        ja:'戻る',              es:'Atrás',            vi:'Quay lại',           hi:'पिछला',          pt:'Voltar',          tl:'Bumalik',           fr:'Retour' },
   btn_run:      { ko:'백테스트 시작', en:'Start Backtest',    id:'Mulai Backtest',  zh:'开始回测',      ja:'バックテスト開始',  es:'Iniciar Backtest', vi:'Bắt đầu Backtest',   hi:'बैकटेस्ट शुरू',  pt:'Iniciar Backtest', tl:'Simulan ang Backtest', fr:'Lancer Backtest' },
   btn_retry:    { ko:'다시 시도',     en:'Retry',             id:'Coba Lagi',       zh:'重试',          ja:'再試行',            es:'Reintentar',       vi:'Thử lại',            hi:'पुनः प्रयास',    pt:'Tentar novamente', tl:'Subukan ulit',      fr:'Réessayer' },
+  btn_stop:     { ko:'수신 중단',     en:'Stop',              id:'Berhenti',        zh:'停止',          ja:'中断',              es:'Detener',          vi:'Dừng',               hi:'रोकें',           pt:'Parar',            tl:'Ihinto',            fr:'Arrêter' },
   btn_new:      { ko:'새 백테스트',   en:'New Backtest',      id:'Backtest Baru',   zh:'新回测',        ja:'新バックテスト',    es:'Nuevo Backtest',   vi:'Backtest mới',       hi:'नया बैकटेस्ट',   pt:'Novo Backtest',    tl:'Bagong Backtest',   fr:'Nouveau Backtest' },
   btn_params:   { ko:'← 파라미터',   en:'← Parameters',     id:'← Parameter',     zh:'← 参数',        ja:'← パラメータ',     es:'← Parámetros',     vi:'← Tham số',          hi:'← पैरामीटर',     pt:'← Parâmetros',     tl:'← Parametro',       fr:'← Paramètres' },
   btn_net:      { ko:'← 네트워크 변경', en:'← Change Network', id:'← Ganti Jaringan', zh:'← 更换网络', ja:'← ネットワーク変更', es:'← Cambiar Red',  vi:'← Đổi mạng',         hi:'← नेटवर्क बदलें', pt:'← Mudar Rede',    tl:'← Baguhin ang Network', fr:'← Changer Réseau' },
@@ -177,6 +178,7 @@ let poolSearchQuery = '';
 let poolPage = 0;
 const POOL_PAGE_SIZE = 10;
 let activeChart = null;
+let _fetchStop = false;
 
 // ═══════════════════════════════════════════════════════
 //  HORIZON API
@@ -315,6 +317,7 @@ async function paginate(url, params, total, onProgress) {
   let cursor = null;
 
   for (let i = 0; i < pages; i++) {
+    if (_fetchStop) break;
     if (cursor) params.set('cursor', cursor);
     const r = await fetchWithRetry(`${url}?${params}`);
     const records = (await r.json())._embedded?.records || [];
@@ -1023,6 +1026,7 @@ function goToRun() {
 // ── Step 5: 실행 ──────────────────────────────────────
 
 function renderRunStep(el, nav) {
+  _fetchStop = false;
   el.innerHTML = `
     <div class="section-title">${t(S.run_title)}</div>
     <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.run_start)}</div>
@@ -1031,9 +1035,15 @@ function renderRunStep(el, nav) {
       <div class="log-list" id="run-log"></div>
     </div>
   `;
-  nav.innerHTML = '';
+  nav.innerHTML = `<button class="btn btn-secondary" id="btn-stop-fetch" onclick="window._stopFetch()">${tl(S.btn_stop)}</button>`;
   runBacktest();
 }
+
+window._stopFetch = function() {
+  _fetchStop = true;
+  const btn = document.getElementById('btn-stop-fetch');
+  if (btn) btn.disabled = true;
+};
 
 async function runBacktest() {
   const log = msg => {
@@ -1056,7 +1066,14 @@ async function runBacktest() {
 
     const fetchFn = state.strategy === 'amm' ? fetchTradesForPool : fetchTradesForPair;
     const records = await fetchFn(state.pool, total, progress);
-    log(`✓ ${records.length} ${tp(S.run_received)}`);
+
+    document.getElementById('nav-buttons').innerHTML = '';
+
+    if (_fetchStop) {
+      log(`⚠ ${records.length} ${tp(S.run_received)} (중단됨)`);
+    } else {
+      log(`✓ ${records.length} ${tp(S.run_received)}`);
+    }
 
     const trades = parseTrades(records);
     log(`✓ ${tp(S.run_valid)} ${trades.length}`);
@@ -1077,6 +1094,7 @@ async function runBacktest() {
     nextStep();
 
   } catch (e) {
+    document.getElementById('nav-buttons').innerHTML = '';
     status(`<div class="alert">${tl(S.run_error)}: ${e.message}</div>`);
     document.getElementById('nav-buttons').innerHTML = `
       <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
