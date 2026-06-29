@@ -328,10 +328,8 @@ function runOrderbookBacktest(trades, p) {
       }
     }
 
-    if (i % Math.max(1, Math.floor(trades.length / 100)) === 0) {
-      const tv = usdc + native * mid;
-      snapshots.push({ i, price: mid, totalVal: tv, profit });
-    }
+    const tv = usdc + native * mid;
+    snapshots.push({ i, price: mid, totalVal: tv, profit });
   }
 
   const finalPx  = trades[stopIdx].price;
@@ -1102,12 +1100,16 @@ function drawChart(r) {
   const canvas = document.getElementById('result-chart');
   if (!canvas || !r.snapshots?.length) return;
 
-  const labels = r.snapshots.map(s => s.i);
+  const raw  = r.snapshots;
+  const step = Math.max(1, Math.floor(raw.length / 200));
+  const snaps = raw.filter((_, i) => i % step === 0);
+
+  const labels = snaps.map(s => s.i);
   const datasets = r.type === 'orderbook'
-    ? [{ label: tp(S.chart_total), data: r.snapshots.map(s => s.totalVal), borderColor: '#667eea', tension: 0.3, pointRadius: 0 }]
+    ? [{ label: tp(S.chart_total), data: snaps.map(s => s.totalVal), borderColor: '#667eea', tension: 0.3, pointRadius: 0 }]
     : [
-        { label: tp(S.chart_lp),   data: r.snapshots.map(s => s.lpVal),   borderColor: '#667eea', tension: 0.3, pointRadius: 0 },
-        { label: tp(S.chart_hodl), data: r.snapshots.map(s => s.hodlVal), borderColor: '#f6ad55', tension: 0.3, pointRadius: 0, borderDash: [5,5] },
+        { label: tp(S.chart_lp),   data: snaps.map(s => s.lpVal),   borderColor: '#667eea', tension: 0.3, pointRadius: 0 },
+        { label: tp(S.chart_hodl), data: snaps.map(s => s.hodlVal), borderColor: '#f6ad55', tension: 0.3, pointRadius: 0, borderDash: [5,5] },
       ];
 
   if (activeChart) activeChart.destroy();
