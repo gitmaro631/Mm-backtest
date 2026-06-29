@@ -1161,6 +1161,7 @@ function renderResultStep(el, nav) {
 
 function obResultHtml(r) {
   return `
+    <div class="alert info" style="margin-bottom:10px">📊 ${poolLabel(state.pool)} · ${NETWORKS[state.network].name}</div>
     <div class="result-card">
       <h3>${t(S.res_summary)}</h3>
       <div class="stat-row"><span class="label">${tl(S.res_pnl)}</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
@@ -1192,6 +1193,7 @@ function obResultHtml(r) {
 function ammResultHtml(r) {
   const hodlRoi = (r.hodlFinal - r.totalStart) / r.totalStart * 100;
   return `
+    <div class="alert info" style="margin-bottom:10px">📊 ${poolLabel(state.pool)} · ${NETWORKS[state.network].name}</div>
     <div class="result-card">
       <h3>${t(S.res_lp_title)}</h3>
       <div class="stat-row"><span class="label">${tl(S.res_lp_pnl)}</span><div>${fmtPct(r.roi)} &nbsp; ${fmtUsdc(r.pnl)}</div></div>
