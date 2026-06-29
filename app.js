@@ -173,6 +173,8 @@ const state = {
 };
 
 let poolSearchQuery = '';
+let poolPage = 0;
+const POOL_PAGE_SIZE = 10;
 let activeChart = null;
 
 // ═══════════════════════════════════════════════════════
@@ -606,7 +608,7 @@ function renderNetworkStep(el, nav) {
 }
 
 function selectNetwork(k) {
-  state.network = k; state.pool = null; state.pools = [];
+  state.network = k; state.pool = null; state.pools = []; poolPage = 0; poolSearchQuery = '';
   renderApp();
 }
 
@@ -690,15 +692,7 @@ function renderPoolStep(el, nav) {
     el.innerHTML = `
       <div class="section-title">${t(S.pair_title)}</div>
       <div class="alert info">${tl(S.pi_info)}</div>
-      ${state.pools.map((p, i) => `
-        <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
-          <div class="pool-pair">
-            ${poolLabel(p)}
-            ${i < 3 ? `<span class="badge" style="background:#2a2a1a;color:#f6e05e">${tp(S.recommended)}</span>` : ''}
-          </div>
-          <div class="pool-meta">${tl(S.recent_trades)} <strong style="color:#e2e8f0">${p.tradeCount}</strong></div>
-        </div>
-      `).join('')}
+      <div id="pool-list">${piPairsHtml()}</div>
     `;
     navBtns(nav, true, 'nextStep', null, !state.pool);
     return;
@@ -750,13 +744,53 @@ function selectPiPair(encodedId) {
 
 function filterPools() {
   poolSearchQuery = document.getElementById('pool-search')?.value?.toLowerCase() || '';
+  poolPage = 0;
   document.getElementById('pool-list').innerHTML = poolListHtml();
+}
+
+function pagerHtml(totalItems) {
+  const totalPages = Math.ceil(totalItems / POOL_PAGE_SIZE);
+  if (totalPages <= 1) return '';
+  return `
+    <div class="pager">
+      <button class="pager-btn" onclick="changePage(-1)" ${poolPage === 0 ? 'disabled' : ''}>◀</button>
+      <span class="pager-info">${poolPage + 1} / ${totalPages}</span>
+      <button class="pager-btn" onclick="changePage(1)" ${poolPage >= totalPages - 1 ? 'disabled' : ''}>▶</button>
+    </div>`;
+}
+
+function changePage(dir) {
+  const filtered = state.network === 'pi'
+    ? state.pools
+    : state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
+  const totalPages = Math.ceil(filtered.length / POOL_PAGE_SIZE);
+  poolPage = Math.max(0, Math.min(poolPage + dir, totalPages - 1));
+  document.getElementById('pool-list').innerHTML = state.network === 'pi' ? piPairsHtml() : poolListHtml();
+}
+
+function piPairsHtml() {
+  const items = state.pools;
+  const start = poolPage * POOL_PAGE_SIZE;
+  const page  = items.slice(start, start + POOL_PAGE_SIZE);
+  return page.map((p, i) => {
+    const globalIdx = start + i;
+    return `
+      <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
+        <div class="pool-pair">
+          ${poolLabel(p)}
+          ${globalIdx < 3 ? `<span class="badge" style="background:#2a2a1a;color:#f6e05e">${tp(S.recommended)}</span>` : ''}
+        </div>
+        <div class="pool-meta">${tl(S.recent_trades)} <strong style="color:#e2e8f0">${p.tradeCount}</strong></div>
+      </div>`;
+  }).join('') + pagerHtml(items.length);
 }
 
 function poolListHtml() {
   const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
   if (!filtered.length) return `<div class="status-text">${tl(S.no_results)}</div>`;
-  return filtered.map(p => {
+  const start = poolPage * POOL_PAGE_SIZE;
+  const page  = filtered.slice(start, start + POOL_PAGE_SIZE);
+  return page.map(p => {
     const meta = state.strategy === 'orderbook'
       ? `${tl(S.lp_count)} <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%`
       : `${tl(S.liquidity)} <strong style="color:#e2e8f0">${fmt(poolLiquidity(p), 0)}</strong> · LP ${p.total_trustlines ?? '?'}`;
@@ -764,9 +798,8 @@ function poolListHtml() {
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
         <div class="pool-pair">${poolLabel(p)}</div>
         <div class="pool-meta">${meta}</div>
-      </div>
-    `;
-  }).join('');
+      </div>`;
+  }).join('') + pagerHtml(filtered.length);
 }
 
 async function loadPools() {

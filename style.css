@@ -67,6 +67,28 @@ h1 {
 .pool-pair { font-size: 0.95rem; font-weight: 600; }
 .pool-meta { font-size: 0.76rem; color: #718096; margin-top: 3px; }
 
+/* ── Pager ── */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 0 4px;
+}
+.pager-btn {
+  background: #2d3748;
+  border: 1px solid #4a5568;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pager-btn:hover:not(:disabled) { border-color: #667eea; color: #667eea; }
+.pager-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.pager-info { font-size: 0.83rem; color: #718096; min-width: 60px; text-align: center; }
+
 .badge {
   display: inline-block;
   background: #2d3748;
