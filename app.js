@@ -198,23 +198,28 @@ async function fetchPools() {
 
     function expertAssetStr(a) {
       if (!a) return null;
+      // 문자열인 경우 ("XLM" 또는 "CODE:ISSUER")
       if (typeof a === 'string') return a === 'XLM' ? 'native' : a;
-      if (a.asset_type === 'native' || a.asset_code === 'XLM' && !a.asset_issuer) return 'native';
-      const code   = a.asset_code   || a.code   || '';
-      const issuer = a.asset_issuer || a.issuer || '';
+      // {asset: "XLM"} 또는 {asset: "CODE:ISSUER"} 형태 (Stellar Expert)
+      if (a.asset !== undefined) return a.asset === 'XLM' ? 'native' : a.asset;
+      // Stellar SDK 형태 fallback
+      if (a.asset_type === 'native') return 'native';
+      const code = a.asset_code || '';
+      const issuer = a.asset_issuer || '';
       return issuer ? `${code}:${issuer}` : code;
     }
 
     return records
       .map(p => {
-        const assets  = p.assets || [];
+        const assets   = p.assets || [];
         const reserves = assets.map(a => ({ asset: expertAssetStr(a) || 'unknown', amount: '0' }));
-        const feePct  = p.fee ?? 0.003;
+        const feeRaw   = p.fee ?? 30;
+        const fee_bp   = feeRaw > 1 ? feeRaw : Math.round(feeRaw * 10000);
         return {
           id: p.id,
           reserves,
           total_trustlines: p.trustlines ?? 0,
-          fee_bp: Math.round(feePct * 10000),
+          fee_bp,
         };
       })
       .filter(p => p.reserves.length === 2 && p.reserves.some(r => r.asset === 'native'));
