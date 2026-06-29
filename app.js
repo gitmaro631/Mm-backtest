@@ -159,7 +159,7 @@ function setLang(lang) {
 
 const NETWORKS = {
   stellar: { name: tp(S.stellar_name), horizon: 'https://horizon.stellar.org',    native: 'XLM' },
-  pi:      { name: tp(S.pi_name),      horizon: 'https://api.mainnet.minepi.com', native: 'PI'  },
+  pi:      { name: tp(S.pi_name),      horizon: 'https://api.testnet.minepi.com', native: 'PI'  },
 };
 
 const state = {
@@ -182,9 +182,6 @@ let activeChart = null;
 function horizonBase() { return NETWORKS[state.network].horizon; }
 
 function apiFetch(url) {
-  if (state.network === 'pi') {
-    return fetch(`/api/proxy?url=${encodeURIComponent(url)}`);
-  }
   return fetch(url);
 }
 
