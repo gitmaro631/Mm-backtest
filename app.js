@@ -793,9 +793,18 @@ async function fetchPiPools() {
   const resp = await apiFetch(`${base}/liquidity_pools?limit=200&order=desc`);
   if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
   const json = await resp.json();
-  const pools = (json._embedded?.records || []).filter(hasNative);
+  const pools = (json._embedded?.records || []).filter(p => {
+    if (!hasNative(p)) return false;
+    const nativeAmt = parseFloat(p.reserves?.find(r => r.asset === 'native')?.amount || '0');
+    return nativeAmt > 0;
+  });
   if (!pools.length) throw new Error(tp(S.no_results));
-  pools.sort((a, b) => (parseInt(b.total_trustlines) || 0) - (parseInt(a.total_trustlines) || 0));
+  pools.sort((a, b) => {
+    const nativeAmt = p => parseFloat(p.reserves?.find(r => r.asset === 'native')?.amount || '0');
+    const lpDiff = (parseInt(b.total_trustlines) || 0) - (parseInt(a.total_trustlines) || 0);
+    const amtDiff = nativeAmt(b) - nativeAmt(a);
+    return lpDiff !== 0 ? lpDiff : amtDiff;
+  });
   return pools;
 }
 
@@ -963,14 +972,18 @@ function poolListHtml() {
   const start = poolPage * POOL_PAGE_SIZE;
   const page  = filtered.slice(start, start + POOL_PAGE_SIZE);
   return page.map(p => {
-    const lp = p._accounts || p.total_trustlines || '?';
+    const lp  = p._accounts || p.total_trustlines || '?';
     const fee = ((parseFloat(p.fee_bp || 30)) / 100).toFixed(1);
-    const meta = state.strategy === 'orderbook'
-      ? `7d거래 <strong style="color:#e2e8f0">${(p._trades7d || 0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${lp}</strong> · ${fee}%`
-      : (() => {
-          const apy = p._tvl > 0 ? (p._vol7d / p._tvl * 0.003 * 52 * 100).toFixed(1) : '?';
-          return `예상APY <strong style="color:#68d391">${apy}%</strong> · LP <strong style="color:#e2e8f0">${lp}</strong> · 7d거래 ${(p._trades7d || 0).toLocaleString()}건`;
-        })();
+    let meta;
+    if (state.network === 'pi') {
+      const nativeAmt = parseFloat(p.reserves?.find(r => r.asset === 'native')?.amount || '0');
+      meta = `PI ${nativeAmt.toLocaleString(undefined, {maximumFractionDigits:2})} · LP <strong style="color:#e2e8f0">${lp}</strong> · ${fee}%`;
+    } else if (state.strategy === 'orderbook') {
+      meta = `7d거래 <strong style="color:#e2e8f0">${(p._trades7d || 0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${lp}</strong> · ${fee}%`;
+    } else {
+      const apy = p._tvl > 0 ? (p._vol7d / p._tvl * 0.003 * 52 * 100).toFixed(1) : '?';
+      meta = `예상APY <strong style="color:#68d391">${apy}%</strong> · LP <strong style="color:#e2e8f0">${lp}</strong> · 7d거래 ${(p._trades7d || 0).toLocaleString()}건`;
+    }
     return `
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
         <div class="pool-pair">${poolLabel(p)}</div>
