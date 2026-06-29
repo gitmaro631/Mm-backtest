@@ -776,10 +776,7 @@ function piPairsHtml() {
     const globalIdx = start + i;
     return `
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPiPair('${encodeURIComponent(p.id)}')">
-        <div class="pool-pair">
-          ${poolLabel(p)}
-          ${globalIdx < 3 ? `<span class="badge" style="background:#2a2a1a;color:#f6e05e">${tp(S.recommended)}</span>` : ''}
-        </div>
+        <div class="pool-pair">${poolLabel(p)}</div>
         <div class="pool-meta">${tl(S.recent_trades)} <strong style="color:#e2e8f0">${p.tradeCount}</strong></div>
       </div>`;
   }).join('') + pagerHtml(items.length);
