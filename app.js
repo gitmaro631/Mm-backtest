@@ -182,13 +182,15 @@ const NETWORKS = {
 };
 
 const state = {
-  step:     1,
-  network:  null,
-  strategy: null,
-  pool:     null,
-  params:   {},
-  result:   null,
-  pools:    [],
+  step:        1,
+  network:     null,
+  strategy:    null,
+  pool:        null,
+  params:      {},
+  result:      null,
+  pools:       [],
+  scanParams:  {},
+  scanResults: [],
 };
 
 let poolSearchQuery = '';
