@@ -146,6 +146,7 @@ const S = {
   ip_copied:      { ko:'복사됨!', en:'Copied!', id:'Tersalin!', zh:'已复制!', ja:'コピーしました!', es:'¡Copiado!', vi:'Đã sao chép!', hi:'कॉपी हो गया!', pt:'Copiado!', tl:'Nakopya na!', fr:'Copié !' },
   ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
   ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
+  btn_help:       { ko:'도움말', en:'Help', id:'Bantuan', zh:'帮助', ja:'ヘルプ', es:'Ayuda', vi:'Trợ giúp', hi:'सहायता', pt:'Ajuda', tl:'Tulong', fr:'Aide' },
   p_rec:          { ko:'권장', en:'Rec', id:'Rekm', zh:'推荐', ja:'推奨', es:'Rec', vi:'Đề xuất', hi:'अनुशंसित', pt:'Rec', tl:'Rekm', fr:'Rec' },
 };
 
@@ -640,6 +641,8 @@ function renderLangSwitch() {
       }).join('')}
     </div>
   </div>`;
+  const helpBtn = document.getElementById('help-btn');
+  if (helpBtn) helpBtn.textContent = `❓ ${t(S.btn_help)}`;
 }
 
 function renderApp() {
