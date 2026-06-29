@@ -187,27 +187,88 @@ function apiFetch(url) {
   return fetch(url);
 }
 
+function strKeyToHex(strKey) {
+  const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+  const bytes = [];
+  let buf = 0, bufLen = 0;
+  for (const c of strKey) {
+    const idx = ALPHA.indexOf(c);
+    if (idx < 0) continue;
+    buf = (buf << 5) | idx;
+    bufLen += 5;
+    if (bufLen >= 8) {
+      bufLen -= 8;
+      bytes.push((buf >> bufLen) & 0xff);
+      buf &= (1 << bufLen) - 1;
+    }
+  }
+  return bytes.slice(1, 33).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function fetchPools() {
-  // Step 1: Stellar Expert에서 거래량/TVL 기준 상위 풀 ID 목록 가져오기
-  const sortKey = state.strategy === 'orderbook' ? 'volume' : 'total_value';
-  const expertResp = await fetch(`https://api.stellar.expert/explorer/public/liquidity-pool?sort=${sortKey}&order=desc&limit=50`);
+  // Step 1: Expert에서 상위 200개 가져오기 (XLM 전용 필터링 전 충분한 후보 확보)
+  const expertResp = await fetch('https://api.stellar.expert/explorer/public/liquidity-pool?sort=volume&order=desc&limit=200');
   if (!expertResp.ok) throw new Error(`Stellar Expert API ${expertResp.status}`);
   const expertJson = await expertResp.json();
   const expertPools = expertJson._embedded?.records || [];
   if (!expertPools.length) throw new Error('Stellar Expert 결과 없음');
 
-  // Step 2: Horizon에서 해당 풀들의 정확한 데이터 병렬 조회 (trustlines 포함)
+  // Step 2: XLM 포함 풀만 클라이언트 필터링
+  const xlmPools = expertPools.filter(p => p.assets?.some(a => a.asset === 'XLM'));
+  if (!xlmPools.length) throw new Error('XLM 풀 없음');
+
+  // Step 3: 전략별 복합 점수로 정렬
+  const maxVol = Math.max(...xlmPools.map(p => p.volume_value?.['7d'] || 0)) || 1;
+  const maxAcc = Math.max(...xlmPools.map(p => p.accounts || 0)) || 1;
+  const maxTvl = Math.max(...xlmPools.map(p => p.total_value_locked || 0)) || 1;
+
+  if (state.strategy === 'orderbook') {
+    // 오더북 MM: 7일 거래량 70% + LP 수 30%
+    xlmPools.sort((a, b) => {
+      const score = p => 0.7 * ((p.volume_value?.['7d'] || 0) / maxVol)
+                       + 0.3 * ((p.accounts || 0) / maxAcc);
+      return score(b) - score(a);
+    });
+  } else {
+    // AMM: 거래량/TVL 비율 (수수료 APY 지표) 기준 정렬
+    xlmPools.sort((a, b) => {
+      const ratio = p => (p.volume_value?.['7d'] || 0) / Math.max(p.total_value_locked || 1, 1);
+      return ratio(b) - ratio(a);
+    });
+  }
+
+  // Step 4: 상위 50개만 Horizon에서 reserve 데이터 병렬 조회 (StrKey → hex 변환)
+  const top50 = xlmPools.slice(0, 50);
+  console.log('[fetchPools] XLM풀:', xlmPools.length, '개, top50 첫번째 ID:', top50[0]?.id, '→ hex:', strKeyToHex(top50[0]?.id || ''));
+  const expertMap = new Map(top50.map((p, i) => [strKeyToHex(p.id), { ex: p, rank: i }]));
   const base = horizonBase();
   const details = await Promise.all(
-    expertPools.map(p =>
-      apiFetch(`${base}/liquidity_pools/${p.id}`)
+    top50.map(p => {
+      const hexId = strKeyToHex(p.id);
+      console.log('→ hex변환:', p.id.slice(0,8), '→', hexId.slice(0,8) || 'EMPTY');
+      return apiFetch(`${base}/liquidity_pools/${hexId}`)
         .then(r => r.ok ? r.json() : null)
-        .catch(() => null)
-    )
+        .catch(() => null);
+    })
   );
+  const nonNull = details.filter(Boolean);
+  const withNative = details.filter(p => p && hasNative(p));
+  console.log('[fetchPools] Horizon 응답:', nonNull.length, '개, native포함:', withNative.length, '개');
 
-  // Step 3: Expert 순서 유지, XLM 포함 풀만 반환
-  return details.filter(p => p && hasNative(p));
+  // Step 5: Expert 메타데이터 병합 후 정렬 순서 유지
+  return withNative
+    .map(p => {
+      const info = expertMap.get(p.id);
+      if (info) {
+        p._rank    = info.rank;
+        p._vol7d   = info.ex.volume_value?.['7d'] || 0;
+        p._tvl     = info.ex.total_value_locked || 0;
+        p._trades7d = info.ex.trades?.['7d'] || 0;
+        p._accounts = info.ex.accounts || 0;
+      }
+      return p;
+    })
+    .sort((a, b) => (a._rank ?? 999) - (b._rank ?? 999));
 }
 
 function hasNative(pool) {
@@ -707,7 +768,9 @@ function renderPoolStep(el, nav) {
     return;
   }
 
-  const sortDesc = state.strategy === 'orderbook' ? tl(S.sort_lp) : tl(S.sort_tvl);
+  const sortDesc = state.strategy === 'orderbook'
+    ? 'XLM 전체 풀 · 7일거래량 70% + LP수 30% 복합 점수순'
+    : 'XLM 전체 풀 · 7일거래량/TVL 비율 (수수료 APY) 순';
 
   el.innerHTML = state.pools.length === 0
     ? `<div class="section-title">${t(S.pool_title)}</div><div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>`
@@ -797,9 +860,14 @@ function poolListHtml() {
   const start = poolPage * POOL_PAGE_SIZE;
   const page  = filtered.slice(start, start + POOL_PAGE_SIZE);
   return page.map(p => {
+    const lp = p._accounts || p.total_trustlines || '?';
+    const fee = ((parseFloat(p.fee_bp || 30)) / 100).toFixed(1);
     const meta = state.strategy === 'orderbook'
-      ? `${tl(S.lp_count)} <strong style="color:#e2e8f0">${p.total_trustlines ?? '?'}</strong> · ${((parseFloat(p.fee_bp || 30)) / 100).toFixed(1)}%`
-      : `${tl(S.liquidity)} <strong style="color:#e2e8f0">${fmt(poolLiquidity(p), 0)}</strong> · LP ${p.total_trustlines ?? '?'}`;
+      ? `7d거래 <strong style="color:#e2e8f0">${(p._trades7d || 0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${lp}</strong> · ${fee}%`
+      : (() => {
+          const apy = p._tvl > 0 ? (p._vol7d / p._tvl * 0.003 * 52 * 100).toFixed(1) : '?';
+          return `예상APY <strong style="color:#68d391">${apy}%</strong> · LP <strong style="color:#e2e8f0">${lp}</strong> · 7d거래 ${(p._trades7d || 0).toLocaleString()}건`;
+        })();
     return `
       <div class="pool-item ${state.pool?.id === p.id ? 'selected' : ''}" onclick="selectPool('${p.id}')">
         <div class="pool-pair">${poolLabel(p)}</div>
@@ -820,22 +888,7 @@ async function loadPools() {
     const pools = await fetchPools();
     clearInterval(timer);
     if (!pools.length) throw new Error(`${S.pool_fail.ko} (0개 / 0 pools)`);
-    state.pools = pools.sort((a, b) => {
-      // XLM 포함 풀 우선 (공통)
-      const xlmA = hasNative(a) ? 1 : 0;
-      const xlmB = hasNative(b) ? 1 : 0;
-      if (xlmB !== xlmA) return xlmB - xlmA;
-
-      if (state.strategy === 'orderbook') {
-        // 오더북 MM: LP 수 많은 순 (거래 활성도 지표)
-        const tA = parseInt(a.total_trustlines || 0);
-        const tB = parseInt(b.total_trustlines || 0);
-        return tB - tA;
-      } else {
-        // AMM LP: 총 유동성(TVL) 큰 순 (안정성 지표)
-        return poolLiquidity(b) - poolLiquidity(a);
-      }
-    });
+    state.pools = pools;
     renderApp();
   } catch (e) {
     clearInterval(timer);
