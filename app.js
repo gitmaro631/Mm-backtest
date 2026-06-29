@@ -254,7 +254,7 @@ async function fetchPools() {
   );
 
   // Step 5: Expert 메타데이터 병합 후 정렬 순서 유지
-  return withNative
+  return details.filter(p => p && hasNative(p))
     .map(p => {
       const info = expertMap.get(p.id);
       if (info) {
