@@ -1410,11 +1410,11 @@ function scanSpreadOptsHtml(selected) {
   const sel  = selected || opts;
   return `<div class="form-group">
     <label>${tl(S.scan_spreads)}</label>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:8px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
       ${opts.map(v => {
         const id = `spread-${String(v).replace('.','_')}`;
-        return `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.88rem">
-          <input type="checkbox" id="${id}" ${sel.includes(v)?'checked':''} style="accent-color:#667eea">
+        return `<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.92rem">
+          <input type="checkbox" id="${id}" ${sel.includes(v)?'checked':''} style="accent-color:#667eea;width:18px;height:18px;flex-shrink:0">
           <span>${v}%</span>
         </label>`;
       }).join('')}
