@@ -217,18 +217,21 @@ async function fetchPools() {
   const xlmPools = expertPools.filter(p => p.assets?.some(a => a.asset === 'XLM'));
   if (!xlmPools.length) throw new Error('XLM 풀 없음');
 
-  // Step 3: 전략별 복합 점수로 정렬
-  const maxVol = Math.max(...xlmPools.map(p => p.volume_value?.['7d'] || 0)) || 1;
-  const maxAcc = Math.max(...xlmPools.map(p => p.accounts || 0)) || 1;
-  const maxTvl = Math.max(...xlmPools.map(p => p.total_value_locked || 0)) || 1;
-
+  // Step 3: 전략별 필터 + 정렬
   if (state.strategy === 'orderbook') {
-    // 오더북 MM: 7일 거래량 70% + LP 수 30%
-    xlmPools.sort((a, b) => {
-      const score = p => 0.7 * ((p.volume_value?.['7d'] || 0) / maxVol)
-                       + 0.3 * ((p.accounts || 0) / maxAcc);
+    // 오더북 MM: 7일 거래 100건 미만 제외 (너무 비활성)
+    const active = xlmPools.filter(p => (p.trades?.['7d'] || 0) >= 100);
+    const candidates = active.length >= 10 ? active : xlmPools; // 풀이 부족하면 필터 완화
+    const maxVol = Math.max(...candidates.map(p => p.volume_value?.['7d'] || 0)) || 1;
+    const maxAcc = Math.max(...candidates.map(p => p.accounts || 0)) || 1;
+    candidates.sort((a, b) => {
+      // 거래량 90% + LP 수 10%
+      const score = p => 0.9 * ((p.volume_value?.['7d'] || 0) / maxVol)
+                       + 0.1 * ((p.accounts || 0) / maxAcc);
       return score(b) - score(a);
     });
+    xlmPools.length = 0;
+    xlmPools.push(...candidates);
   } else {
     // AMM: 거래량/TVL 비율 (수수료 APY 지표) 기준 정렬
     xlmPools.sort((a, b) => {
@@ -239,21 +242,16 @@ async function fetchPools() {
 
   // Step 4: 상위 50개만 Horizon에서 reserve 데이터 병렬 조회 (StrKey → hex 변환)
   const top50 = xlmPools.slice(0, 50);
-  console.log('[fetchPools] XLM풀:', xlmPools.length, '개, top50 첫번째 ID:', top50[0]?.id, '→ hex:', strKeyToHex(top50[0]?.id || ''));
   const expertMap = new Map(top50.map((p, i) => [strKeyToHex(p.id), { ex: p, rank: i }]));
   const base = horizonBase();
   const details = await Promise.all(
     top50.map(p => {
       const hexId = strKeyToHex(p.id);
-      console.log('→ hex변환:', p.id.slice(0,8), '→', hexId.slice(0,8) || 'EMPTY');
       return apiFetch(`${base}/liquidity_pools/${hexId}`)
         .then(r => r.ok ? r.json() : null)
         .catch(() => null);
     })
   );
-  const nonNull = details.filter(Boolean);
-  const withNative = details.filter(p => p && hasNative(p));
-  console.log('[fetchPools] Horizon 응답:', nonNull.length, '개, native포함:', withNative.length, '개');
 
   // Step 5: Expert 메타데이터 병합 후 정렬 순서 유지
   return withNative
