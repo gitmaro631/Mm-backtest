@@ -51,8 +51,8 @@ const S = {
   loading_pairs:{ ko:'거래 페어 불러오는 중', en:'Loading pairs', id:'Memuat pasangan trading', zh:'加载交易对中', ja:'取引ペア読込中', es:'Cargando pares', vi:'Đang tải cặp giao dịch', hi:'ट्रेडिंग पेयर लोड हो रहे हैं', pt:'Carregando pares', tl:'Nilo-load ang mga pares', fr:'Chargement des paires' },
   sec:          { ko:'초', en:'sec', id:'dtk', zh:'秒', ja:'秒', es:'seg', vi:'giây', hi:'सेकंड', pt:'seg', tl:'seg', fr:'sec' },
   search_ph:    { ko:'토큰 이름 검색...', en:'Search token...', id:'Cari nama token...', zh:'搜索代币...', ja:'トークン検索...', es:'Buscar token...', vi:'Tìm kiếm token...', hi:'टोकन खोजें...', pt:'Buscar token...', tl:'Hanapin ang token...', fr:'Rechercher token...' },
-  sort_lp:      { ko:'LP 수 많은 순 (거래 활성도)', en:'By LP count (activity)', id:'Urut LP terbanyak (aktivitas)', zh:'按 LP 数量排序（活跃度）', ja:'LP数順（取引活発）', es:'Por cantidad LP (actividad)', vi:'Theo số LP (hoạt động)', hi:'LP संख्या से (सक्रियता)', pt:'Por quantidade de LP (atividade)', tl:'Ayon sa LP count (aktibidad)', fr:'Par nombre de LP (activité)' },
-  sort_tvl:     { ko:'유동성 큰 순 (안정성)', en:'By liquidity (stability)', id:'Urut likuiditas terbesar (stabilitas)', zh:'按流动性排序（稳定性）', ja:'流動性順（安定性）', es:'Por liquidez (estabilidad)', vi:'Theo thanh khoản (ổn định)', hi:'तरलता से (स्थिरता)', pt:'Por liquidez (estabilidade)', tl:'Ayon sa liquidity (katatagan)', fr:'Par liquidité (stabilité)' },
+  sort_lp:      { ko:'XLM 전체 풀 · 7일 거래 횟수 90% + LP 수 10% 순', en:'All XLM pools · 7d trade count 90% + LP 10%', id:'Semua pool XLM · Frekuensi 7h 90% + LP 10%', zh:'XLM全部池 · 7日交易次数90% + LP数10%', ja:'XLM全プール · 7日取引回数90% + LP数10%順', es:'Todos pools XLM · Operaciones 7d 90% + LP 10%', vi:'Tất cả pool XLM · Số giao dịch 7d 90% + LP 10%', hi:'सभी XLM पूल · 7d ट्रेड 90% + LP 10%', pt:'Todos pools XLM · Negociações 7d 90% + LP 10%', tl:'Lahat ng XLM pool · 7d trade count 90% + LP 10%', fr:'Tous pools XLM · Transactions 7j 90% + LP 10%' },
+  sort_tvl:     { ko:'XLM 전체 풀 · 거래량/TVL 비율 (수수료 APY) 순', en:'All XLM pools · Volume/TVL ratio (fee APY)', id:'Semua pool XLM · Rasio volume/TVL (APY biaya)', zh:'XLM全部池 · 交易量/TVL比率（手续费APY）', ja:'XLM全プール · 取引量/TVL比率（手数料APY）順', es:'Todos pools XLM · Ratio volumen/TVL (APY comisión)', vi:'Tất cả pool XLM · Tỷ lệ khối lượng/TVL (APY phí)', hi:'सभी XLM पूल · वॉल्यूम/TVL अनुपात (शुल्क APY)', pt:'Todos pools XLM · Proporção volume/TVL (APY de taxa)', tl:'Lahat ng XLM pool · Volume/TVL ratio (fee APY)', fr:'Tous pools XLM · Ratio volume/TVL (APY de frais)' },
   pi_info:      { ko:'Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬', en:'Pi DEX · Orderbook data · Sorted by volume', id:'Pi DEX · Data orderbook · Urut volume', zh:'Pi DEX · 订单簿交易数据 · 按交易量排序', ja:'Pi DEX · オーダーブックデータ · 取引量順', es:'Pi DEX · Datos orderbook · Ordenado por volumen', vi:'Pi DEX · Dữ liệu orderbook · Sắp xếp theo khối lượng', hi:'Pi DEX · ऑर्डरबुक डेटा · वॉल्यूम के अनुसार', pt:'Pi DEX · Dados orderbook · Ordenado por volume', tl:'Pi DEX · Orderbook data · Nakaayos ayon sa volume', fr:'Pi DEX · Données orderbook · Trié par volume' },
   recommended:  { ko:'추천', en:'Top', id:'Unggulan', zh:'推荐', ja:'おすすめ', es:'Top', vi:'Nổi bật', hi:'अनुशंसित', pt:'Top', tl:'Inirerekomenda', fr:'Top' },
   recent_trades:{ ko:'최근 거래', en:'Recent trades', id:'Transaksi terkini', zh:'最近交易', ja:'最近の取引', es:'Operaciones recientes', vi:'Giao dịch gần đây', hi:'हालिया ट्रेड', pt:'Negociações recentes', tl:'Kamakailang trades', fr:'Transactions récentes' },
@@ -219,14 +219,14 @@ async function fetchPools() {
 
   // Step 3: 전략별 필터 + 정렬
   if (state.strategy === 'orderbook') {
-    // 오더북 MM: 7일 거래 100건 미만 제외 (너무 비활성)
+    // 오더북 MM: 7일 거래 100건 미만 제외 (비활성 풀)
     const active = xlmPools.filter(p => (p.trades?.['7d'] || 0) >= 100);
-    const candidates = active.length >= 10 ? active : xlmPools; // 풀이 부족하면 필터 완화
-    const maxVol = Math.max(...candidates.map(p => p.volume_value?.['7d'] || 0)) || 1;
-    const maxAcc = Math.max(...candidates.map(p => p.accounts || 0)) || 1;
+    const candidates = active.length >= 10 ? active : xlmPools;
+    const maxTrades = Math.max(...candidates.map(p => p.trades?.['7d'] || 0)) || 1;
+    const maxAcc    = Math.max(...candidates.map(p => p.accounts || 0)) || 1;
     candidates.sort((a, b) => {
-      // 거래량 90% + LP 수 10%
-      const score = p => 0.9 * ((p.volume_value?.['7d'] || 0) / maxVol)
+      // 7일 거래 횟수 90% + LP 수 10%
+      const score = p => 0.9 * ((p.trades?.['7d'] || 0) / maxTrades)
                        + 0.1 * ((p.accounts || 0) / maxAcc);
       return score(b) - score(a);
     });
@@ -766,9 +766,7 @@ function renderPoolStep(el, nav) {
     return;
   }
 
-  const sortDesc = state.strategy === 'orderbook'
-    ? 'XLM 전체 풀 · 7일거래량 70% + LP수 30% 복합 점수순'
-    : 'XLM 전체 풀 · 7일거래량/TVL 비율 (수수료 APY) 순';
+  const sortDesc = state.strategy === 'orderbook' ? tl(S.sort_lp) : tl(S.sort_tvl);
 
   el.innerHTML = state.pools.length === 0
     ? `<div class="section-title">${t(S.pool_title)}</div><div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>`
