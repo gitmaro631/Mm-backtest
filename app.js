@@ -1356,8 +1356,8 @@ function renderScanParamsStep(el, nav) {
     </div>
 
     <div class="form-group">
-      <label>${tl(S.scan_records)} <span class="param-hint">${t(S.p_rec)}: 500</span></label>
-      <input type="number" id="scan-records" value="${p.records||500}" min="200" max="2000" step="100">
+      <label>${tl(S.scan_records)} <span class="param-hint">${t(S.p_rec)}: 2,000</span></label>
+      <input type="number" id="scan-records" value="${p.records||2000}" min="200" max="5000" step="100">
     </div>
 
     <div id="scan-spread-opts">${sub==='orderbook' ? scanSpreadOptsHtml(p.spreadOptions) : ''}</div>
