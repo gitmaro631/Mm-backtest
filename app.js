@@ -54,6 +54,7 @@ const S = {
   search_ph:    { ko:'토큰 이름 검색...', en:'Search token...', id:'Cari nama token...', zh:'搜索代币...', ja:'トークン検索...', es:'Buscar token...', vi:'Tìm kiếm token...', hi:'टोकन खोजें...', pt:'Buscar token...', tl:'Hanapin ang token...', fr:'Rechercher token...' },
   sort_lp:      { ko:'XLM 전체 풀 · 7일 거래 횟수 90% + LP 수 10% 순', en:'All XLM pools · 7d trade count 90% + LP 10%', id:'Semua pool XLM · Frekuensi 7h 90% + LP 10%', zh:'XLM全部池 · 7日交易次数90% + LP数10%', ja:'XLM全プール · 7日取引回数90% + LP数10%順', es:'Todos pools XLM · Operaciones 7d 90% + LP 10%', vi:'Tất cả pool XLM · Số giao dịch 7d 90% + LP 10%', hi:'सभी XLM पूल · 7d ट्रेड 90% + LP 10%', pt:'Todos pools XLM · Negociações 7d 90% + LP 10%', tl:'Lahat ng XLM pool · 7d trade count 90% + LP 10%', fr:'Tous pools XLM · Transactions 7j 90% + LP 10%' },
   sort_tvl:     { ko:'XLM 전체 풀 · 거래량/TVL 비율 (수수료 APY) 순', en:'All XLM pools · Volume/TVL ratio (fee APY)', id:'Semua pool XLM · Rasio volume/TVL (APY biaya)', zh:'XLM全部池 · 交易量/TVL比率（手续费APY）', ja:'XLM全プール · 取引量/TVL比率（手数料APY）順', es:'Todos pools XLM · Ratio volumen/TVL (APY comisión)', vi:'Tất cả pool XLM · Tỷ lệ khối lượng/TVL (APY phí)', hi:'सभी XLM पूल · वॉल्यूम/TVL अनुपात (शुल्क APY)', pt:'Todos pools XLM · Proporção volume/TVL (APY de taxa)', tl:'Lahat ng XLM pool · Volume/TVL ratio (fee APY)', fr:'Tous pools XLM · Ratio volume/TVL (APY de frais)' },
+  sort_pi_amm:  { ko:'Pi DEX AMM 풀 · LP 수 순 정렬', en:'Pi DEX AMM pools · Sorted by LP count', id:'Pool AMM Pi DEX · Urut jumlah LP', zh:'Pi DEX AMM 池 · 按 LP 数量排序', ja:'Pi DEX AMM プール · LP数順', es:'Pools AMM Pi DEX · Ordenado por LP', vi:'Pool AMM Pi DEX · Sắp xếp theo số LP', hi:'Pi DEX AMM पूल · LP संख्या के अनुसार', pt:'Pools AMM Pi DEX · Ordenado por LP', tl:'Pi DEX AMM pools · Nakaayos ayon sa LP count', fr:'Pools AMM Pi DEX · Trié par nombre de LP' },
   pi_info:      { ko:'Pi DEX · 오더북 거래 데이터 · 거래량 순 정렬', en:'Pi DEX · Orderbook data · Sorted by volume', id:'Pi DEX · Data orderbook · Urut volume', zh:'Pi DEX · 订单簿交易数据 · 按交易量排序', ja:'Pi DEX · オーダーブックデータ · 取引量順', es:'Pi DEX · Datos orderbook · Ordenado por volumen', vi:'Pi DEX · Dữ liệu orderbook · Sắp xếp theo khối lượng', hi:'Pi DEX · ऑर्डरबुक डेटा · वॉल्यूम के अनुसार', pt:'Pi DEX · Dados orderbook · Ordenado por volume', tl:'Pi DEX · Orderbook data · Nakaayos ayon sa volume', fr:'Pi DEX · Données orderbook · Trié par volume' },
   recommended:  { ko:'추천', en:'Top', id:'Unggulan', zh:'推荐', ja:'おすすめ', es:'Top', vi:'Nổi bật', hi:'अनुशंसित', pt:'Top', tl:'Inirerekomenda', fr:'Top' },
   recent_trades:{ ko:'최근 거래', en:'Recent trades', id:'Transaksi terkini', zh:'最近交易', ja:'最近の取引', es:'Operaciones recientes', vi:'Giao dịch gần đây', hi:'हालिया ट्रेड', pt:'Negociações recentes', tl:'Kamakailang trades', fr:'Transactions récentes' },
@@ -724,18 +725,15 @@ function selectNetwork(k) {
 // ── Step 2: 전략 ──────────────────────────────────────
 
 function renderStrategyStep(el, nav) {
-  const isPi = state.network === 'pi';
   el.innerHTML = `
     <div class="section-title">${t(S.str_title)}</div>
     <div class="card ${state.strategy === 'orderbook' ? 'selected' : ''}" onclick="selectStrategy('orderbook')">
       <h3>${t(S.ob_name)}</h3>
       <p>${tl(S.ob_desc)}</p>
     </div>
-    <div class="card ${isPi ? '' : state.strategy === 'amm' ? 'selected' : ''}"
-         style="${isPi ? 'opacity:0.4;cursor:not-allowed' : ''}"
-         ${isPi ? '' : "onclick=\"selectStrategy('amm')\""}>
+    <div class="card ${state.strategy === 'amm' ? 'selected' : ''}" onclick="selectStrategy('amm')">
       <h3>${t(S.amm_name)}</h3>
-      <p>${isPi ? tl(S.amm_disabled) : tl(S.amm_desc)}</p>
+      <p>${tl(S.amm_desc)}</p>
     </div>
     <div class="card ${state.strategy === 'auto' ? 'selected' : ''}" onclick="selectStrategy('auto')">
       <h3>${t(S.auto_name)}</h3>
@@ -790,9 +788,40 @@ async function fetchPiPairs() {
   return Object.values(pairMap).sort((a, b) => b.tradeCount - a.tradeCount);
 }
 
+async function fetchPiPools() {
+  const base = horizonBase();
+  const resp = await apiFetch(`${base}/liquidity_pools?limit=200&order=desc`);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+  const json = await resp.json();
+  const pools = (json._embedded?.records || []).filter(hasNative);
+  if (!pools.length) throw new Error(tp(S.no_results));
+  pools.sort((a, b) => (parseInt(b.total_trustlines) || 0) - (parseInt(a.total_trustlines) || 0));
+  return pools;
+}
+
 function renderPoolStep(el, nav) {
   if (state.strategy === 'auto') { renderAutoPoolSelectStep(el, nav); return; }
   const isPi = state.network === 'pi';
+
+  if (isPi && state.strategy === 'amm') {
+    if (state.pools.length === 0) {
+      el.innerHTML = `
+        <div class="section-title">${t(S.pool_title)}</div>
+        <div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>
+      `;
+      navBtns(nav, true, null);
+      loadPiPools();
+      return;
+    }
+    el.innerHTML = `
+      <div class="section-title">${t(S.pool_title)}</div>
+      <div class="alert info" style="margin-bottom:10px">${tl(S.sort_pi_amm)}</div>
+      <input class="search-box" id="pool-search" placeholder="${tp(S.search_ph)}" oninput="filterPools()" value="${poolSearchQuery}">
+      <div id="pool-list">${poolListHtml()}</div>
+    `;
+    navBtns(nav, true, 'nextStep', null, !state.pool);
+    return;
+  }
 
   if (isPi) {
     if (state.pools.length === 0) {
@@ -852,6 +881,29 @@ async function loadPiPairs() {
   }
 }
 
+async function loadPiPools() {
+  let sec = 0;
+  const timer = setInterval(() => {
+    sec++;
+    const el = document.getElementById('load-timer');
+    if (el) el.textContent = sec;
+  }, 1000);
+  try {
+    const pools = await fetchPiPools();
+    clearInterval(timer);
+    state.pools = pools;
+    renderApp();
+  } catch (e) {
+    clearInterval(timer);
+    document.getElementById('content').innerHTML = `
+      <div class="section-title">${t(S.pool_title)}</div>
+      <div class="alert">${tl(S.pool_fail)}: ${e.message}</div>
+      <button class="btn btn-secondary" style="margin-top:10px" onclick="loadPiPools()">${tl(S.btn_retry)}</button>
+      <button class="btn btn-secondary" style="margin-top:10px;margin-left:8px" onclick="goToStep(1)">${tl(S.btn_net)}</button>
+    `;
+  }
+}
+
 function selectPiPair(encodedId) {
   const id = decodeURIComponent(encodedId);
   state.pool = state.pools.find(p => p.id === id);
@@ -876,14 +928,15 @@ function pagerHtml(totalItems) {
 }
 
 function changePage(dir) {
-  const filtered = state.network === 'pi'
+  const isPiOrderbook = state.network === 'pi' && state.strategy !== 'amm' && state.strategy !== 'auto';
+  const filtered = isPiOrderbook
     ? state.pools
     : state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
   const totalPages = Math.ceil(filtered.length / POOL_PAGE_SIZE);
   poolPage = Math.max(0, Math.min(poolPage + dir, totalPages - 1));
   if (state.strategy === 'auto') {
     document.getElementById('auto-pool-list').innerHTML = autoPoolListHtml();
-  } else if (state.network === 'pi') {
+  } else if (isPiOrderbook) {
     document.getElementById('pool-list').innerHTML = piPairsHtml();
   } else {
     document.getElementById('pool-list').innerHTML = poolListHtml();
