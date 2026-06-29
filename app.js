@@ -967,7 +967,7 @@ function renderParamsStep(el, nav) {
 
     <div class="form-group">
       <label>${tl(S.p_records)} <span class="param-hint">${t(S.p_rec)}: 5,000</span></label>
-      <input type="number" id="p-records" value="${p.records || 5000}" min="5000" max="10000" step="1000">
+      <input type="number" id="p-records" value="${p.records || 5000}" min="200" max="10000" step="100">
     </div>
 
     ${isOB ? `
@@ -1042,7 +1042,7 @@ function goToRun() {
   const clamp = (v, mn, mx) => Math.min(mx, Math.max(mn, v));
 
   state.params = isOB ? {
-    records:      clamp(ni('p-records'), 5000, 10000),
+    records:      clamp(ni('p-records'), 200, 10000),
     totalUsdc:    n('p-totalUsdc'),
     splitRatio:   n('p-splitRatio'),
     spreadPct:    n('p-spreadPct'),
@@ -1053,7 +1053,7 @@ function goToRun() {
     surgeTicks:   ni('p-surgeTicks'),
     surgePct:     n('p-surgePct'),
   } : {
-    records:      clamp(ni('p-records'), 5000, 10000),
+    records:      clamp(ni('p-records'), 200, 10000),
     depositUsdc:  n('p-depositUsdc'),
     maxILPct:     n('p-maxILPct'),
     targetRoiPct: n('p-targetRoiPct'),
@@ -1536,7 +1536,7 @@ function useScanResult(idx) {
   const r = state.scanResults[idx];
   state.strategy = state.scanParams.subStrategy;
   state.pool     = r.pool;
-  state.params   = { ...r.params, records: 5000 };
+  state.params   = { ...r.params, records: state.scanParams.records };
   goToStep(4);
 }
 
