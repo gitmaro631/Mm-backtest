@@ -1330,8 +1330,18 @@ function toggleScanPool(id) {
   navBtns(document.getElementById('nav-buttons'), true, 'nextStep', null, scanSelectedIds.size === 0);
 }
 
-function scanSelectAll()   { state.pools.forEach(p => scanSelectedIds.add(p.id)); renderApp(); }
-function scanDeselectAll() { scanSelectedIds.clear(); scanSelectionSet = true; renderApp(); }
+function scanSelectAll() {
+  const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
+  filtered.forEach(p => scanSelectedIds.add(p.id));
+  scanSelectionSet = true;
+  renderApp();
+}
+function scanDeselectAll() {
+  const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
+  filtered.forEach(p => scanSelectedIds.delete(p.id));
+  scanSelectionSet = true;
+  renderApp();
+}
 
 // ── Step 4 (auto): 스캔 설정 ──────────────────────────
 
