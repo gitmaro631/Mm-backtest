@@ -13,6 +13,7 @@
         <div style="display:flex;align-items:center;gap:8px;">
           <h1 style="margin-bottom:0;">MM 백테스트</h1>
           <button class="ip-btn" id="help-btn" onclick="toggleInfo()">❓ 도움말</button>
+          <button class="ip-btn" id="utils-btn" onclick="toggleUtils()">🔗 유틸 모음</button>
         </div>
         <div id="lang-switch"></div>
       </div>
@@ -24,6 +25,9 @@
 
   <div id="info-overlay" class="ip-hidden">
     <div id="info-panel"></div>
+  </div>
+  <div id="utils-overlay" class="ip-hidden">
+    <div id="utils-panel"></div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="app.js"></script>

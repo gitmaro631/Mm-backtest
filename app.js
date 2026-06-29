@@ -148,6 +148,9 @@ const S = {
   ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
   ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
   btn_help:       { ko:'도움말', en:'Help', id:'Bantuan', zh:'帮助', ja:'ヘルプ', es:'Ayuda', vi:'Trợ giúp', hi:'सहायता', pt:'Ajuda', tl:'Tulong', fr:'Aide' },
+  btn_utils:      { ko:'유틸 모음', en:'My Apps', id:'Aplikasi', zh:'工具合集', ja:'アプリ一覧', es:'Mis Apps', vi:'Ứng dụng', hi:'मेरे ऐप्स', pt:'Meus Apps', tl:'Mga App', fr:'Mes Apps' },
+  utils_title:    { ko:'유틸 모음', en:'My Utilities', id:'Utilitas Saya', zh:'我的工具集', ja:'マイユーティリティ', es:'Mis Utilidades', vi:'Tiện ích của tôi', hi:'मेरे उपकरण', pt:'Minhas Utilidades', tl:'Aking Mga Utility', fr:'Mes Utilitaires' },
+  utils_soon:     { ko:'유틸 목록이 곧 추가됩니다 :)', en:'More utilities coming soon :)', id:'Utilitas lainnya segera hadir :)', zh:'更多工具即将推出 :)', ja:'他のユーティリティが近日公開 :)', es:'Más utilidades próximamente :)', vi:'Thêm tiện ích sắp ra mắt :)', hi:'और उपकरण जल्द आ रहे हैं :)', pt:'Mais utilitários em breve :)', tl:'Mas maraming utility ang darating :)', fr:"Plus d'utilitaires bientôt :)" },
   p_rec:          { ko:'권장', en:'Rec', id:'Rekm', zh:'推荐', ja:'推奨', es:'Rec', vi:'Đề xuất', hi:'अनुशंसित', pt:'Rec', tl:'Rekm', fr:'Rec' },
   // ── Auto Optimize ──
   auto_name:       { ko:'자동 최적화 🔍', en:'Auto Optimize 🔍', id:'Optimasi Otomatis 🔍', zh:'自动优化 🔍', ja:'自動最適化 🔍', es:'Auto Optimizar 🔍', vi:'Tự Động Tối Ưu 🔍', hi:'स्वतः अनुकूलन 🔍', pt:'Auto Otimizar 🔍', tl:'Auto Optimize 🔍', fr:'Auto Optimiser 🔍' },
@@ -629,6 +632,23 @@ function toggleInfo() {
   const overlay = document.getElementById('info-overlay');
   const hidden  = overlay.classList.toggle('ip-hidden');
   if (!hidden) renderInfoPanel();
+}
+
+function toggleUtils() {
+  const overlay = document.getElementById('utils-overlay');
+  overlay.classList.toggle('ip-hidden');
+  const panel = document.getElementById('utils-panel');
+  if (!overlay.classList.contains('ip-hidden')) {
+    panel.innerHTML = `
+      <div class="ip-header">
+        <span class="ip-title">🔗 ${t(S.utils_title)}</span>
+        <button class="ip-close-btn" onclick="toggleUtils()">${t(S.ip_close)}</button>
+      </div>
+      <div class="ip-card" style="text-align:center;padding:40px 20px;color:#4a5568;font-size:0.9rem">
+        ${t(S.utils_soon)}
+      </div>
+    `;
+  }
 }
 
 const _LANG_META = {

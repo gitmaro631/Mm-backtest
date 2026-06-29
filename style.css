@@ -321,8 +321,9 @@ h1 {
 }
 .ip-btn:hover { background: #667eea; color: #fff; }
 
-/* ── Info overlay ── */
-#info-overlay {
+/* ── Info / Utils overlay ── */
+#info-overlay,
+#utils-overlay {
   position: fixed;
   inset: 0;
   background: #0f1117;
@@ -330,7 +331,8 @@ h1 {
   overflow-y: auto;
   padding: 16px;
 }
-#info-overlay.ip-hidden { display: none; }
+#info-overlay.ip-hidden,
+#utils-overlay.ip-hidden { display: none; }
 
 .ip-header {
   display: flex;
