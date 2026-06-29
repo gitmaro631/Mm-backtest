@@ -197,6 +197,7 @@ const POOL_PAGE_SIZE = 10;
 let activeChart = null;
 let _fetchStop = false;
 let scanSelectedIds = new Set();
+let scanSelectionSet = false;
 let piTotalFetched = 0;
 
 // ═══════════════════════════════════════════════════════
@@ -743,7 +744,7 @@ function renderStrategyStep(el, nav) {
 
 function selectStrategy(k) {
   state.strategy = k; state.pool = null; state.pools = []; poolPage = 0;
-  scanSelectedIds.clear();
+  scanSelectedIds.clear(); scanSelectionSet = false;
   renderApp();
 }
 
@@ -1269,8 +1270,9 @@ function renderAutoPoolSelectStep(el, nav) {
     if (state.network === 'pi') loadPiPairs(); else loadPools();
     return;
   }
-  if (scanSelectedIds.size === 0) {
+  if (!scanSelectionSet) {
     state.pools.slice(0, 10).forEach(p => scanSelectedIds.add(p.id));
+    scanSelectionSet = true;
   }
   const selCount = scanSelectedIds.size;
   el.innerHTML = `
@@ -1325,7 +1327,7 @@ function toggleScanPool(id) {
 }
 
 function scanSelectAll()   { state.pools.forEach(p => scanSelectedIds.add(p.id)); renderApp(); }
-function scanDeselectAll() { scanSelectedIds.clear(); renderApp(); }
+function scanDeselectAll() { scanSelectedIds.clear(); scanSelectionSet = true; renderApp(); }
 
 // ── Step 4 (auto): 스캔 설정 ──────────────────────────
 
