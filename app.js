@@ -188,23 +188,43 @@ function apiFetch(url) {
 }
 
 async function fetchPools() {
-  const base = horizonBase();
-  const all = [];
-  let url = `${base}/liquidity_pools?reserves_asset_type=native&limit=200&order=desc`;
-  for (let page = 0; page < 5 && url; page++) {
-    const r = await apiFetch(url);
-    if (!r.ok) break;
+  try {
+    const sortKey = state.strategy === 'orderbook' ? 'volume' : 'total_value';
+    const r = await fetch(`https://api.stellar.expert/explorer/public/liquidity-pool?sort=${sortKey}&order=desc&limit=200`);
+    if (!r.ok) throw new Error(`Expert ${r.status}`);
     const json = await r.json();
     const records = json._embedded?.records || [];
-    if (!records.length) break;
-    all.push(...records);
-    url = json._links?.next?.href || null;
-    if (all.length >= 1000) break;
+    if (!records.length) throw new Error('empty');
+
+    function expertAssetStr(a) {
+      if (!a) return null;
+      if (typeof a === 'string') return a === 'XLM' ? 'native' : a;
+      if (a.asset_type === 'native' || a.asset_code === 'XLM' && !a.asset_issuer) return 'native';
+      const code   = a.asset_code   || a.code   || '';
+      const issuer = a.asset_issuer || a.issuer || '';
+      return issuer ? `${code}:${issuer}` : code;
+    }
+
+    return records
+      .map(p => {
+        const assets  = p.assets || [];
+        const reserves = assets.map(a => ({ asset: expertAssetStr(a) || 'unknown', amount: '0' }));
+        const feePct  = p.fee ?? 0.003;
+        return {
+          id: p.id,
+          reserves,
+          total_trustlines: p.trustlines ?? 0,
+          fee_bp: Math.round(feePct * 10000),
+        };
+      })
+      .filter(p => p.reserves.length === 2 && p.reserves.some(r => r.asset === 'native'));
+  } catch (_) {
+    // Horizon 폴백
+    const base = horizonBase();
+    const r = await apiFetch(`${base}/liquidity_pools?reserves_asset_type=native&limit=200&order=desc`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return (await r.json())._embedded?.records || [];
   }
-  if (all.length > 0) return all;
-  const r = await apiFetch(`${base}/liquidity_pools?limit=200&order=desc`);
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  return (await r.json())._embedded?.records || [];
 }
 
 function hasNative(pool) {
