@@ -296,6 +296,19 @@ async function fetchTradesForPool(pool, total, onProgress) {
   return paginate(`${horizonBase()}/liquidity_pools/${pool.id}/trades`, params, total, onProgress);
 }
 
+async function fetchWithRetry(url, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    const r = await apiFetch(url);
+    if (r.ok) return r;
+    if (r.status === 503 || r.status === 429) {
+      await sleep(1500 * (i + 1));
+      continue;
+    }
+    throw new Error(`HTTP ${r.status}`);
+  }
+  throw new Error('HTTP 503 (재시도 실패)');
+}
+
 async function paginate(url, params, total, onProgress) {
   const pages = Math.ceil(total / 200);
   const all = [];
@@ -303,8 +316,7 @@ async function paginate(url, params, total, onProgress) {
 
   for (let i = 0; i < pages; i++) {
     if (cursor) params.set('cursor', cursor);
-    const r = await apiFetch(`${url}?${params}`);
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const r = await fetchWithRetry(`${url}?${params}`);
     const records = (await r.json())._embedded?.records || [];
     if (!records.length) break;
     all.push(...records);
