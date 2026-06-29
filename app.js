@@ -148,6 +148,22 @@ const S = {
   ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
   btn_help:       { ko:'도움말', en:'Help', id:'Bantuan', zh:'帮助', ja:'ヘルプ', es:'Ayuda', vi:'Trợ giúp', hi:'सहायता', pt:'Ajuda', tl:'Tulong', fr:'Aide' },
   p_rec:          { ko:'권장', en:'Rec', id:'Rekm', zh:'推荐', ja:'推奨', es:'Rec', vi:'Đề xuất', hi:'अनुशंसित', pt:'Rec', tl:'Rekm', fr:'Rec' },
+  // ── Auto Optimize ──
+  auto_name:       { ko:'자동 최적화 🔍', en:'Auto Optimize 🔍', id:'Optimasi Otomatis 🔍', zh:'自动优化 🔍', ja:'自動最適化 🔍', es:'Auto Optimizar 🔍', vi:'Tự Động Tối Ưu 🔍', hi:'स्वतः अनुकूलन 🔍', pt:'Auto Otimizar 🔍', tl:'Auto Optimize 🔍', fr:'Auto Optimiser 🔍' },
+  auto_desc:       { ko:'상위 풀을 자동 분석해 최적 파라미터 조합을 추천합니다', en:'Scans top pools to find the best parameter combination', id:'Pindai pool teratas untuk kombinasi parameter terbaik', zh:'自动扫描顶部池以找到最佳参数组合', ja:'上位プールを自動分析し最適パラメータを推薦します', es:'Escanea los mejores pools para encontrar la mejor combinación', vi:'Tự động quét các pool hàng đầu để tìm tham số tối ưu', hi:'सर्वोत्तम पैरामीटर के लिए शीर्ष पूल स्कैन करें', pt:'Verifica os melhores pools para a melhor combinação', tl:'I-scan ang mga nangungunang pool para sa pinakamahusay na parameter', fr:'Analyse les meilleurs pools pour trouver la meilleure combinaison' },
+  auto_pool_title: { ko:'분석할 풀 선택', en:'Select Pools to Scan', id:'Pilih Pool untuk Dipindai', zh:'选择要扫描的池', ja:'スキャンするプールを選択', es:'Seleccionar Pools a Escanear', vi:'Chọn Pool để Quét', hi:'स्कैन के लिए पूल चुनें', pt:'Selecionar Pools para Escanear', tl:'Piliin ang Pools na I-scan', fr:'Sélectionner les Pools à Scanner' },
+  auto_sel_all:    { ko:'전체 선택', en:'Select All', id:'Pilih Semua', zh:'全选', ja:'全て選択', es:'Seleccionar Todo', vi:'Chọn tất cả', hi:'सभी चुनें', pt:'Selecionar Tudo', tl:'Piliin Lahat', fr:'Tout Sélectionner' },
+  auto_desel_all:  { ko:'전체 해제', en:'Deselect All', id:'Hapus Semua', zh:'取消全选', ja:'全て解除', es:'Deseleccionar Todo', vi:'Bỏ chọn tất cả', hi:'सभी हटाएं', pt:'Desmarcar Tudo', tl:'I-deselect Lahat', fr:'Tout Désélectionner' },
+  auto_selected:   { ko:'개 선택됨', en:'selected', id:'dipilih', zh:'已选', ja:'個選択中', es:'seleccionados', vi:'đã chọn', hi:'चुने गए', pt:'selecionados', tl:'napili', fr:'sélectionnés' },
+  scan_title:      { ko:'스캔 설정', en:'Scan Settings', id:'Pengaturan Scan', zh:'扫描设置', ja:'スキャン設定', es:'Configuración de Escaneo', vi:'Cài đặt Quét', hi:'स्कैन सेटिंग्स', pt:'Configurações de Varredura', tl:'Mga Setting ng Scan', fr:'Paramètres de Scan' },
+  scan_sub_strat:  { ko:'분석 전략', en:'Strategy to Test', id:'Strategi', zh:'分析策略', ja:'分析戦略', es:'Estrategia', vi:'Chiến lược', hi:'रणनीति', pt:'Estratégia', tl:'Estratehiya', fr:'Stratégie' },
+  scan_records:    { ko:'풀당 거래 건수', en:'Records per Pool', id:'Rekaman per Pool', zh:'每池交易数', ja:'プールあたりの件数', es:'Registros por Pool', vi:'Số giao dịch mỗi pool', hi:'प्रति पूल रिकॉर्ड', pt:'Registros por Pool', tl:'Mga Record bawat Pool', fr:'Enregistrements par Pool' },
+  scan_spreads:    { ko:'스프레드 옵션 (%)', en:'Spread Options (%)', id:'Opsi Spread (%)', zh:'价差选项 (%)', ja:'スプレッドオプション (%)', es:'Opciones de Spread (%)', vi:'Tùy chọn Spread (%)', hi:'स्प्रेड विकल्प (%)', pt:'Opções de Spread (%)', tl:'Mga Opsyon ng Spread (%)', fr:'Options de Spread (%)' },
+  scan_running:    { ko:'분석 중', en:'Scanning', id:'Memindai', zh:'扫描中', ja:'スキャン中', es:'Escaneando', vi:'Đang quét', hi:'स्कैन हो रहा है', pt:'Varrendo', tl:'Nag-sca-scan', fr:'En cours de scan' },
+  scan_done:       { ko:'스캔 완료', en:'Scan Complete', id:'Scan Selesai', zh:'扫描完成', ja:'スキャン完了', es:'Escaneo Completo', vi:'Quét xong', hi:'स्कैन पूर्ण', pt:'Varredura Completa', tl:'Tapos na ang Scan', fr:'Scan Terminé' },
+  res_scan_title:  { ko:'최적화 결과', en:'Optimization Results', id:'Hasil Optimasi', zh:'优化结果', ja:'最適化結果', es:'Resultados de Optimización', vi:'Kết quả Tối ưu hóa', hi:'अनुकूलन परिणाम', pt:'Resultados de Otimização', tl:'Mga Resulta ng Optimization', fr:"Résultats d'Optimisation" },
+  res_scan_use:    { ko:'이 설정으로 백테스트', en:'Backtest this setup', id:'Backtest pengaturan ini', zh:'用此设置回测', ja:'この設定でバックテスト', es:'Backtest con esta configuración', vi:'Backtest với cài đặt này', hi:'इस सेटअप से बैकटेस्ट', pt:'Backtest com esta configuração', tl:'I-backtest ang setup na ito', fr:'Backtest avec cette configuration' },
+  res_scan_empty:  { ko:'결과 없음 — 다시 시도해주세요', en:'No results — please retry', id:'Tidak ada hasil — coba lagi', zh:'无结果 — 请重试', ja:'結果なし — 再試行してください', es:'Sin resultados — intente de nuevo', vi:'Không có kết quả — thử lại', hi:'कोई परिणाम नहीं — पुनः प्रयास करें', pt:'Sem resultados — tente novamente', tl:'Walang resulta — subukan muli', fr:'Aucun résultat — réessayez' },
 };
 
 function t(s)  { return s[LANG] ?? s.ko; }
@@ -180,6 +196,7 @@ let poolPage = 0;
 const POOL_PAGE_SIZE = 10;
 let activeChart = null;
 let _fetchStop = false;
+let scanSelectedIds = new Set();
 
 // ═══════════════════════════════════════════════════════
 //  HORIZON API
@@ -221,8 +238,8 @@ async function fetchPools() {
   const xlmPools = expertPools.filter(p => p.assets?.some(a => a.asset === 'XLM'));
   if (!xlmPools.length) throw new Error('XLM 풀 없음');
 
-  // Step 3: 전략별 필터 + 정렬
-  if (state.strategy === 'orderbook') {
+  // Step 3: 전략별 필터 + 정렬 (auto는 orderbook 정렬 사용)
+  if (state.strategy === 'orderbook' || state.strategy === 'auto') {
     // 오더북 MM: 7일 거래 100건 미만 제외 (비활성 풀)
     const active = xlmPools.filter(p => (p.trades?.['7d'] || 0) >= 100);
     const candidates = active.length >= 10 ? active : xlmPools;
@@ -715,12 +732,17 @@ function renderStrategyStep(el, nav) {
       <h3>${t(S.amm_name)}</h3>
       <p>${isPi ? tl(S.amm_disabled) : tl(S.amm_desc)}</p>
     </div>
+    <div class="card ${state.strategy === 'auto' ? 'selected' : ''}" onclick="selectStrategy('auto')">
+      <h3>${t(S.auto_name)}</h3>
+      <p>${tl(S.auto_desc)}</p>
+    </div>
   `;
   navBtns(nav, true, 'nextStep', null, !state.strategy);
 }
 
 function selectStrategy(k) {
   state.strategy = k; state.pool = null; state.pools = []; poolPage = 0;
+  scanSelectedIds.clear();
   renderApp();
 }
 
@@ -763,6 +785,7 @@ async function fetchPiPairs() {
 }
 
 function renderPoolStep(el, nav) {
+  if (state.strategy === 'auto') { renderAutoPoolSelectStep(el, nav); return; }
   const isPi = state.network === 'pi';
 
   if (isPi) {
@@ -852,7 +875,13 @@ function changePage(dir) {
     : state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
   const totalPages = Math.ceil(filtered.length / POOL_PAGE_SIZE);
   poolPage = Math.max(0, Math.min(poolPage + dir, totalPages - 1));
-  document.getElementById('pool-list').innerHTML = state.network === 'pi' ? piPairsHtml() : poolListHtml();
+  if (state.strategy === 'auto') {
+    document.getElementById('auto-pool-list').innerHTML = autoPoolListHtml();
+  } else if (state.network === 'pi') {
+    document.getElementById('pool-list').innerHTML = piPairsHtml();
+  } else {
+    document.getElementById('pool-list').innerHTML = poolListHtml();
+  }
 }
 
 function piPairsHtml() {
@@ -924,6 +953,7 @@ function selectPool(id) {
 // ── Step 4: 파라미터 ──────────────────────────────────
 
 function renderParamsStep(el, nav) {
+  if (state.strategy === 'auto') { renderScanParamsStep(el, nav); return; }
   const isOB = state.strategy === 'orderbook';
   const p    = state.params;
   el.innerHTML = `
@@ -1030,6 +1060,7 @@ function goToRun() {
 
 function renderRunStep(el, nav) {
   _fetchStop = false;
+  if (state.strategy === 'auto') { renderAutoRunStep(el, nav); return; }
   el.innerHTML = `
     <div class="section-title">${t(S.run_title)}</div>
     <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.run_start)}</div>
@@ -1109,6 +1140,7 @@ async function runBacktest() {
 // ── Step 6: 결과 ──────────────────────────────────────
 
 function renderResultStep(el, nav) {
+  if (state.strategy === 'auto') { renderScanResultStep(el, nav); return; }
   const r = state.result;
   if (!r) { el.innerHTML = `<div class="alert">${tl(S.res_none)}</div>`; return; }
 
@@ -1219,6 +1251,284 @@ function drawChart(r) {
       },
     },
   });
+}
+
+// ═══════════════════════════════════════════════════════
+//  AUTO OPTIMIZE
+// ═══════════════════════════════════════════════════════
+
+function renderAutoPoolSelectStep(el, nav) {
+  if (state.pools.length === 0) {
+    el.innerHTML = `
+      <div class="section-title">${t(S.auto_pool_title)}</div>
+      <div class="status-text"><span class="spinner"></span> ${tl(S.loading_pools)}... <span id="load-timer">0</span>${tp(S.sec)}</div>
+    `;
+    navBtns(nav, true, null);
+    loadPools();
+    return;
+  }
+  if (scanSelectedIds.size === 0) {
+    state.pools.slice(0, 10).forEach(p => scanSelectedIds.add(p.id));
+  }
+  const selCount = scanSelectedIds.size;
+  el.innerHTML = `
+    <div class="section-title">${t(S.auto_pool_title)}</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:0.8rem" onclick="scanSelectAll()">${tl(S.auto_sel_all)}</button>
+      <button class="btn btn-secondary" style="padding:5px 12px;font-size:0.8rem" onclick="scanDeselectAll()">${tl(S.auto_desel_all)}</button>
+      <span id="scan-sel-badge" style="font-size:0.82rem;color:#90cdf4"><strong>${selCount}</strong> ${t(S.auto_selected)}</span>
+    </div>
+    <input class="search-box" id="pool-search" placeholder="${tp(S.search_ph)}" oninput="filterAutoPool()" value="${poolSearchQuery}">
+    <div id="auto-pool-list">${autoPoolListHtml()}</div>
+  `;
+  navBtns(nav, true, 'nextStep', null, selCount === 0);
+}
+
+function autoPoolListHtml() {
+  const filtered = state.pools.filter(p => !poolSearchQuery || poolLabel(p).toLowerCase().includes(poolSearchQuery));
+  if (!filtered.length) return `<div class="status-text">${tl(S.no_results)}</div>`;
+  const start = poolPage * POOL_PAGE_SIZE;
+  const page  = filtered.slice(start, start + POOL_PAGE_SIZE);
+  return page.map(p => `
+    <div class="pool-item ${scanSelectedIds.has(p.id) ? 'selected' : ''}" onclick="toggleScanPool('${p.id}')">
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="checkbox" ${scanSelectedIds.has(p.id) ? 'checked' : ''} style="width:16px;height:16px;accent-color:#667eea;flex-shrink:0;pointer-events:none">
+        <div>
+          <div class="pool-pair">${poolLabel(p)}</div>
+          <div class="pool-meta">7d거래 <strong style="color:#e2e8f0">${(p._trades7d||0).toLocaleString()}</strong>건 · LP <strong style="color:#e2e8f0">${p._accounts||'?'}</strong></div>
+        </div>
+      </div>
+    </div>`).join('') + pagerHtml(filtered.length);
+}
+
+function filterAutoPool() {
+  poolSearchQuery = document.getElementById('pool-search')?.value?.toLowerCase() || '';
+  poolPage = 0;
+  document.getElementById('auto-pool-list').innerHTML = autoPoolListHtml();
+  const badge = document.getElementById('scan-sel-badge');
+  if (badge) badge.innerHTML = `<strong>${scanSelectedIds.size}</strong> ${t(S.auto_selected)}`;
+  navBtns(document.getElementById('nav-buttons'), true, 'nextStep', null, scanSelectedIds.size === 0);
+}
+
+function toggleScanPool(id) {
+  if (scanSelectedIds.has(id)) scanSelectedIds.delete(id);
+  else scanSelectedIds.add(id);
+  document.getElementById('auto-pool-list').innerHTML = autoPoolListHtml();
+  const badge = document.getElementById('scan-sel-badge');
+  if (badge) badge.innerHTML = `<strong>${scanSelectedIds.size}</strong> ${t(S.auto_selected)}`;
+  navBtns(document.getElementById('nav-buttons'), true, 'nextStep', null, scanSelectedIds.size === 0);
+}
+
+function scanSelectAll()   { state.pools.forEach(p => scanSelectedIds.add(p.id)); renderApp(); }
+function scanDeselectAll() { scanSelectedIds.clear(); renderApp(); }
+
+// ── Step 4 (auto): 스캔 설정 ──────────────────────────
+
+function renderScanParamsStep(el, nav) {
+  const isPi = state.network === 'pi';
+  const p    = state.scanParams;
+  const sub  = p.subStrategy || 'orderbook';
+  el.innerHTML = `
+    <div class="section-title">${t(S.scan_title)}</div>
+    <div class="alert info">📊 ${scanSelectedIds.size} ${t(S.auto_selected)} · ${NETWORKS[state.network].name}</div>
+
+    <div class="form-group">
+      <label>${tl(S.scan_sub_strat)}</label>
+      <div style="display:flex;gap:16px;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.9rem">
+          <input type="radio" name="scan-strat" value="orderbook" ${sub==='orderbook'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea">
+          <span>${t(S.ob_name)}</span>
+        </label>
+        ${!isPi ? `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.9rem">
+          <input type="radio" name="scan-strat" value="amm" ${sub==='amm'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea">
+          <span>${t(S.amm_name)}</span>
+        </label>` : ''}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>${tl(S.scan_records)} <span class="param-hint">${t(S.p_rec)}: 500</span></label>
+      <input type="number" id="scan-records" value="${p.records||500}" min="200" max="2000" step="100">
+    </div>
+
+    <div id="scan-spread-opts">${sub==='orderbook' ? scanSpreadOptsHtml(p.spreadOptions) : ''}</div>
+  `;
+  navBtns(nav, true, 'goToScanRun', `▶ ${t(S.btn_run)}`);
+}
+
+function scanSpreadOptsHtml(selected) {
+  const opts = [0.3, 0.5, 1.0, 1.5, 2.0];
+  const sel  = selected || opts;
+  return `<div class="form-group">
+    <label>${tl(S.scan_spreads)}</label>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:8px">
+      ${opts.map(v => {
+        const id = `spread-${String(v).replace('.','_')}`;
+        return `<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.88rem">
+          <input type="checkbox" id="${id}" ${sel.includes(v)?'checked':''} style="accent-color:#667eea">
+          <span>${v}%</span>
+        </label>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function updateScanSpreadOpts(val) {
+  const el = document.getElementById('scan-spread-opts');
+  if (el) el.innerHTML = val === 'orderbook' ? scanSpreadOptsHtml(null) : '';
+}
+
+function goToScanRun() {
+  const subStrat = document.querySelector('input[name="scan-strat"]:checked')?.value || 'orderbook';
+  const records  = Math.max(200, Math.min(2000, parseInt(document.getElementById('scan-records')?.value || '500')));
+  const spreadOptions = subStrat === 'orderbook'
+    ? [0.3, 0.5, 1.0, 1.5, 2.0].filter(v => document.getElementById(`spread-${String(v).replace('.','_')}`)?.checked)
+    : null;
+  state.scanParams = { subStrategy: subStrat, records, capital: 500, spreadOptions: spreadOptions?.length ? spreadOptions : [0.5] };
+  nextStep();
+}
+
+// ── Step 5 (auto): 스캔 실행 ──────────────────────────
+
+function renderAutoRunStep(el, nav) {
+  el.innerHTML = `
+    <div class="section-title">${t(S.scan_title)}</div>
+    <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.scan_running)}...</div>
+    <div class="progress-bar"><div class="progress-fill" id="run-prog" style="width:0%"></div></div>
+    <div class="result-card" style="margin-top:12px">
+      <div class="log-list" id="run-log"></div>
+    </div>
+  `;
+  nav.innerHTML = `<button class="btn btn-secondary" id="btn-stop-fetch" onclick="window._stopFetch()">${tl(S.btn_stop)}</button>`;
+  runAutoScan();
+}
+
+async function runAutoScan() {
+  const { subStrategy, records, capital, spreadOptions } = state.scanParams;
+  const log    = msg => { const el = document.getElementById('run-log');  if (el) el.innerHTML += `<div>${msg}</div>`; };
+  const status = msg => { const el = document.getElementById('run-status'); if (el) el.innerHTML = msg; };
+  const setProg = (cur, tot) => {
+    const el = document.getElementById('run-prog');
+    if (el) el.style.width = `${Math.min(100, cur/tot*100)}%`;
+  };
+
+  const selected = state.pools.filter(p => scanSelectedIds.has(p.id));
+  state.scanResults = [];
+
+  try {
+    for (let i = 0; i < selected.length; i++) {
+      if (_fetchStop) break;
+      const pool  = selected[i];
+      const label = poolLabel(pool);
+      status(`<span class="spinner"></span> [${i+1}/${selected.length}] ${label} — ${tl(S.scan_running)}...`);
+      setProg(i, selected.length);
+
+      let tradeRecords;
+      try {
+        const fetchFn = subStrategy === 'amm' ? fetchTradesForPool : fetchTradesForPair;
+        tradeRecords  = await fetchFn(pool, records, () => {});
+      } catch (e) {
+        log(`✗ ${label}: ${e.message}`);
+        continue;
+      }
+
+      const trades = parseTrades(tradeRecords);
+      if (trades.length < 10) { log(`✗ ${label}: 데이터 부족 (${trades.length}건)`); continue; }
+
+      let bestRoi = -Infinity, bestResult = null, bestParams = null;
+
+      if (subStrategy === 'orderbook') {
+        for (const spread of spreadOptions) {
+          for (const split of [40, 50, 60]) {
+            const p = { records, totalUsdc: capital, splitRatio: split, spreadPct: spread,
+                        orderSizePct: 3, layers: 1, stopRatio: 70, feePct: 0, surgeTicks: 3, surgePct: 1.5 };
+            const r = runOrderbookBacktest(trades, p);
+            if (r.roi > bestRoi) { bestRoi = r.roi; bestResult = r; bestParams = p; }
+          }
+        }
+      } else {
+        for (const maxIL of [5, 10, 20]) {
+          for (const targetRoi of [3, 5, 10]) {
+            const p = { records, depositUsdc: capital, maxILPct: maxIL, targetRoiPct: targetRoi };
+            const r = runAMMBacktest(pool, trades, p);
+            if (r.roi > bestRoi) { bestRoi = r.roi; bestResult = r; bestParams = p; }
+          }
+        }
+      }
+
+      if (bestResult) {
+        state.scanResults.push({ pool, params: bestParams, result: bestResult, roi: bestRoi, label });
+        const roiStr = (bestRoi * 100).toFixed(1);
+        const hint   = subStrategy === 'orderbook'
+          ? `스프레드 ${bestParams.spreadPct}% · 비율 ${bestParams.splitRatio}:${100-bestParams.splitRatio}`
+          : `IL ${bestParams.maxILPct}% · 목표ROI ${bestParams.targetRoiPct}%`;
+        log(`✓ ${label}: ROI <strong style="color:${bestRoi>=0?'#68d391':'#fc8181'}">${roiStr}%</strong> (${hint})`);
+      }
+    }
+
+    state.scanResults.sort((a, b) => b.roi - a.roi);
+    setProg(selected.length, selected.length);
+    status(tl(S.scan_done));
+    document.getElementById('nav-buttons').innerHTML = '';
+    await sleep(400);
+    nextStep();
+
+  } catch (e) {
+    document.getElementById('nav-buttons').innerHTML = '';
+    status(`<div class="alert">${tl(S.run_error)}: ${e.message}</div>`);
+    document.getElementById('nav-buttons').innerHTML = `
+      <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
+      <button class="btn btn-primary"   onclick="goToStep(5)">${tl(S.btn_retry)}</button>
+    `;
+  }
+}
+
+// ── Step 6 (auto): 결과 ───────────────────────────────
+
+function renderScanResultStep(el, nav) {
+  const results    = state.scanResults;
+  const subStrategy = state.scanParams.subStrategy;
+
+  if (!results.length) {
+    el.innerHTML = `<div class="section-title">${t(S.res_scan_title)}</div><div class="alert">${tl(S.res_scan_empty)}</div>`;
+    nav.innerHTML = `<button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="section-title">${t(S.res_scan_title)}</div>
+    <div class="result-card">
+      ${results.map((r, idx) => {
+        const roi      = (r.roi * 100).toFixed(1);
+        const roiClass = r.roi >= 0 ? 'positive' : 'negative';
+        const paramLine = subStrategy === 'orderbook'
+          ? `스프레드 ${r.params.spreadPct}% · 비율 ${r.params.splitRatio}:${100-r.params.splitRatio}`
+          : `IL ${r.params.maxILPct}% · 목표ROI ${r.params.targetRoiPct}%`;
+        const medal = idx === 0 ? '🥇 ' : idx === 1 ? '🥈 ' : idx === 2 ? '🥉 ' : `#${idx+1} `;
+        return `
+          <div class="stat-row" style="flex-direction:column;align-items:flex-start;gap:5px;padding:12px 0">
+            <div style="display:flex;justify-content:space-between;width:100%;align-items:center">
+              <span style="font-weight:600">${medal}${r.label}</span>
+              <span class="value ${roiClass}">${roi}%</span>
+            </div>
+            <div style="font-size:0.78rem;color:#718096">${paramLine} · ${r.result.fills}회 체결</div>
+            <button class="btn btn-primary" style="padding:5px 12px;font-size:0.8rem;margin-top:3px" onclick="useScanResult(${idx})">${tl(S.res_scan_use)}</button>
+          </div>`;
+      }).join('')}
+    </div>
+  `;
+  nav.innerHTML = `
+    <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
+    <button class="btn btn-primary"   onclick="goToStep(1)">${tl(S.btn_new)}</button>
+  `;
+}
+
+function useScanResult(idx) {
+  const r = state.scanResults[idx];
+  state.strategy = state.scanParams.subStrategy;
+  state.pool     = r.pool;
+  state.params   = { ...r.params, records: 5000 };
+  goToStep(4);
 }
 
 // ═══════════════════════════════════════════════════════
