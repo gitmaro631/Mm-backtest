@@ -163,6 +163,7 @@ const S = {
   scan_done:       { ko:'스캔 완료', en:'Scan Complete', id:'Scan Selesai', zh:'扫描完成', ja:'スキャン完了', es:'Escaneo Completo', vi:'Quét xong', hi:'स्कैन पूर्ण', pt:'Varredura Completa', tl:'Tapos na ang Scan', fr:'Scan Terminé' },
   res_scan_title:  { ko:'최적화 결과', en:'Optimization Results', id:'Hasil Optimasi', zh:'优化结果', ja:'最適化結果', es:'Resultados de Optimización', vi:'Kết quả Tối ưu hóa', hi:'अनुकूलन परिणाम', pt:'Resultados de Otimização', tl:'Mga Resulta ng Optimization', fr:"Résultats d'Optimisation" },
   res_scan_use:    { ko:'이 설정으로 백테스트', en:'Backtest this setup', id:'Backtest pengaturan ini', zh:'用此设置回测', ja:'この設定でバックテスト', es:'Backtest con esta configuración', vi:'Backtest với cài đặt này', hi:'इस सेटअप से बैकटेस्ट', pt:'Backtest com esta configuração', tl:'I-backtest ang setup na ito', fr:'Backtest avec cette configuration' },
+  run_live_roi:    { ko:'실시간 예상 수익률', en:'Live ROI Preview', id:'Pratinjau ROI', zh:'实时收益预览', ja:'リアルタイム損益', es:'Rentabilidad en Vivo', vi:'ROI Trực Tiếp', hi:'लाइव ROI', pt:'ROI em Tempo Real', tl:'Live ROI', fr:'ROI en Direct' },
   res_scan_empty:  { ko:'결과 없음 — 다시 시도해주세요', en:'No results — please retry', id:'Tidak ada hasil — coba lagi', zh:'无结果 — 请重试', ja:'結果なし — 再試行してください', es:'Sin resultados — intente de nuevo', vi:'Không có kết quả — thử lại', hi:'कोई परिणाम नहीं — पुनः प्रयास करें', pt:'Sem resultados — tente novamente', tl:'Walang resulta — subukan muli', fr:'Aucun résultat — réessayez' },
 };
 
@@ -346,7 +347,7 @@ async function paginate(url, params, total, onProgress) {
     if (!records.length) break;
     all.push(...records);
     cursor = records.at(-1).paging_token;
-    onProgress(all.length, total);
+    onProgress(all.length, total, all);
     await sleep(150);
   }
   return all.reverse();
@@ -1066,8 +1067,19 @@ function goToRun() {
 function renderRunStep(el, nav) {
   _fetchStop = false;
   if (state.strategy === 'auto') { renderAutoRunStep(el, nav); return; }
+  const isOB      = state.strategy === 'orderbook';
+  const stratLabel = isOB ? t(S.ob_name) : t(S.amm_name);
+  const stratColor = isOB ? '#48bb78' : '#667eea';
   el.innerHTML = `
     <div class="section-title">${t(S.run_title)}</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <span style="background:${stratColor};color:#fff;font-size:0.78rem;font-weight:700;padding:3px 12px;border-radius:12px">${stratLabel}</span>
+      <span style="font-size:0.97rem;font-weight:600;color:#f7fafc">${poolLabel(state.pool)}</span>
+    </div>
+    <div style="text-align:center;background:#1a1f2e;border:1px solid #2d3748;border-radius:10px;padding:14px 10px;margin-bottom:10px">
+      <div id="live-roi" style="font-size:1.7rem;font-weight:700;color:#4a5568;transition:color 0.4s">—</div>
+      <div style="font-size:0.72rem;color:#4a5568;margin-top:3px">${t(S.run_live_roi)}</div>
+    </div>
     <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.run_start)}</div>
     <div class="progress-bar"><div class="progress-fill" id="run-prog" style="width:0%"></div></div>
     <div class="result-card" style="margin-top:12px">
@@ -1093,10 +1105,24 @@ async function runBacktest() {
     const el = document.getElementById('run-status');
     if (el) el.innerHTML = msg;
   };
-  const progress = (cur, tot) => {
+  const progress = (cur, tot, currentAll) => {
     const el = document.getElementById('run-prog');
     if (el) el.style.width = `${Math.min(100, cur / tot * 100)}%`;
     status(`<span class="spinner"></span> ${cur} / ${tot} ${tl(S.run_received)}`);
+    if (currentAll && cur >= 100) {
+      try {
+        const pt = parseTrades([...currentAll].reverse());
+        if (pt.length >= 10) {
+          const pv = state.strategy === 'orderbook'
+            ? runOrderbookBacktest(pt, state.params)
+            : runAMMBacktest(state.pool, pt, state.params);
+          const roi = pv.roi * 100;
+          const color = roi >= 0 ? '#68d391' : '#fc8181';
+          const lv = document.getElementById('live-roi');
+          if (lv) lv.innerHTML = `<span style="color:${color}">${roi >= 0 ? '+' : ''}${roi.toFixed(2)}%</span>`;
+        }
+      } catch (_) {}
+    }
   };
 
   try {
