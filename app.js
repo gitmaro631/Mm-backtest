@@ -188,44 +188,26 @@ function apiFetch(url) {
 }
 
 async function fetchPools() {
-  try {
-    const sortKey = state.strategy === 'orderbook' ? 'volume' : 'total_value';
-    const r = await fetch(`https://api.stellar.expert/explorer/public/liquidity-pool?sort=${sortKey}&order=desc&limit=200`);
-    if (!r.ok) throw new Error(`Expert ${r.status}`);
-    const json = await r.json();
-    const records = json._embedded?.records || [];
-    if (!records.length) throw new Error('empty');
+  // Step 1: Stellar Expert에서 거래량/TVL 기준 상위 풀 ID 목록 가져오기
+  const sortKey = state.strategy === 'orderbook' ? 'volume' : 'total_value';
+  const expertResp = await fetch(`https://api.stellar.expert/explorer/public/liquidity-pool?sort=${sortKey}&order=desc&limit=50`);
+  if (!expertResp.ok) throw new Error(`Stellar Expert API ${expertResp.status}`);
+  const expertJson = await expertResp.json();
+  const expertPools = expertJson._embedded?.records || [];
+  if (!expertPools.length) throw new Error('Stellar Expert 결과 없음');
 
-    function expertAssetStr(a) {
-      if (!a) return null;
-      // 문자열인 경우 ("XLM" 또는 "CODE:ISSUER")
-      if (typeof a === 'string') return a === 'XLM' ? 'native' : a;
-      // {asset: "XLM"} 또는 {asset: "CODE:ISSUER"} 형태 (Stellar Expert)
-      if (a.asset !== undefined) return a.asset === 'XLM' ? 'native' : a.asset;
-      // Stellar SDK 형태 fallback
-      if (a.asset_type === 'native') return 'native';
-      const code = a.asset_code || '';
-      const issuer = a.asset_issuer || '';
-      return issuer ? `${code}:${issuer}` : code;
-    }
+  // Step 2: Horizon에서 해당 풀들의 정확한 데이터 병렬 조회 (trustlines 포함)
+  const base = horizonBase();
+  const details = await Promise.all(
+    expertPools.map(p =>
+      apiFetch(`${base}/liquidity_pools/${p.id}`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    )
+  );
 
-    return records
-      .map(p => {
-        const assets   = p.assets || [];
-        const reserves = assets.map(a => ({ asset: expertAssetStr(a) || 'unknown', amount: '0' }));
-        const feeRaw   = p.fee ?? 30;
-        const fee_bp   = feeRaw > 1 ? feeRaw : Math.round(feeRaw * 10000);
-        return {
-          id: p.id,
-          reserves,
-          total_trustlines: p.trustlines ?? 0,
-          fee_bp,
-        };
-      })
-      .filter(p => p.reserves.length === 2 && p.reserves.some(r => r.asset === 'native'));
-  } catch (e) {
-    throw new Error(`Stellar Expert API 연결 실패: ${e.message}`);
-  }
+  // Step 3: Expert 순서 유지, XLM 포함 풀만 반환
+  return details.filter(p => p && hasNative(p));
 }
 
 function hasNative(pool) {
