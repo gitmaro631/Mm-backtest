@@ -189,12 +189,20 @@ function apiFetch(url) {
 
 async function fetchPools() {
   const base = horizonBase();
-  let r = await apiFetch(`${base}/liquidity_pools?reserves_asset_type=native&limit=100&order=asc`);
-  if (r.ok) {
-    const records = (await r.json())._embedded?.records || [];
-    if (records.length > 0) return records;
+  const all = [];
+  let url = `${base}/liquidity_pools?reserves_asset_type=native&limit=200&order=desc`;
+  for (let page = 0; page < 5 && url; page++) {
+    const r = await apiFetch(url);
+    if (!r.ok) break;
+    const json = await r.json();
+    const records = json._embedded?.records || [];
+    if (!records.length) break;
+    all.push(...records);
+    url = json._links?.next?.href || null;
+    if (all.length >= 1000) break;
   }
-  r = await apiFetch(`${base}/liquidity_pools?limit=100&order=asc`);
+  if (all.length > 0) return all;
+  const r = await apiFetch(`${base}/liquidity_pools?limit=200&order=desc`);
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return (await r.json())._embedded?.records || [];
 }
@@ -631,7 +639,7 @@ function renderStrategyStep(el, nav) {
 }
 
 function selectStrategy(k) {
-  state.strategy = k; state.pool = null;
+  state.strategy = k; state.pool = null; state.pools = []; poolPage = 0;
   renderApp();
 }
 
