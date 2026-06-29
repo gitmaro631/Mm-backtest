@@ -752,7 +752,7 @@ function selectStrategy(k) {
 async function fetchPiPairs() {
   const allRecords = [];
   let cursor = null;
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 25; i++) {
     const url = `${horizonBase()}/trades?limit=200&order=desc${cursor ? `&cursor=${cursor}` : ''}`;
     const r = await apiFetch(url);
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
