@@ -1383,13 +1383,13 @@ function renderScanParamsStep(el, nav) {
 
     <div class="form-group">
       <label>${tl(S.scan_sub_strat)}</label>
-      <div style="display:flex;gap:16px;margin-top:8px">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.9rem">
-          <input type="radio" name="scan-strat" value="orderbook" ${sub==='orderbook'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea">
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.92rem">
+          <input type="radio" name="scan-strat" value="orderbook" ${sub==='orderbook'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea;width:18px;height:18px;flex-shrink:0">
           <span>${t(S.ob_name)}</span>
         </label>
-        ${!isPi ? `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.9rem">
-          <input type="radio" name="scan-strat" value="amm" ${sub==='amm'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea">
+        ${!isPi ? `<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:0.92rem">
+          <input type="radio" name="scan-strat" value="amm" ${sub==='amm'?'checked':''} onchange="updateScanSpreadOpts(this.value)" style="accent-color:#667eea;width:18px;height:18px;flex-shrink:0">
           <span>${t(S.amm_name)}</span>
         </label>` : ''}
       </div>
