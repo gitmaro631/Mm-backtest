@@ -145,6 +145,7 @@ const S = {
   ip_copied:      { ko:'복사됨!', en:'Copied!', id:'Tersalin!', zh:'已复制!', ja:'コピーしました!', es:'¡Copiado!', vi:'Đã sao chép!', hi:'कॉपी हो गया!', pt:'Copiado!', tl:'Nakopya na!', fr:'Copié !' },
   ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
   ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
+  p_rec:          { ko:'권장', en:'Rec', id:'Rekm', zh:'推荐', ja:'推奨', es:'Rec', vi:'Đề xuất', hi:'अनुशंसित', pt:'Rec', tl:'Rekm', fr:'Rec' },
 };
 
 function t(s)  { return s[LANG] ?? s.ko; }
@@ -912,67 +913,67 @@ function renderParamsStep(el, nav) {
     <div class="alert info">📊 ${poolLabel(state.pool)} · ${NETWORKS[state.network].name}</div>
 
     <div class="form-group">
-      <label>${tl(S.p_records)}</label>
+      <label>${tl(S.p_records)} <span class="param-hint">${t(S.p_rec)}: 5,000</span></label>
       <input type="number" id="p-records" value="${p.records || 5000}" min="5000" max="10000" step="1000">
     </div>
 
     ${isOB ? `
     <div class="form-group">
-      <label>${tl(S.p_capital)} (USDC)</label>
+      <label>${tl(S.p_capital)} (USDC) <span class="param-hint">${t(S.p_rec)}: 500</span></label>
       <input type="number" id="p-totalUsdc" value="${p.totalUsdc || 500}" min="10">
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>${tl(S.p_split)}</label>
+        <label>${tl(S.p_split)} <span class="param-hint">${t(S.p_rec)}: 50</span></label>
         <input type="number" id="p-splitRatio" value="${p.splitRatio || 50}" min="10" max="90">
       </div>
       <div class="form-group">
-        <label>${tl(S.p_spread)}</label>
+        <label>${tl(S.p_spread)} <span class="param-hint">${t(S.p_rec)}: 0.3~0.5</span></label>
         <input type="number" id="p-spreadPct" value="${p.spreadPct || 0.5}" step="0.1" min="0.1">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>${tl(S.p_order_size)}</label>
+        <label>${tl(S.p_order_size)} <span class="param-hint">${t(S.p_rec)}: 3~5</span></label>
         <input type="number" id="p-orderSizePct" value="${p.orderSizePct || 3}" step="0.5" min="0.5">
       </div>
       <div class="form-group">
-        <label>${tl(S.p_layers)}</label>
+        <label>${tl(S.p_layers)} <span class="param-hint">${t(S.p_rec)}: 1~3</span></label>
         <input type="number" id="p-layers" value="${p.layers || 1}" min="1" max="5">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>${tl(S.p_stop)}</label>
+        <label>${tl(S.p_stop)} <span class="param-hint">${t(S.p_rec)}: 70</span></label>
         <input type="number" id="p-stopRatio" value="${p.stopRatio || 70}" min="51" max="99">
       </div>
       <div class="form-group">
-        <label>${tl(S.p_fee)}</label>
-        <input type="number" id="p-feePct" value="${p.feePct || 0.1}" step="0.05" min="0">
+        <label>${tl(S.p_fee)} <span class="param-hint">${t(S.p_rec)}: 0 (Stellar)</span></label>
+        <input type="number" id="p-feePct" value="${p.feePct !== undefined ? p.feePct : 0}" step="0.05" min="0">
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>${tl(S.p_surge_ticks)}</label>
+        <label>${tl(S.p_surge_ticks)} <span class="param-hint">${t(S.p_rec)}: 3~5</span></label>
         <input type="number" id="p-surgeTicks" value="${p.surgeTicks || 3}" min="2" max="20">
       </div>
       <div class="form-group">
-        <label>${tl(S.p_surge_pct)}</label>
+        <label>${tl(S.p_surge_pct)} <span class="param-hint">${t(S.p_rec)}: 1~2</span></label>
         <input type="number" id="p-surgePct" value="${p.surgePct || 1.5}" step="0.1" min="0.1">
       </div>
     </div>
     ` : `
     <div class="form-group">
-      <label>${tl(S.p_deposit)} (USDC)</label>
+      <label>${tl(S.p_deposit)} (USDC) <span class="param-hint">${t(S.p_rec)}: 500</span></label>
       <input type="number" id="p-depositUsdc" value="${p.depositUsdc || 500}" min="10">
     </div>
     <div class="form-row">
       <div class="form-group">
-        <label>${tl(S.p_max_il)}</label>
+        <label>${tl(S.p_max_il)} <span class="param-hint">${t(S.p_rec)}: 5~10</span></label>
         <input type="number" id="p-maxILPct" value="${p.maxILPct || 10}" min="1" max="50">
       </div>
       <div class="form-group">
-        <label>${tl(S.p_target_roi)}</label>
+        <label>${tl(S.p_target_roi)} <span class="param-hint">${t(S.p_rec)}: 3~5</span></label>
         <input type="number" id="p-targetRoiPct" value="${p.targetRoiPct || 5}" min="0.1">
       </div>
     </div>

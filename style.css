@@ -107,6 +107,12 @@ h1 {
   color: #a0aec0;
   margin-bottom: 5px;
 }
+.param-hint {
+  font-size: 0.73rem;
+  color: #4a5568;
+  font-weight: 400;
+  margin-left: 4px;
+}
 .form-group input,
 .form-group select {
   width: 100%;
