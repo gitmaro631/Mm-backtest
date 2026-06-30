@@ -1615,7 +1615,7 @@ async function runAutoScan() {
         for (const spread of spreadOptions) {
           for (const split of [40, 50, 60]) {
             const p = { records, totalUsdc: capital, splitRatio: split, spreadPct: spread,
-                        orderSizePct: 3, layers: 1, stopRatio: 70, feePct: 0, surgeTicks: 3, surgePct: 1.5 };
+                        orderSizePct: 3, layers: 1, stopRatio: 70, feePct: 0.3, surgeTicks: 3, surgePct: 1.5 };
             const r = runOrderbookBacktest(trades, p);
             if (r.roi > bestRoi) { bestRoi = r.roi; bestResult = r; bestParams = p; }
           }
