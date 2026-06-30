@@ -147,6 +147,9 @@ const S = {
   ip_copied:      { ko:'복사됨!', en:'Copied!', id:'Tersalin!', zh:'已复制!', ja:'コピーしました!', es:'¡Copiado!', vi:'Đã sao chép!', hi:'कॉपी हो गया!', pt:'Copiado!', tl:'Nakopya na!', fr:'Copié !' },
   ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
   ip_close:       { ko:'닫기', en:'Close', id:'Tutup', zh:'关闭', ja:'閉じる', es:'Cerrar', vi:'Đóng', hi:'बंद करें', pt:'Fechar', tl:'Isara', fr:'Fermer' },
+  ip_donation_title: { ko:'💙 유틸 제작 지원', en:'💙 Support Development', id:'💙 Dukung Pengembangan', zh:'💙 支持开发', ja:'💙 開発支援', es:'💙 Apoyar Desarrollo', vi:'💙 Ủng hộ Phát triển', hi:'💙 विकास समर्थन', pt:'💙 Apoiar Desenvolvimento', tl:'💙 Suportahan ang Development', fr:'💙 Soutenir le Développement' },
+  ip_donation_desc:  { ko:'앱이 도움이 됐다면 소중한 후원 부탁드려요. 후원금은 앱 개발·운영에 사용됩니다.', en:'If the app has been useful, a small tip goes a long way. All support funds development.', id:'Jika aplikasi bermanfaat, dukunganmu sangat berarti untuk pengembangan.', zh:'如果应用对您有帮助，欢迎打赏支持开发。', ja:'アプリが役に立ったら開発支援をお願いします。', es:'Si la app te ha sido útil, un pequeño apoyo importa.', vi:'Nếu app hữu ích, sự ủng hộ của bạn rất có ý nghĩa.', hi:'यदि ऐप उपयोगी रहा, एक छोटा योगदान बहुत मायने रखता है।', pt:'Se o app foi útil, um pequeno apoio faz diferença.', tl:'Kung nakatulong ang app, malaki ang ibig sabihin ng inyong suporta.', fr:"Si l'app vous a été utile, un petit soutien compte." },
+  ip_donation_err:   { ko:'Pi Browser에서만 후원이 가능합니다.', en:'Donations only work inside Pi Browser.', id:'Donasi hanya tersedia di Pi Browser.', zh:'仅在 Pi Browser 内可后援。', ja:'Pi Browser 内でのみ後援できます。', es:'Las donaciones solo funcionan en Pi Browser.', vi:'Chỉ ủng hộ được trong Pi Browser.', hi:'Pi Browser के अंदर ही योगदान संभव है।', pt:'Doações só funcionam no Pi Browser.', tl:'Gumagana lamang ang donasyon sa loob ng Pi Browser.', fr:'Les dons ne fonctionnent que dans Pi Browser.' },
   btn_help:       { ko:'도움말', en:'Help', id:'Bantuan', zh:'帮助', ja:'ヘルプ', es:'Ayuda', vi:'Trợ giúp', hi:'सहायता', pt:'Ajuda', tl:'Tulong', fr:'Aide' },
   btn_utils:      { ko:'유틸 모음', en:'My Apps', id:'Aplikasi', zh:'工具合集', ja:'アプリ一覧', es:'Mis Apps', vi:'Ứng dụng', hi:'मेरे ऐप्स', pt:'Meus Apps', tl:'Mga App', fr:'Mes Apps' },
   utils_title:    { ko:'유틸 모음', en:'My Utilities', id:'Utilitas Saya', zh:'我的工具集', ja:'マイユーティリティ', es:'Mis Utilidades', vi:'Tiện ích của tôi', hi:'मेरे उपकरण', pt:'Minhas Utilidades', tl:'Aking Mga Utility', fr:'Mes Utilitaires' },
@@ -619,12 +622,55 @@ function renderInfoPanel() {
     </div>
 
     <div class="alert info" style="margin-top:10px;">${t(S.ip_disclaimer)}</div>
+
+    <div class="ip-section-title">${t(S.ip_donation_title)}</div>
+    <div class="ip-card">
+      <p class="ip-contact-desc">${t(S.ip_donation_desc)}</p>
+      <div class="donation-btns" style="display:flex;gap:8px;margin:12px 0 8px;">
+        <button class="donation-btn" data-amount="1" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">1 Pi</button>
+        <button class="donation-btn" data-amount="5" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">5 Pi</button>
+        <button class="donation-btn" data-amount="10" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">10 Pi</button>
+      </div>
+      <p id="ip-donation-result" style="font-size:13px;min-height:18px;"></p>
+    </div>
   `;
   document.getElementById('ip-copy-btn').addEventListener('click', () => {
     navigator.clipboard.writeText('youtube.com/@hiddenstrokes-j5w').then(() => {
       const btn = document.getElementById('ip-copy-btn');
       btn.textContent = t(S.ip_copied);
       setTimeout(() => { btn.textContent = t(S.ip_copy); }, 2000);
+    });
+  });
+
+  document.querySelectorAll('.donation-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const amount = parseInt(btn.dataset.amount);
+      const resultEl = document.getElementById('ip-donation-result');
+      document.querySelectorAll('.donation-btn').forEach(b => b.disabled = true);
+      if (typeof Pi === 'undefined') {
+        resultEl.textContent = t(S.ip_donation_err);
+        resultEl.style.color = '#e05a5a';
+        document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
+        return;
+      }
+      Pi.createPayment(
+        { amount, memo: `mm-backtest 후원 ${amount}π`, metadata: { app: 'mm_backtest', type: 'donation' } },
+        {
+          onReadyForServerApproval: (paymentId) => { console.log('[Donation] approval:', paymentId); },
+          onReadyForServerCompletion: (paymentId, txid) => {
+            console.log('[Donation] complete:', paymentId, txid);
+            resultEl.textContent = `${amount}π 후원 감사합니다! 💙`;
+            resultEl.style.color = '#00BFA5';
+            document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
+          },
+          onCancel: () => { document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false); },
+          onError: () => {
+            resultEl.textContent = t(S.ip_donation_err);
+            resultEl.style.color = '#e05a5a';
+            document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
+          },
+        }
+      );
     });
   });
 }
