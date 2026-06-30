@@ -5,16 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MM 백테스트</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="login-screen">
+    <div class="login-box">
+      <h1 class="login-title">MM 백테스트</h1>
+      <p class="login-sub">전략 시뮬레이터 · Strategy Simulator</p>
+      <button id="btn-login" class="btn btn-primary btn-login" onclick="doLogin()">
+        전략 시뮬레이션 시작<br><span class="login-btn-en">Start Strategy Simulation</span>
+      </button>
+      <p class="login-note">Requires Pi Browser · Pi Browser 전용</p>
+      <p id="login-error" class="login-error" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div id="app" style="display:none;">
     <header>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <h1 style="margin-bottom:0;">MM 백테스트</h1>
-          <button class="ip-btn" id="help-btn" onclick="toggleInfo()">❓ 도움말</button>
-          <button class="ip-btn" id="utils-btn" onclick="toggleUtils()">🔗 유틸 모음</button>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <span style="min-width:60px;"></span>
+        <h1 style="margin:0;font-size:1.3rem;">MM 백테스트</h1>
+        <span id="header-username" class="header-user">-</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+        <button class="ip-btn" id="help-btn" onclick="toggleInfo()">❓ 도움말</button>
+        <button class="ip-btn" id="utils-btn" onclick="toggleUtils()">🔗 유틸 모음</button>
         <div id="lang-switch"></div>
       </div>
       <div id="step-indicator"></div>

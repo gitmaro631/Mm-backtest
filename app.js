@@ -1676,5 +1676,29 @@ function nextStep() { state.step = Math.min(6, state.step + 1); renderApp(); }
 function prevStep() { state.step = Math.max(1, state.step - 1); renderApp(); }
 function goToStep(n) { state.step = n; renderApp(); }
 
-// ── 시작 ─────────────────────────────────────────────
-renderApp();
+// ── Pi SDK 인증 ───────────────────────────────────────
+Pi.init({ version: '2.0', sandbox: true });
+
+function doLogin() {
+  const btn    = document.getElementById('btn-login');
+  const errEl  = document.getElementById('login-error');
+  btn.disabled = true;
+  btn.innerHTML = '연결 중... / Connecting...';
+  errEl.style.display = 'none';
+
+  Pi.authenticate(['username'], payment => {
+    console.warn('미완료 결제:', payment.identifier);
+  }).then(auth => {
+    const username = auth.user?.username ?? 'Pioneer';
+    document.getElementById('header-username').textContent = username;
+    document.getElementById('login-screen').style.display  = 'none';
+    document.getElementById('app').style.display           = 'block';
+    renderApp();
+  }).catch(err => {
+    btn.disabled = false;
+    btn.innerHTML = '전략 시뮬레이션 시작<br><span class="login-btn-en">Start Strategy Simulation</span>';
+    errEl.textContent    = '연결 실패. 다시 시도해주세요. / Connection failed.';
+    errEl.style.display  = 'block';
+    console.error(err);
+  });
+}
