@@ -675,9 +675,9 @@ function toggleUtils() {
         <div class="util-card-body">
           <div class="util-card-name">PiDEX Util</div>
           <div class="util-card-tags">
-            <span class="util-tag">차익 탐색</span>
-            <span class="util-tag">LP 계산기</span>
-            <span class="util-tag">스왑 시뮬</span>
+            <span class="util-tag">Arbitrage Finder</span>
+            <span class="util-tag">LP Calculator</span>
+            <span class="util-tag">Swap Simulator</span>
           </div>
           <div class="util-card-desc">Pi DEX 유동성·차익·스왑 유틸 모음.<br><span class="util-card-desc-en">All-in-one Pi DEX utility — arbitrage, LP calculator &amp; swap simulator.</span></div>
           <div class="util-card-link">Pi Browser로 열기 →</div>
