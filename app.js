@@ -160,6 +160,7 @@ const S = {
   auto_desel_all:  { ko:'이 페이지 전체 해제', en:'Deselect This Page', id:'Hapus Halaman Ini', zh:'取消本页', ja:'このページを全解除', es:'Deseleccionar Esta Página', vi:'Bỏ chọn trang này', hi:'यह पेज हटाएं', pt:'Desmarcar Esta Página', tl:'I-deselect ang Page na Ito', fr:'Désélectionner Cette Page' },
   auto_selected:   { ko:'개 선택됨', en:'selected', id:'dipilih', zh:'已选', ja:'個選択中', es:'seleccionados', vi:'đã chọn', hi:'चुने गए', pt:'selecionados', tl:'napili', fr:'sélectionnés' },
   scan_title:      { ko:'스캔 설정', en:'Scan Settings', id:'Pengaturan Scan', zh:'扫描设置', ja:'スキャン設定', es:'Configuración de Escaneo', vi:'Cài đặt Quét', hi:'स्कैन सेटिंग्स', pt:'Configurações de Varredura', tl:'Mga Setting ng Scan', fr:'Paramètres de Scan' },
+  scan_simulating: { ko:'시뮬 중...', en:'Simulating...', id:'Menyimulasikan...', zh:'模拟中...', ja:'シミュレーション中...', es:'Simulando...', vi:'Đang mô phỏng...', hi:'सिमुलेशन चल रहा है...', pt:'Simulando...', tl:'Nagsisimulate...', fr:'Simulation en cours...' },
   scan_sub_strat:  { ko:'분석 전략', en:'Strategy to Test', id:'Strategi', zh:'分析策略', ja:'分析戦略', es:'Estrategia', vi:'Chiến lược', hi:'रणनीति', pt:'Estratégia', tl:'Estratehiya', fr:'Stratégie' },
   scan_records:    { ko:'풀당 거래 건수', en:'Records per Pool', id:'Rekaman per Pool', zh:'每池交易数', ja:'プールあたりの件数', es:'Registros por Pool', vi:'Số giao dịch mỗi pool', hi:'प्रति पूल रिकॉर्ड', pt:'Registros por Pool', tl:'Mga Record bawat Pool', fr:'Enregistrements par Pool' },
   scan_spreads:    { ko:'스프레드 옵션 (%)', en:'Spread Options (%)', id:'Opsi Spread (%)', zh:'价差选项 (%)', ja:'スプレッドオプション (%)', es:'Opciones de Spread (%)', vi:'Tùy chọn Spread (%)', hi:'स्प्रेड विकल्प (%)', pt:'Opções de Spread (%)', tl:'Mga Opsyon ng Spread (%)', fr:'Options de Spread (%)' },
@@ -1464,7 +1465,7 @@ function renderScanParamsStep(el, nav) {
   const p    = state.scanParams;
   const sub  = p.subStrategy || 'orderbook';
   el.innerHTML = `
-    <div class="section-title">${t(S.scan_title)}</div>
+    <div class="section-title" id="scan-section-title">${sub === 'amm' ? 'AMM' : 'MM'} ${t(S.scan_title)}</div>
     <div class="alert info">📊 ${scanSelectedIds.size} ${t(S.auto_selected)} · ${NETWORKS[state.network].name}</div>
 
     <div class="form-group">
@@ -1511,6 +1512,8 @@ function scanSpreadOptsHtml(selected) {
 function updateScanSpreadOpts(val) {
   const el = document.getElementById('scan-spread-opts');
   if (el) el.innerHTML = val === 'orderbook' ? scanSpreadOptsHtml(null) : '';
+  const titleEl = document.getElementById('scan-section-title');
+  if (titleEl) titleEl.textContent = `${val === 'amm' ? 'AMM' : 'MM'} ${t(S.scan_title)}`;
 }
 
 function goToScanRun() {
@@ -1526,8 +1529,9 @@ function goToScanRun() {
 // ── Step 5 (auto): 스캔 실행 ──────────────────────────
 
 function renderAutoRunStep(el, nav) {
+  const sub = state.scanParams?.subStrategy || 'orderbook';
   el.innerHTML = `
-    <div class="section-title">${t(S.scan_title)}</div>
+    <div class="section-title">${sub === 'amm' ? 'AMM' : 'MM'} ${t(S.scan_simulating)}</div>
     <div id="run-status" class="status-text"><span class="spinner"></span> ${tl(S.scan_running)}...</div>
     <div class="progress-bar"><div class="progress-fill" id="run-prog" style="width:0%"></div></div>
     <div class="result-card" style="margin-top:12px">
