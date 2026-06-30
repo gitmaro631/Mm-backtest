@@ -623,16 +623,6 @@ function renderInfoPanel() {
 
     <div class="alert info" style="margin-top:10px;">${t(S.ip_disclaimer)}</div>
 
-    <div class="ip-section-title">${t(S.ip_donation_title)}</div>
-    <div class="ip-card">
-      <p class="ip-contact-desc">${t(S.ip_donation_desc)}</p>
-      <div class="donation-btns" style="display:flex;gap:8px;margin:12px 0 8px;">
-        <button class="donation-btn" data-amount="1" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">1 Pi</button>
-        <button class="donation-btn" data-amount="5" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">5 Pi</button>
-        <button class="donation-btn" data-amount="10" style="flex:1;padding:10px 0;border-radius:10px;border:1px solid #7B5EA7;background:rgba(123,94,167,0.12);color:#7B5EA7;font-size:14px;font-weight:700;cursor:pointer;">10 Pi</button>
-      </div>
-      <p id="ip-donation-result" style="font-size:13px;min-height:18px;"></p>
-    </div>
   `;
   document.getElementById('ip-copy-btn').addEventListener('click', () => {
     navigator.clipboard.writeText('youtube.com/@hiddenstrokes-j5w').then(() => {
@@ -642,37 +632,6 @@ function renderInfoPanel() {
     });
   });
 
-  document.querySelectorAll('.donation-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const amount = parseInt(btn.dataset.amount);
-      const resultEl = document.getElementById('ip-donation-result');
-      document.querySelectorAll('.donation-btn').forEach(b => b.disabled = true);
-      if (typeof Pi === 'undefined') {
-        resultEl.textContent = t(S.ip_donation_err);
-        resultEl.style.color = '#e05a5a';
-        document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
-        return;
-      }
-      Pi.createPayment(
-        { amount, memo: `mm-backtest 후원 ${amount}π`, metadata: { app: 'mm_backtest', type: 'donation' } },
-        {
-          onReadyForServerApproval: (paymentId) => { console.log('[Donation] approval:', paymentId); },
-          onReadyForServerCompletion: (paymentId, txid) => {
-            console.log('[Donation] complete:', paymentId, txid);
-            resultEl.textContent = `${amount}π 후원 감사합니다! 💙`;
-            resultEl.style.color = '#00BFA5';
-            document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
-          },
-          onCancel: () => { document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false); },
-          onError: () => {
-            resultEl.textContent = t(S.ip_donation_err);
-            resultEl.style.color = '#e05a5a';
-            document.querySelectorAll('.donation-btn').forEach(b => b.disabled = false);
-          },
-        }
-      );
-    });
-  });
 }
 
 function toggleInfo() {
