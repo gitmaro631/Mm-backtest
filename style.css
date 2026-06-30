@@ -378,6 +378,30 @@ h1 {
 .ip-copy-url { font-size: 0.78rem; color: #718096; flex: 1; }
 .ip-copy-note{ font-size: 0.74rem; color: #4a5568; margin: 0; }
 
+/* ── 유틸 앱 카드 ── */
+.util-card {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #1a1f2e;
+  border: 1px solid #2d3748;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s;
+}
+.util-card:hover { border-color: #667eea; }
+.util-card-icon { flex-shrink: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.util-card-body { flex: 1; min-width: 0; }
+.util-card-name { font-size: 1rem; font-weight: 700; color: #f7fafc; margin-bottom: 6px; }
+.util-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.util-tag { background: #2d3748; border: 1px solid #4a5568; border-radius: 8px; font-size: 0.7rem; color: #90cdf4; padding: 2px 7px; }
+.util-card-desc { font-size: 0.8rem; color: #a0aec0; line-height: 1.55; margin-bottom: 10px; }
+.util-card-desc-en { color: #718096; }
+.util-card-link { font-size: 0.8rem; color: #667eea; font-weight: 600; }
+
 /* ── Login screen ── */
 #login-screen {
   min-height: 100vh;
