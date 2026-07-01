@@ -378,6 +378,19 @@ h1 {
 .ip-copy-url { font-size: 0.78rem; color: #718096; flex: 1; }
 .ip-copy-note{ font-size: 0.74rem; color: #4a5568; margin: 0; }
 
+/* ── 문의 및 피드백 카드 ── */
+.contact-card { background: #1a1f2e; border: 1px solid #2d3748; border-radius: 14px; padding: 16px; margin-top: 12px; }
+.contact-title { font-size: 14px; font-weight: 600; color: #f7fafc; margin-bottom: 8px; }
+.contact-desc { font-size: 12px; color: #a0aec0; margin-bottom: 10px; line-height: 1.6; }
+.youtube-link { display: flex; align-items: center; gap: 12px; background: #fc4444; border-radius: 10px; padding: 10px 14px; text-decoration: none; color: #fff; transition: opacity .15s; }
+.youtube-link:hover { opacity: .88; }
+.yt-icon { font-size: 18px; flex-shrink: 0; }
+.yt-text { display: flex; flex-direction: column; }
+.yt-label { font-size: 14px; font-weight: 700; }
+.yt-sub { font-size: 11px; opacity: .85; }
+.copy-url-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; background: #0d111c; border-radius: 8px; padding: 8px 10px; }
+.copy-url-text { flex: 1; font-size: 12px; color: #667eea; word-break: break-all; }
+
 /* ── 유틸 앱 카드 ── */
 .util-card {
   display: flex;

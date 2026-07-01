@@ -135,12 +135,12 @@ const S = {
   ip_t1:          { ko:'?ㅽ봽?덈뱶瑜?以꾩씠硫?泥닿껐???섏?留?嫄대떦 ?섏씡??以꾩뼱??땲??', en:'Narrower spread ??more fills, but lower profit per fill.', id:'Spread lebih kecil ??lebih banyak fill, tapi profit per fill lebih kecil.', zh:'煐⒴컦餓룟량 ???먧벡罌욃쩀竊뚥퐜?뺟쵒?띄썗?뤷컩??, ja:'?밤깤?с긿?됥굮潁?굙?뗣겏榮꾢츣?뚦쥥?덀굥?뚣??욁걗?잆굤??룑?듽겘歷쎼굤?얇걲??, es:'Spread m찼s estrecho ??m찼s fills, pero menor ganancia por fill.', vi:'Spread h梳퉝 h퉤n ??nhi沼걏 kh沼썂 l沼뇆h h퉤n, nh튼ng l沼즜 nhu梳춏 m沼뾦 l梳쬷 th梳쩺 h퉤n.', hi:'西멘쨧西뺖ㅀ西?西멘쪓西む쪓西겯쪍西???西끶ㄷ西욈쨻 西ムㅏ西? 西꿋쪍西뺖ㅏ西?西む쪓西겯ㄴ西?西ムㅏ西?西뺖ㄾ 西꿋ㅎ西?ⅳ', pt:'Spread mais estreito ??mais fills, mas menor lucro por fill.', tl:'Mas makitid na spread ??mas maraming fill, ngunit mas mababa ang kita bawat fill.', fr:'Spread plus 챕troit ??plus de fills, mais moins de profit par fill.' },
   ip_t2:          { ko:'?덉씠?대? ?섎━硫????볦? 媛寃?踰붿쐞??二쇰Ц??遺꾩궛?⑸땲??', en:'More layers spread orders across a wider price range.', id:'Lebih banyak layer menyebarkan order ke rentang harga yang lebih luas.', zh:'罌욃뒥掠귝빊??컛溫℡뜒?녷븺?경쎍若썹쉪餓룡졏?븅뿴??, ja:'?с궎?ㅳ꺖?믣쥥?꾠걲?ⓦ굠?듿틕?꾡쐴?쇔릭?ユ낏?뉎걣?녷븺?뺛굦?얇걲??, es:'M찼s capas distribuyen las 처rdenes en un rango de precios m찼s amplio.', vi:'Nhi沼걏 l沼썂 l沼뇆h h퉤n ph창n t찼n l沼뇆h tr챗n ph梳죑 vi gi찼 r沼셬g h퉤n.', hi:'西끶ㄷ西욈쨻 西꿋쪍西?ㅀ 西멘쪍 西묂ㅀ誓띭ㄱ西?西듀쪓西?ㅎ西む쨻 西?쪈西꿋쪓西?西뜩쪓西겯쪍西｀? 西?쪍西?西ム쪎西꿋ㄴ誓?西밝쪎西귖ⅳ', pt:'Mais camadas distribuem ordens por uma faixa de pre챌o mais ampla.', tl:'Mas maraming layer ang nagpapakalat ng mga order sa mas malawak na hanay ng presyo.', fr:'Plus de couches r챕partissent les ordres sur une plage de prix plus large.' },
   ip_t3:          { ko:'?곗씠??嫄댁닔瑜??섎━硫??쒕??덉씠???뺥솗?꾧? ?믪븘吏묐땲??', en:'More data records give more accurate simulation results.', id:'Lebih banyak data meningkatkan akurasi simulasi.', zh:'罌욃뒥?경뜮?→빊??룓遙섉Æ?잏꼐簾?벧??, ja:'?뉎꺖?요뻑?겹굮罌쀣굜?쇻겏?룔깱?γ꺃?쇈궥?㎯꺍暎얍벧?뚥툓?뚣굤?얇걲??, es:'M찼s registros de datos dan resultados de simulaci처n m찼s precisos.', vi:'Nhi沼걏 b梳즢 ghi d沼?li沼뇎 h퉤n cho k梳퓍 qu梳?m척 ph沼뢮g ch챠nh x찼c h퉤n.', hi:'西끶ㄷ西욈쨻 西□쪍西잀ㅎ 西겯ㅏ西뺖쪏西겯쪓西?西멘쪍 西멘ㅏ西?쪇西꿋쪍西뜩ㄸ 西むㅀ西욈ㄳ西약ㄾ 西끶ㄷ西욈쨻 西멘쩅誓西?西밝쪑西ㅰ쪍 西밝쪎西귖ⅳ', pt:'Mais registros de dados fornecem resultados de simula챌찾o mais precisos.', tl:'Mas maraming rekord ng datos ang nagbibigay ng mas tumpak na resulta ng simulation.', fr:"Plus d'enregistrements donnent des r챕sultats de simulation plus pr챕cis." },
-  ip_contact:     { ko:'臾몄쓽 / ?쇰뱶諛?, en:'Contact / Feedback', id:'Kontak / Masukan', zh:'?붺내 / ?띺쫰', ja:'?듿븦?꾢릦?뤵걵 / ?뺛궍?쇈깋?먦긿??, es:'Contacto / Comentarios', vi:'Li챗n h沼?/ Ph梳즢 h沼밿', hi:'西멘쨧西むㅀ誓띭쨻 / 西ム?西□ㄼ誓댽쨻', pt:'Contato / Feedback', tl:'Makipag-ugnayan / Feedback', fr:'Contact / Retours' },
-  ip_contact_desc:{ ko:'?ъ슜 以?臾몄쓽?ы빆?대굹 ?쇰뱶諛깆? ?좏뒠釉?梨꾨꼸 ?볤?濡??④꺼二쇱꽭??', en:'Leave questions or feedback in the YouTube channel comments.', id:'Tinggalkan pertanyaan atau masukan di kolom komentar YouTube.', zh:'倻귝쐣鵝욜뵪??쥦?뽩룏腰덌펽瑥룟쑉YouTube窯묌걪瑥꾥??븀븰鼇??, ja:'?붶툖?롢겒?밤굜?뺛궍?쇈깋?먦긿??겘YouTube?곥깵?녈깓?ャ겗?녈깳?녈깉轝꾠겓?듿칱?쎼걦?졼걬?꾠?, es:'Deje preguntas o comentarios en los comentarios del canal de YouTube.', vi:'H찾y 휃沼?l梳죍 c창u h沼뢩 ho梳톍 ph梳즢 h沼밿 trong ph梳쬷 b챙nh lu梳춏 k챗nh YouTube.', hi:'YouTube 西싟쪎西ⓣㅂ 西뺖쪍 西뺖ㄾ誓뉋쨧西?西?쪍西?西む쪓西겯ㅆ誓띭ㄸ 西?ㅎ 西ム?西□ㄼ誓댽쨻 西쎹쪑西□ㅌ誓뉋쨧誓?, pt:'Deixe perguntas ou feedback nos coment찼rios do canal do YouTube.', tl:'Mag-iwan ng mga tanong o feedback sa mga komento ng YouTube channel.', fr:'Laissez vos questions ou commentaires dans les commentaires de la cha챤ne YouTube.' },
+  ip_contact:     { ko:'문의 및 피드백', en:'Contact & Feedback', id:'Kontak & Masukan', zh:'联系及反馈', ja:'お問い合わせとフィードバック', es:'Contacto y Comentarios', vi:'Liên hệ và phản hồi', hi:'संपर्क और फीडबैक', pt:'Contato e Feedback', tl:'Makipag-ugnayan at Feedback', fr:'Contact et Retours' },
+  ip_contact_desc:{ ko:'사용 중 문의사항이나 피드백은 유튜브 채널 댓글로 남겨주세요.', en:'Leave questions or feedback in the YouTube channel comments.', id:'Tinggalkan pertanyaan atau masukan di kolom komentar YouTube.', zh:'如有使用问题或反馈，请在YouTube频道评论区留言。', ja:'ご不明な点やフィードバックはYouTubeチャンネルのコメント欄にお寄せください。', es:'Deje preguntas o comentarios en los comentarios del canal de YouTube.', vi:'Hãy để lại câu hỏi hoặc phản hồi trong phần bình luận kênh YouTube.', hi:'प्रश्न या फीडबैक YouTube चैनल के कमेंट में छोड़ें।', pt:'Deixe perguntas ou feedback nos comentários do canal do YouTube.', tl:'Mag-iwan ng mga tanong o feedback sa mga komento ng YouTube channel.', fr:'Laissez vos questions ou commentaires dans les commentaires de la chaîne YouTube.' },
   ip_disclaimer:  { ko:'?좑툘 ?쒕??덉씠???꾩슜 ???ㅼ젣 嫄곕옒 寃곌낵瑜?蹂댁옣?섏? ?딆뒿?덈떎.', en:'?좑툘 Simulation only ??does not guarantee real trading results.', id:'?좑툘 Hanya simulasi ??tidak menjamin hasil trading nyata.', zh:'?좑툘 餓끺풘與→떉 ??訝띴퓷瑥곩츩?끺벡?볡퍜?쒌?, ja:'?좑툘 ?룔깱?γ꺃?쇈궥?㎯꺍弱귞뵪 ??若잓슋??룚凉뺟탳?쒌굮岳앲㉫?쀣겲?쎼굯??, es:'?좑툘 Solo simulaci처n ??no garantiza resultados reales de trading.', vi:'?좑툘 Ch沼?m척 ph沼뢮g ??kh척ng 휃梳즡 b梳즣 k梳퓍 qu梳?giao d沼땉h th沼켧 t梳?', hi:'?좑툘 西뺖쪍西듀ㅂ 西멘ㅏ西?쪇西꿋쪍西뜩ㄸ ??西듀ㅎ西멘쪓西ㅰㅅ西욈쨻 西잀쪓西겯쪍西□ㅏ西귖쨽 西むㅀ西욈ㄳ西약ㄾ誓뗠쨧 西뺖? 西쀠ㅎ西겯쨧西잀? 西ⓣㅉ誓西귖ⅳ', pt:'?좑툘 Somente simula챌찾o ??n찾o garante resultados reais de trading.', tl:'?좑툘 Simulation lamang ??hindi ginagarantiyahan ang mga tunay na resulta ng trading.', fr:'?좑툘 Simulation uniquement ??ne garantit pas les r챕sultats de trading r챕els.' },
-  ip_copy:        { ko:'蹂듭궗', en:'Copy', id:'Salin', zh:'鸚띶댍', ja:'?녈깞??, es:'Copiar', vi:'Sao ch챕p', hi:'西뺖쪏西む?', pt:'Copiar', tl:'Kopyahin', fr:'Copier' },
-  ip_copied:      { ko:'蹂듭궗??', en:'Copied!', id:'Tersalin!', zh:'藥꿨쨳??', ja:'?녈깞?쇈걮?얇걮??', es:'징Copiado!', vi:'휂찾 sao ch챕p!', hi:'西뺖쪏西む? 西밝쪑 西쀠ㄿ西?', pt:'Copiado!', tl:'Nakopya na!', fr:'Copi챕 !' },
-  ip_copy_note:   { ko:'??二쇱냼瑜?蹂듭궗 ???좏뒠釉뚯뿉??寃?됲빐二쇱꽭??', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'鸚띶댍訝딀뼶?겼??롥쑉YouTube?쒐뇨??, ja:'訝딂쮼URL?믡궠?붵꺖?쀣겍YouTube?㎪쩂榮㏂걮?╉걦?졼걬?꾠?, es:'Copie la URL de arriba y b첬squela en YouTube.', vi:'Sao ch챕p URL ph챠a tr챗n v횪 t챙m ki梳퓅 tr챗n YouTube.', hi:'西듺ㄺ西?URL 西뺖쪏西む? 西뺖ㅀ誓뉋쨧 西붲ㅀ YouTube 西むㅀ 西뽤쪑西쒉쪍西귖ⅳ', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:"Copiez l'URL ci-dessus et recherchez sur YouTube." },
+  ip_copy:        { ko:'복사', en:'Copy', id:'Salin', zh:'复制', ja:'コピー', es:'Copiar', vi:'Sao chép', hi:'कॉपी करें', pt:'Copiar', tl:'Kopyahin', fr:'Copier' },
+  ip_copied:      { ko:'복사됨', en:'Copied!', id:'Tersalin!', zh:'已复制！', ja:'コピーしました！', es:'¡Copiado!', vi:'Đã sao chép!', hi:'कॉपी हो गया!', pt:'Copiado!', tl:'Nakopya na!', fr:'Copié !' },
+  ip_copy_note:   { ko:'위 주소를 복사 후 유튜브에서 검색해주세요.', en:'Copy the URL above and search in YouTube.', id:'Salin URL di atas lalu cari di YouTube.', zh:'复制上方地址后在YouTube搜索。', ja:'上記URLをコピーしてYouTubeで検索してください。', es:'Copie la URL de arriba y búsquela en YouTube.', vi:'Sao chép URL phía trên và tìm kiếm trên YouTube.', hi:'ऊपर का URL कॉपी करें और YouTube पर खोजें।', pt:'Copie a URL acima e pesquise no YouTube.', tl:'Kopyahin ang URL sa itaas at hanapin sa YouTube.', fr:'Copiez l'URL ci-dessus et recherchez sur YouTube.' },
   ip_close:       { ko:'?リ린', en:'Close', id:'Tutup', zh:'?녜뿭', ja:'?됥걯??, es:'Cerrar', vi:'휂처ng', hi:'西о쨧西?西뺖ㅀ誓뉋쨧', pt:'Fechar', tl:'Isara', fr:'Fermer' },
   ip_donation_title: { ko:'?뮋 ?좏떥 ?쒖옉 吏??, en:'?뮋 Support Development', id:'?뮋 Dukung Pengembangan', zh:'?뮋 ??똻凉??, ja:'?뮋 ?뗧쇇??뤃', es:'?뮋 Apoyar Desarrollo', vi:'?뮋 沼쫚g h沼?Ph찼t tri沼긪', hi:'?뮋 西듀ㅏ西뺖ㅎ西?西멘ㄾ西겯쪓西?ㄸ', pt:'?뮋 Apoiar Desenvolvimento', tl:'?뮋 Suportahan ang Development', fr:'?뮋 Soutenir le D챕veloppement' },
   ip_donation_desc:  { ko:'?깆씠 ?꾩????먮떎硫??뚯쨷???꾩썝 遺?곷뱶?ㅼ슂. ?꾩썝湲덉? ??媛쒕컻쨌?댁쁺???ъ슜?⑸땲??', en:'If the app has been useful, a small tip goes a long way. All support funds development.', id:'Jika aplikasi bermanfaat, dukunganmu sangat berarti untuk pengembangan.', zh:'倻귝옖佯붺뵪野방궓?됧리?⑼펽轝?퓥?볢탲??똻凉?묆?, ja:'?㏂깤?ゃ걣壤밤겓塋뗣겂?잆굢?뗧쇇??뤃?믡걡窈섅걚?쀣겲?쇻?, es:'Si la app te ha sido 첬til, un peque챰o apoyo importa.', vi:'N梳퓎 app h沼칤 챠ch, s沼?沼쬷g h沼?c沼쬪 b梳죒 r梳쩿 c처 첵 ngh칫a.', hi:'西?ㄶ西?西먣ㄺ 西됢ㄺ西?쪑西쀠? 西겯ㅉ西? 西뤲쨻 西쎹쪑西잀ㅎ 西?쪑西쀠ㄶ西약ㄸ 西оㅉ誓곟ㄴ 西?ㅎ西?ㄸ誓?西겯쨼西ㅰㅎ 西밝쪎誓?, pt:'Se o app foi 첬til, um pequeno apoio faz diferen챌a.', tl:'Kung nakatulong ang app, malaki ang ibig sabihin ng inyong suporta.', fr:"Si l'app vous a 챕t챕 utile, un petit soutien compte." },
@@ -645,21 +645,21 @@ function renderInfoPanel() {
       <div class="ip-tip">쨌 ${t(S.ip_t3)}</div>
     </div>
 
-    <div class="ip-section-title">${t(S.ip_contact)}</div>
-    <div class="ip-card">
-      <p class="ip-contact-desc">${t(S.ip_contact_desc)}</p>
-      <div class="ip-yt-row">
-        <span class="ip-yt-icon">??/span>
-        <div class="ip-yt-body">
-          <div class="ip-yt-name">Hidden Strokes</div>
-          <div class="ip-yt-url" id="ip-yt-url-text">youtube.com/@hiddenstrokes-j5w</div>
-        </div>
+    <div class="contact-card">
+      <div class="contact-title">${t(S.ip_contact)}</div>
+      <p class="contact-desc">${t(S.ip_contact_desc)}</p>
+      <div class="youtube-link">
+        <span class="yt-icon">&#x25B6;</span>
+        <span class="yt-text">
+          <span class="yt-label">Hidden Strokes</span>
+          <span class="yt-sub">youtube.com/@hiddenstrokes-j5w</span>
+        </span>
       </div>
-      <div class="ip-copy-row">
-        <span class="ip-copy-url">youtube.com/@hiddenstrokes-j5w</span>
-        <button class="btn btn-secondary ip-copy-btn" id="ip-copy-btn" style="font-size:0.8rem;padding:6px 12px;">${t(S.ip_copy)}</button>
+      <div class="copy-url-row">
+        <span class="copy-url-text">youtube.com/@hiddenstrokes-j5w</span>
+        <button class="btn btn-secondary ip-copy-btn" id="ip-copy-btn">${t(S.ip_copy)}</button>
       </div>
-      <p class="ip-copy-note">${t(S.ip_copy_note)}</p>
+      <p class="contact-desc" style="margin-top:6px;font-size:11px;">${t(S.ip_copy_note)}</p>
     </div>
 
     <div class="ip-section-title">${t(S.ip_donation_title)}</div>
