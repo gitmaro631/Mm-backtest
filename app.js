@@ -749,29 +749,7 @@ function toggleUtils() {
 
       <a class="util-card" href="https://apppidexutillaac6961.pinet.com/" target="_blank">
         <div class="util-card-icon">
-          <svg width="64" height="64" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-            <rect width="72" height="72" rx="16" fill="#f8f8f8"/>
-            <path d="M16,47 Q7,25 30,13" stroke="#00BFA5" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M42,11 Q64,22 60,45" stroke="#7B5EA7" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M55,58 Q40,68 17,58" stroke="#4A90D9" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <circle cx="36" cy="36" r="14" fill="#F5A623"/>
-            <circle cx="36" cy="36" r="10" fill="none" stroke="white" stroke-width="2.5"/>
-            <line x1="43" y1="29" x2="29" y2="43" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="36" cy="11" r="9" fill="#7B5EA7"/>
-            <path d="M30,11 Q33,8 36,8 Q39,8 42,11 Q39,14 36,14 Q33,14 30,11Z" fill="white" opacity="0.9"/>
-            <path d="M30,11 Q33,14 36,14 Q39,14 42,11" fill="none" stroke="white" stroke-width="1.5"/>
-            <path d="M33,9 Q35,10 37,10 L36,7" fill="white" opacity="0.7"/>
-            <path d="M39,9 Q37,10 35,10 L36,7" fill="white" opacity="0.7"/>
-            <circle cx="61" cy="53" r="9" fill="#4A90D9"/>
-            <path d="M55,50 Q61,48 67,50" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M55,53.5 Q61,51.5 67,53.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M55,57 Q61,55 67,57" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="11" cy="53" r="9" fill="#00BFA5"/>
-            <path d="M11,44 Q11,50 11,55" fill="none"/>
-            <ellipse cx="11" cy="47" rx="0" ry="0"/>
-            <path d="M11,45 C8,49 6,52 8,55 C9,57 13,57 14,55 C16,52 14,49 11,45Z" fill="white" opacity="0.9"/>
-            <ellipse cx="11" cy="57" rx="5" ry="2" fill="white" opacity="0.5"/>
-          </svg>
+          <img src="https://apppidexutillaac6961.pinet.com/icon.png" width="64" height="64" style="border-radius:14px;display:block;object-fit:cover;" alt="PiDEX Util">
         </div>
         <div class="util-card-body">
           <div class="util-card-name">PiDEX Util</div>
@@ -781,6 +759,22 @@ function toggleUtils() {
             <span class="util-tag">Swap Simulator</span>
           </div>
           <div class="util-card-desc">Pi DEX 유동성·차익·스왑 유틸 모음.<br><span class="util-card-desc-en">All-in-one Pi DEX utility — arbitrage, LP calculator &amp; swap simulator.</span></div>
+          <div class="util-card-link">Pi Browser로 열기 →</div>
+        </div>
+      </a>
+
+      <a class="util-card" href="https://quizpisgn2184.pinet.com" target="_blank">
+        <div class="util-card-icon">
+          <img src="https://quizpisgn2184.pinet.com/icon.png" width="64" height="64" style="border-radius:14px;display:block;object-fit:cover;" alt="PiDEX Quiz">
+        </div>
+        <div class="util-card-body">
+          <div class="util-card-name">PiDEX Quiz</div>
+          <div class="util-card-tags">
+            <span class="util-tag">DEX Quiz</span>
+            <span class="util-tag">Leaderboard</span>
+            <span class="util-tag">Survey</span>
+          </div>
+          <div class="util-card-desc">Pi DEX 지식 퀴즈 &amp; 글로벌 커뮤니티 설문.<br><span class="util-card-desc-en">Pi DEX knowledge quiz &amp; global community survey.</span></div>
           <div class="util-card-link">Pi Browser로 열기 →</div>
         </div>
       </a>
