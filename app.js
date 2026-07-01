@@ -563,6 +563,66 @@ function fmtUsdc(n) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  DONATION
+// ═══════════════════════════════════════════════════════
+
+async function _serverApprove(paymentId) {
+  const res = await fetch('/api/payments/approve', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentId }),
+  });
+  if (!res.ok) throw new Error(`approve failed: ${res.status}`);
+}
+
+async function _serverComplete(paymentId, txid) {
+  const res = await fetch('/api/payments/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ paymentId, txid }),
+  });
+  if (!res.ok) throw new Error(`complete failed: ${res.status}`);
+}
+
+async function _onIncompletePaymentFound(payment) {
+  console.warn('미완료 결제 처리 중:', payment.identifier);
+  try {
+    if (payment.transaction == null) {
+      await _serverApprove(payment.identifier);
+    } else {
+      await _serverComplete(payment.identifier, payment.transaction.txid);
+    }
+  } catch (err) {
+    console.error('미완료 결제 처리 실패:', err);
+  }
+}
+
+function createDonation(amount) {
+  if (typeof Pi === 'undefined') {
+    return Promise.reject(new Error('Pi SDK를 찾을 수 없어요. Pi Browser에서 실행해주세요.'));
+  }
+  return new Promise((resolve, reject) => {
+    Pi.createPayment(
+      {
+        amount,
+        memo: `mm백테스트 후원 ${amount}π`,
+        metadata: { app: 'mm_backtest', type: 'donation' },
+      },
+      {
+        onReadyForServerApproval: async (paymentId) => {
+          try { await _serverApprove(paymentId); } catch (err) { reject(err); }
+        },
+        onReadyForServerCompletion: async (paymentId, txid) => {
+          try { await _serverComplete(paymentId, txid); resolve({ paymentId, txid }); } catch (err) { reject(err); }
+        },
+        onCancel: () => reject(new Error('cancelled')),
+        onError: (err) => reject(err),
+      }
+    );
+  });
+}
+
+// ═══════════════════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════════════════
 
@@ -621,6 +681,17 @@ function renderInfoPanel() {
       <p class="ip-copy-note">${t(S.ip_copy_note)}</p>
     </div>
 
+    <div class="ip-section-title">${t(S.ip_donation_title)}</div>
+    <div class="ip-card">
+      <p class="ip-contact-desc" style="margin-bottom:8px;">${t(S.ip_donation_desc)}</p>
+      <div class="donation-btns">
+        <button class="donation-btn" data-amount="1">1π</button>
+        <button class="donation-btn" data-amount="5">5π</button>
+        <button class="donation-btn" data-amount="10">10π</button>
+      </div>
+      <div class="donation-result" id="ip-donation-result"></div>
+    </div>
+
     <div class="alert info" style="margin-top:10px;">${t(S.ip_disclaimer)}</div>
 
   `;
@@ -629,6 +700,31 @@ function renderInfoPanel() {
       const btn = document.getElementById('ip-copy-btn');
       btn.textContent = t(S.ip_copied);
       setTimeout(() => { btn.textContent = t(S.ip_copy); }, 2000);
+    });
+  });
+
+  document.querySelectorAll('.donation-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const amount = Number(btn.dataset.amount);
+      const resultEl = document.getElementById('ip-donation-result');
+      const allBtns = document.querySelectorAll('.donation-btn');
+      allBtns.forEach(b => { b.disabled = true; });
+      resultEl.textContent = '';
+      resultEl.className = 'donation-result';
+      try {
+        await createDonation(amount);
+        resultEl.textContent = `✓ ${amount}π`;
+        resultEl.classList.add('donation-success');
+      } catch (err) {
+        if (err.message === 'cancelled') {
+          resultEl.textContent = '';
+        } else {
+          resultEl.textContent = t(S.ip_donation_err);
+          resultEl.classList.add('donation-error');
+        }
+      } finally {
+        allBtns.forEach(b => { b.disabled = false; });
+      }
     });
   });
 

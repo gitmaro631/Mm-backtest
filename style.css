@@ -460,3 +460,11 @@ h1 {
   text-overflow: ellipsis;
   max-width: 80px;
 }
+
+.donation-btns { display: flex; gap: 8px; margin: 4px 0 8px; }
+.donation-btn { flex: 1; padding: 10px 0; border-radius: 10px; border: 1px solid #7b5ea7; background: rgba(123,94,167,0.12); color: #a78bd4; font-size: 14px; font-weight: 700; cursor: pointer; }
+.donation-btn:hover:not(:disabled) { background: rgba(123,94,167,0.28); }
+.donation-btn:disabled { opacity: 0.5; cursor: default; }
+.donation-result { font-size: 13px; min-height: 18px; }
+.donation-success { color: #4caf50; }
+.donation-error { color: #f44336; }
