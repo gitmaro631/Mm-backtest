@@ -176,6 +176,9 @@ const S = {
 
   // ── Subscription ──
   sub_title:        { ko:'🎫 1개월 이용권', en:'🎫 1-Month Pass', id:'🎫 Paket 1 Bulan', zh:'🎫 1个月使用权', ja:'🎫 1ヶ月利用券', es:'🎫 Pase 1 Mes', vi:'🎫 Gói 1 Tháng', hi:'🎫 1 माह का पास', pt:'🎫 Passe 1 Mês', tl:'🎫 Pass 1 Buwan', fr:'🎫 Pass 1 Mois' },
+  sub_b1:           { ko:'✓ 자동최적화 100회/일 (무료 30회 → 3배)', en:'✓ 100 auto-optimize/day (3× free limit)', id:'✓ 100 optimize/hari (3× batas gratis)', zh:'✓ 自动优化100次/天（免费30次的3倍）', ja:'✓ 自動最適化100回/日（無料30回の3倍）', es:'✓ 100 optimizaciones/día (3× el límite gratis)', vi:'✓ 100 lần tối ưu/ngày (gấp 3 lần miễn phí)', hi:'✓ 100 ऑटो-ऑप्टिमाइज/दिन (मुफ्त 30 से 3 गुना)', pt:'✓ 100 otimizações/dia (3× o limite grátis)', tl:'✓ 100 auto-optimize/araw (3× ng libreng limit)', fr:'✓ 100 optimisations/jour (3× la limite gratuite)' },
+  sub_b2:           { ko:'✓ 유효기간 30일', en:'✓ Valid for 30 days', id:'✓ Berlaku 30 hari', zh:'✓ 有效期30天', ja:'✓ 有効期間30日', es:'✓ Válido por 30 días', vi:'✓ Hiệu lực 30 ngày', hi:'✓ 30 दिन के लिए वैध', pt:'✓ Válido por 30 dias', tl:'✓ Valid sa loob ng 30 araw', fr:'✓ Valable 30 jours' },
+  sub_b3:           { ko:'✓ 1π 결제 (테스트파이)', en:'✓ Pay 1π (test Pi)', id:'✓ Bayar 1π (Pi uji coba)', zh:'✓ 支付1π（测试π）', ja:'✓ 1π支払い（テストパイ）', es:'✓ Pagar 1π (Pi de prueba)', vi:'✓ Thanh toán 1π (Pi thử nghiệm)', hi:'✓ 1π भुगतान (टेस्ट Pi)', pt:'✓ Pagar 1π (Pi de teste)', tl:'✓ Magbayad ng 1π (test Pi)', fr:'✓ Payer 1π (Pi de test)' },
   sub_free:         { ko:'무료 · 자동최적화 30회/일', en:'Free · 30 auto-optimize/day', id:'Gratis · 30 optimize/hari', zh:'免费 · 自动优化30次/天', ja:'無料 · 自動最適化30回/日', es:'Gratis · 30 optimizaciones/día', vi:'Miễn phí · 30 lần tối ưu/ngày', hi:'मुफ्त · 30 ऑटो-ऑप्टिमाइज/दिन', pt:'Grátis · 30 otimizações/dia', tl:'Libre · 30 auto-optimize/araw', fr:'Gratuit · 30 optimisations/jour' },
   sub_active_s:     { ko:'⭐ 이용권 활성 · 자동최적화 100회/일', en:'⭐ Pass Active · 100 auto-optimize/day', id:'⭐ Paket Aktif · 100 optimize/hari', zh:'⭐ 使用权有效 · 自动优化100次/天', ja:'⭐ 利用券有効 · 自動最適化100回/日', es:'⭐ Pase Activo · 100 optimizaciones/día', vi:'⭐ Gói Hiệu Lực · 100 lần/ngày', hi:'⭐ पास सक्रिय · 100/दिन', pt:'⭐ Passe Ativo · 100/dia', tl:'⭐ Pass Aktibo · 100/araw', fr:'⭐ Pass Actif · 100/jour' },
   sub_expiry:       { ko:'만료일', en:'Expires', id:'Kedaluwarsa', zh:'到期日', ja:'有効期限', es:'Vence el', vi:'Hết hạn', hi:'समाप्ति', pt:'Expira em', tl:'Mag-e-expire', fr:'Expire le' },
@@ -766,14 +769,18 @@ function renderInfoPanel() {
 
     <div class="ip-section-title">${t(S.sub_title)}</div>
     <div class="ip-card">
-      <p class="ip-contact-desc" style="margin-bottom:6px;">
+      <p class="ip-contact-desc" style="margin-bottom:8px;">
         ${mmIsSubscribed() ? t(S.sub_active_s) : t(S.sub_free)}
       </p>
-      ${mmIsSubscribed() ? `<p style="font-size:0.78rem;color:#718096;margin-bottom:8px;">${t(S.sub_expiry)}: ${new Date(localStorage.getItem(MM_KEYS.SUB_EXPIRY)).toLocaleDateString()}</p>` : ''}
       ${!mmIsSubscribed() ? `
-        <button class="btn btn-primary" id="ip-sub-btn" style="width:100%;margin-top:4px;">${t(S.sub_btn)}</button>
+        <div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:0.8rem;line-height:1.9;color:#a0aec0;">
+          ${t(S.sub_b1)}<br>
+          ${t(S.sub_b2)}<br>
+          ${t(S.sub_b3)}
+        </div>
+        <button class="btn btn-primary" id="ip-sub-btn" style="width:100%;margin-top:2px;">${t(S.sub_btn)}</button>
         <div class="donation-result" id="ip-sub-result"></div>
-      ` : ''}
+      ` : `<p style="font-size:0.78rem;color:#718096;margin-bottom:0;">${t(S.sub_expiry)}: ${new Date(localStorage.getItem(MM_KEYS.SUB_EXPIRY)).toLocaleDateString()}</p>`}
     </div>
 
     <div class="ip-section-title">${t(S.ip_donation_title)}</div>
