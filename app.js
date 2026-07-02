@@ -645,11 +645,27 @@ function mmIncrementAutoCount() {
 }
 function mmCanUseAuto() {
   const count = mmGetAutoCount();
-  return mmIsSubscribed() ? count < MM_SUB_LIMIT : count < MM_FREE_LIMIT;
+  return mmIsSubscribed() ? count < MM_FREE_LIMIT + MM_SUB_LIMIT : count < MM_FREE_LIMIT;
 }
 function mmRemainingAuto() {
   const count = mmGetAutoCount();
-  return mmIsSubscribed() ? Math.max(0, MM_SUB_LIMIT - count) : Math.max(0, MM_FREE_LIMIT - count);
+  return mmIsSubscribed() ? Math.max(0, MM_FREE_LIMIT + MM_SUB_LIMIT - count) : Math.max(0, MM_FREE_LIMIT - count);
+}
+function updateAutoQuotaBar() {
+  const bar = document.getElementById('auto-quota-bar');
+  if (!bar) return;
+  const subbed = mmIsSubscribed();
+  const remaining = mmRemainingAuto();
+  bar.style.background = subbed ? 'rgba(72,187,120,0.1)' : (remaining > 0 ? 'rgba(102,126,234,0.1)' : 'rgba(252,129,129,0.1)');
+  bar.style.border = `1px solid ${subbed ? 'rgba(72,187,120,0.3)' : (remaining > 0 ? 'rgba(102,126,234,0.3)' : 'rgba(252,129,129,0.3)')}`;
+  bar.innerHTML = subbed
+    ? `<span style="color:#68d391">${t(S.sub_active_s)}: ${remaining} / ${MM_SUB_LIMIT}</span>`
+    : remaining > 0
+      ? `<span style="color:#90cdf4">${t(S.auto_quota)}: ${remaining} / ${MM_FREE_LIMIT}</span>`
+      : `<span style="color:#fc8181">${t(S.auto_quota_over)}</span><br>
+         <button onclick="toggleInfo()" style="margin-top:6px;background:none;border:none;color:#90cdf4;cursor:pointer;font-size:0.8rem;padding:0;">${t(S.auto_sub_info)}</button>`;
+  const runBtn = document.querySelector('[onclick="goToScanRun"]');
+  if (runBtn) runBtn.disabled = !mmCanUseAuto();
 }
 function updateHeaderSub(username) {
   const el = document.getElementById('header-username');
@@ -809,6 +825,7 @@ function renderInfoPanel() {
         resultEl.textContent = t(S.sub_ok);
         resultEl.classList.add('donation-success');
         updateHeaderSub();
+        updateAutoQuotaBar();
         setTimeout(() => renderInfoPanel(), 1500);
       } catch (err) {
         if (err.message === 'cancelled') {
