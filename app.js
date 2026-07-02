@@ -590,13 +590,26 @@ async function _serverApprove(paymentId) {
   if (!res.ok) throw new Error(`approve failed: ${res.status}`);
 }
 
-async function _serverComplete(paymentId, txid) {
+async function _serverComplete(paymentId, txid, walletAddress) {
   const res = await fetch('/api/payments/complete', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ paymentId, txid }),
+    body: JSON.stringify({ paymentId, txid, walletAddress }),
   });
   if (!res.ok) throw new Error(`complete failed: ${res.status}`);
+}
+
+async function _syncSubscription(walletAddress) {
+  try {
+    const res = await fetch(`/api/subscription/status?wallet=${encodeURIComponent(walletAddress)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.active && data.expiry) {
+      localStorage.setItem(MM_KEYS.SUB_EXPIRY, data.expiry);
+    } else if (!data.active) {
+      localStorage.removeItem(MM_KEYS.SUB_EXPIRY);
+    }
+  } catch { /* 실패 시 localStorage 그대로 유지 */ }
 }
 
 async function _onIncompletePaymentFound(payment) {
@@ -617,6 +630,7 @@ async function _onIncompletePaymentFound(payment) {
 // ═══════════════════════════════════════════════════════
 
 const MM_KEYS = { SUB_EXPIRY: 'mm_sub_expiry', AUTO_COUNT: 'mm_auto_count', AUTO_DATE: 'mm_auto_date' };
+let _currentWallet = null;
 const MM_FREE_LIMIT = 30;
 const MM_SUB_LIMIT  = 100;
 
@@ -687,7 +701,7 @@ function createSubscription() {
         },
         onReadyForServerCompletion: async (paymentId, txid) => {
           try {
-            await _serverComplete(paymentId, txid);
+            await _serverComplete(paymentId, txid, _currentWallet);
             mmSetSubscription(1);
             resolve({ paymentId, txid });
           } catch (err) { reject(err); }
@@ -1988,7 +2002,9 @@ function doLogin() {
 
   Pi.authenticate(['username', 'payments', 'wallet_address'], payment => {
     console.warn('미완료 결제:', payment.identifier);
-  }).then(auth => {
+  }).then(async auth => {
+    _currentWallet = auth.user?.wallet_address ?? null;
+    if (_currentWallet) await _syncSubscription(_currentWallet);
     const username = auth.user?.username ?? 'Pioneer';
     updateHeaderSub(username);
     document.getElementById('login-screen').style.display  = 'none';
