@@ -179,6 +179,9 @@ const S = {
   sub_b1:           { ko:'✓ 자동최적화 100회/일 (무료 30회 → 3배)', en:'✓ 100 auto-optimize/day (3× free limit)', id:'✓ 100 optimize/hari (3× batas gratis)', zh:'✓ 自动优化100次/天（免费30次的3倍）', ja:'✓ 自動最適化100回/日（無料30回の3倍）', es:'✓ 100 optimizaciones/día (3× el límite gratis)', vi:'✓ 100 lần tối ưu/ngày (gấp 3 lần miễn phí)', hi:'✓ 100 ऑटो-ऑप्टिमाइज/दिन (मुफ्त 30 से 3 गुना)', pt:'✓ 100 otimizações/dia (3× o limite grátis)', tl:'✓ 100 auto-optimize/araw (3× ng libreng limit)', fr:'✓ 100 optimisations/jour (3× la limite gratuite)' },
   sub_b2:           { ko:'✓ 유효기간 30일', en:'✓ Valid for 30 days', id:'✓ Berlaku 30 hari', zh:'✓ 有效期30天', ja:'✓ 有効期間30日', es:'✓ Válido por 30 días', vi:'✓ Hiệu lực 30 ngày', hi:'✓ 30 दिन के लिए वैध', pt:'✓ Válido por 30 dias', tl:'✓ Valid sa loob ng 30 araw', fr:'✓ Valable 30 jours' },
   sub_b3:           { ko:'✓ 1π 결제 (테스트파이)', en:'✓ Pay 1π (test Pi)', id:'✓ Bayar 1π (Pi uji coba)', zh:'✓ 支付1π（测试π）', ja:'✓ 1π支払い（テストパイ）', es:'✓ Pagar 1π (Pi de prueba)', vi:'✓ Thanh toán 1π (Pi thử nghiệm)', hi:'✓ 1π भुगतान (टेस्ट Pi)', pt:'✓ Pagar 1π (Pi de teste)', tl:'✓ Magbayad ng 1π (test Pi)', fr:'✓ Payer 1π (Pi de test)' },
+  sub_restore_btn:  { ko:'🔄 이용권 복구', en:'🔄 Restore Pass', id:'🔄 Pulihkan Paket', zh:'🔄 恢复使用权', ja:'🔄 利用券を復元', es:'🔄 Restaurar Pase', vi:'🔄 Khôi phục gói', hi:'🔄 पास पुनर्स्थापित करें', pt:'🔄 Restaurar Passe', tl:'🔄 I-restore ang Pass', fr:'🔄 Restaurer le Pass' },
+  sub_restore_ok:   { ko:'이용권 복구 완료!', en:'Pass restored!', id:'Paket dipulihkan!', zh:'使用权已恢复！', ja:'利用券を復元しました！', es:'¡Pase restaurado!', vi:'Gói đã được khôi phục!', hi:'पास बहाल!', pt:'Passe restaurado!', tl:'Na-restore ang pass!', fr:'Pass restauré !' },
+  sub_restore_none: { ko:'서버에 이용권 정보가 없습니다.', en:'No pass found on server.', id:'Tidak ada paket di server.', zh:'服务器上没有使用权信息。', ja:'サーバーに利用券情報がありません。', es:'No se encontró pase en el servidor.', vi:'Không tìm thấy gói trên máy chủ.', hi:'सर्वर पर कोई पास नहीं मिला।', pt:'Nenhum passe encontrado no servidor.', tl:'Walang pass na nahanap sa server.', fr:'Aucun pass trouvé sur le serveur.' },
   sub_free:         { ko:'무료 · 자동최적화 30회/일', en:'Free · 30 auto-optimize/day', id:'Gratis · 30 optimize/hari', zh:'免费 · 自动优化30次/天', ja:'無料 · 自動最適化30回/日', es:'Gratis · 30 optimizaciones/día', vi:'Miễn phí · 30 lần tối ưu/ngày', hi:'मुफ्त · 30 ऑटो-ऑप्टिमाइज/दिन', pt:'Grátis · 30 otimizações/dia', tl:'Libre · 30 auto-optimize/araw', fr:'Gratuit · 30 optimisations/jour' },
   sub_active_s:     { ko:'⭐ 이용권 활성 · 자동최적화 100회/일', en:'⭐ Pass Active · 100 auto-optimize/day', id:'⭐ Paket Aktif · 100 optimize/hari', zh:'⭐ 使用权有效 · 自动优化100次/天', ja:'⭐ 利用券有効 · 自動最適化100回/日', es:'⭐ Pase Activo · 100 optimizaciones/día', vi:'⭐ Gói Hiệu Lực · 100 lần/ngày', hi:'⭐ पास सक्रिय · 100/दिन', pt:'⭐ Passe Ativo · 100/dia', tl:'⭐ Pass Aktibo · 100/araw', fr:'⭐ Pass Actif · 100/jour' },
   sub_expiry:       { ko:'만료일', en:'Expires', id:'Kedaluwarsa', zh:'到期日', ja:'有効期限', es:'Vence el', vi:'Hết hạn', hi:'समाप्ति', pt:'Expira em', tl:'Mag-e-expire', fr:'Expire le' },
@@ -809,6 +812,7 @@ function renderInfoPanel() {
           ${t(S.sub_b3)}
         </div>
         <button class="btn btn-primary" id="ip-sub-btn" style="width:100%;margin-top:2px;">${t(S.sub_btn)}</button>
+        <button class="btn btn-secondary" id="ip-restore-btn" style="width:100%;margin-top:6px;font-size:0.82rem;">${t(S.sub_restore_btn)}</button>
         <div class="donation-result" id="ip-sub-result"></div>
       ` : `<p style="font-size:0.78rem;color:#718096;margin-bottom:0;">${t(S.sub_expiry)}: ${new Date(localStorage.getItem(MM_KEYS.SUB_EXPIRY)).toLocaleDateString()}</p>`}
     </div>
@@ -849,6 +853,37 @@ function renderInfoPanel() {
           resultEl.classList.add('donation-error');
         }
         subBtn.disabled = false;
+      }
+    });
+  }
+
+  const restoreBtn = document.getElementById('ip-restore-btn');
+  if (restoreBtn) {
+    restoreBtn.addEventListener('click', async () => {
+      const resultEl = document.getElementById('ip-sub-result');
+      restoreBtn.disabled = true;
+      resultEl.textContent = '';
+      resultEl.className = 'donation-result';
+      try {
+        if (!_currentWallet) throw new Error('no wallet');
+        const res = await fetch(`/api/subscription/status?wallet=${encodeURIComponent(_currentWallet)}`);
+        const data = await res.json();
+        if (data.active && data.expiry) {
+          localStorage.setItem(MM_KEYS.SUB_EXPIRY, data.expiry);
+          resultEl.textContent = t(S.sub_restore_ok);
+          resultEl.classList.add('donation-success');
+          updateHeaderSub();
+          updateAutoQuotaBar();
+          setTimeout(() => renderInfoPanel(), 1500);
+        } else {
+          resultEl.textContent = t(S.sub_restore_none);
+          resultEl.classList.add('donation-error');
+          restoreBtn.disabled = false;
+        }
+      } catch {
+        resultEl.textContent = t(S.sub_restore_none);
+        resultEl.classList.add('donation-error');
+        restoreBtn.disabled = false;
       }
     });
   }
