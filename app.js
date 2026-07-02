@@ -173,6 +173,18 @@ const S = {
   res_scan_use:    { ko:'이 설정으로 백테스트', en:'Backtest this setup', id:'Backtest pengaturan ini', zh:'用此设置回测', ja:'この設定でバックテスト', es:'Backtest con esta configuración', vi:'Backtest với cài đặt này', hi:'इस सेटअप से बैकटेस्ट', pt:'Backtest com esta configuração', tl:'I-backtest ang setup na ito', fr:'Backtest avec cette configuration' },
   run_live_roi:    { ko:'실시간 예상 수익률', en:'Live ROI Preview', id:'Pratinjau ROI', zh:'实时收益预览', ja:'リアルタイム損益', es:'Rentabilidad en Vivo', vi:'ROI Trực Tiếp', hi:'लाइव ROI', pt:'ROI em Tempo Real', tl:'Live ROI', fr:'ROI en Direct' },
   res_scan_empty:  { ko:'결과 없음 — 다시 시도해주세요', en:'No results — please retry', id:'Tidak ada hasil — coba lagi', zh:'无结果 — 请重试', ja:'結果なし — 再試行してください', es:'Sin resultados — intente de nuevo', vi:'Không có kết quả — thử lại', hi:'कोई परिणाम नहीं — पुनः प्रयास करें', pt:'Sem resultados — tente novamente', tl:'Walang resulta — subukan muli', fr:'Aucun résultat — réessayez' },
+
+  // ── Subscription ──
+  sub_title:        { ko:'🎫 1개월 이용권', en:'🎫 1-Month Pass', id:'🎫 Paket 1 Bulan', zh:'🎫 1个月使用权', ja:'🎫 1ヶ月利用券', es:'🎫 Pase 1 Mes', vi:'🎫 Gói 1 Tháng', hi:'🎫 1 माह का पास', pt:'🎫 Passe 1 Mês', tl:'🎫 Pass 1 Buwan', fr:'🎫 Pass 1 Mois' },
+  sub_free:         { ko:'무료 · 자동최적화 30회/일', en:'Free · 30 auto-optimize/day', id:'Gratis · 30 optimize/hari', zh:'免费 · 自动优化30次/天', ja:'無料 · 自動最適化30回/日', es:'Gratis · 30 optimizaciones/día', vi:'Miễn phí · 30 lần tối ưu/ngày', hi:'मुफ्त · 30 ऑटो-ऑप्टिमाइज/दिन', pt:'Grátis · 30 otimizações/dia', tl:'Libre · 30 auto-optimize/araw', fr:'Gratuit · 30 optimisations/jour' },
+  sub_active_s:     { ko:'⭐ 이용권 활성 · 자동최적화 100회/일', en:'⭐ Pass Active · 100 auto-optimize/day', id:'⭐ Paket Aktif · 100 optimize/hari', zh:'⭐ 使用权有效 · 自动优化100次/天', ja:'⭐ 利用券有効 · 自動最適化100回/日', es:'⭐ Pase Activo · 100 optimizaciones/día', vi:'⭐ Gói Hiệu Lực · 100 lần/ngày', hi:'⭐ पास सक्रिय · 100/दिन', pt:'⭐ Passe Ativo · 100/dia', tl:'⭐ Pass Aktibo · 100/araw', fr:'⭐ Pass Actif · 100/jour' },
+  sub_expiry:       { ko:'만료일', en:'Expires', id:'Kedaluwarsa', zh:'到期日', ja:'有効期限', es:'Vence el', vi:'Hết hạn', hi:'समाप्ति', pt:'Expira em', tl:'Mag-e-expire', fr:'Expire le' },
+  sub_btn:          { ko:'1π 이용권 구매 (1개월)', en:'Buy 1-Month Pass · 1π', id:'Beli Paket 1 Bulan · 1π', zh:'购买1个月使用权 · 1π', ja:'1ヶ月利用券を購入 · 1π', es:'Comprar Pase 1 Mes · 1π', vi:'Mua Gói 1 Tháng · 1π', hi:'1 माह का पास खरीदें · 1π', pt:'Comprar Passe 1 Mês · 1π', tl:'Bilhin ang 1 Buwang Pass · 1π', fr:'Acheter Pass 1 Mois · 1π' },
+  sub_ok:           { ko:'이용권 구매 완료! 30일간 100회/일 이용 가능합니다.', en:'Pass purchased! 100 auto-optimize/day for 30 days.', id:'Berhasil! 100 optimize/hari selama 30 hari.', zh:'购买成功！30天内每天100次自动优化。', ja:'利用券購入完了！30日間100回/日ご利用いただけます。', es:'¡Pase comprado! 100 optimizaciones/día por 30 días.', vi:'Mua gói thành công! 100 lần/ngày trong 30 ngày.', hi:'पास खरीदा! 30 दिनों के लिए 100 बार/दिन।', pt:'Passe comprado! 100 otimizações/dia por 30 dias.', tl:'Nabili ang pass! 100/araw sa loob ng 30 araw.', fr:'Pass acheté ! 100/jour pendant 30 jours.' },
+  sub_err:          { ko:'이용권 구매 실패. Pi Browser에서 다시 시도해주세요.', en:'Purchase failed. Please retry in Pi Browser.', id:'Pembelian gagal. Coba lagi di Pi Browser.', zh:'购买失败，请在Pi Browser中重试。', ja:'利用券購入失敗。Pi Browserで再試行してください。', es:'Compra fallida. Intente de nuevo en Pi Browser.', vi:'Mua gói thất bại. Hãy thử lại trong Pi Browser.', hi:'खरीद विफल। Pi Browser में पुनः प्रयास करें।', pt:'Compra falhou. Tente novamente no Pi Browser.', tl:'Nabigo ang pagbili. Subukang muli sa Pi Browser.', fr:"Achat échoué. Réessayez dans Pi Browser." },
+  auto_quota:       { ko:'자동최적화 남은 횟수', en:'Auto-optimize remaining', id:'Sisa optimize otomatis', zh:'自动优化剩余次数', ja:'自動最適化残り回数', es:'Auto-optimización restante', vi:'Còn lại tự động tối ưu', hi:'ऑटो-ऑप्टिमाइज शेष', pt:'Otimização automática restante', tl:'Natitira sa auto-optimize', fr:'Auto-optimisation restante' },
+  auto_quota_over:  { ko:'오늘 자동최적화 횟수를 모두 사용했습니다. 이용권 구매 시 100회/일 이용 가능합니다.', en:'Daily auto-optimize limit reached. Buy a pass for 100/day.', id:'Batas optimize otomatis hari ini tercapai. Beli paket untuk 100/hari.', zh:'今日自动优化次数已用完。购买使用权后可获100次/天。', ja:'本日の自動最適化回数を使い切りました。利用券購入で100回/日。', es:'Límite diario de auto-optimización alcanzado. Compra un pase para 100/día.', vi:'Đã hết lần tối ưu hôm nay. Mua gói để được 100 lần/ngày.', hi:'आज का ऑटो-ऑप्टिमाइज सीमा पहुंच गई। पास खरीदने पर 100/दिन।', pt:'Limite diário de otimização atingido. Compre um passe para 100/dia.', tl:'Naabot na ang limitasyon ngayon. Bilhin ang pass para 100/araw.', fr:'Limite journalière atteinte. Achetez un pass pour 100/jour.' },
+  auto_sub_info:    { ko:'정보 탭에서 이용권 구매 →', en:'Buy Pass in Info panel →', id:'Beli paket di panel Info →', zh:'在信息面板购买使用权 →', ja:'情報パネルで利用券を購入 →', es:'Comprar pase en panel Info →', vi:'Mua gói ở bảng Thông tin →', hi:'जानकारी पैनल में पास खरीदें →', pt:'Comprar passe no painel Info →', tl:'Bilhin ang pass sa Info panel →', fr:"Acheter pass dans Info →" },
 };
 
 function t(s)  { return s[LANG] ?? s.ko; }
@@ -597,6 +609,77 @@ async function _onIncompletePaymentFound(payment) {
   }
 }
 
+// ═══════════════════════════════════════════════════════
+//  SUBSCRIPTION
+// ═══════════════════════════════════════════════════════
+
+const MM_KEYS = { SUB_EXPIRY: 'mm_sub_expiry', AUTO_COUNT: 'mm_auto_count', AUTO_DATE: 'mm_auto_date' };
+const MM_FREE_LIMIT = 30;
+const MM_SUB_LIMIT  = 100;
+
+function mmIsSubscribed() {
+  const expiry = localStorage.getItem(MM_KEYS.SUB_EXPIRY);
+  return expiry ? new Date(expiry) > new Date() : false;
+}
+function mmSetSubscription(months = 1) {
+  const expiry = new Date();
+  expiry.setMonth(expiry.getMonth() + months);
+  localStorage.setItem(MM_KEYS.SUB_EXPIRY, expiry.toISOString());
+}
+function mmGetAutoCount() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem(MM_KEYS.AUTO_DATE) !== today) {
+    localStorage.setItem(MM_KEYS.AUTO_DATE, today);
+    localStorage.setItem(MM_KEYS.AUTO_COUNT, '0');
+    return 0;
+  }
+  return parseInt(localStorage.getItem(MM_KEYS.AUTO_COUNT) ?? '0');
+}
+function mmIncrementAutoCount() {
+  const count = mmGetAutoCount() + 1;
+  localStorage.setItem(MM_KEYS.AUTO_COUNT, String(count));
+  return count;
+}
+function mmCanUseAuto() {
+  const count = mmGetAutoCount();
+  return mmIsSubscribed() ? count < MM_SUB_LIMIT : count < MM_FREE_LIMIT;
+}
+function mmRemainingAuto() {
+  const count = mmGetAutoCount();
+  return mmIsSubscribed() ? Math.max(0, MM_SUB_LIMIT - count) : Math.max(0, MM_FREE_LIMIT - count);
+}
+function updateHeaderSub(username) {
+  const el = document.getElementById('header-username');
+  if (!el) return;
+  const name = username ?? el.textContent.replace(/^⭐\s*/, '');
+  el.textContent = (mmIsSubscribed() ? '⭐ ' : '') + name;
+}
+
+function createSubscription() {
+  if (typeof Pi === 'undefined') {
+    return Promise.reject(new Error('Pi SDK를 찾을 수 없어요. Pi Browser에서 실행해주세요.'));
+  }
+  return new Promise((resolve, reject) => {
+    Pi.createPayment(
+      { amount: 1, memo: 'MM백테스트 1개월 이용권', metadata: { app: 'mm_backtest', type: 'subscription' } },
+      {
+        onReadyForServerApproval: async (paymentId) => {
+          try { await _serverApprove(paymentId); } catch (err) { reject(err); }
+        },
+        onReadyForServerCompletion: async (paymentId, txid) => {
+          try {
+            await _serverComplete(paymentId, txid);
+            mmSetSubscription(1);
+            resolve({ paymentId, txid });
+          } catch (err) { reject(err); }
+        },
+        onCancel: () => reject(new Error('cancelled')),
+        onError: (err) => reject(err),
+      }
+    );
+  });
+}
+
 function createDonation(amount) {
   if (typeof Pi === 'undefined') {
     return Promise.reject(new Error('Pi SDK를 찾을 수 없어요. Pi Browser에서 실행해주세요.'));
@@ -681,6 +764,18 @@ function renderInfoPanel() {
       <p class="ip-copy-note">${t(S.ip_copy_note)}</p>
     </div>
 
+    <div class="ip-section-title">${t(S.sub_title)}</div>
+    <div class="ip-card">
+      <p class="ip-contact-desc" style="margin-bottom:6px;">
+        ${mmIsSubscribed() ? t(S.sub_active_s) : t(S.sub_free)}
+      </p>
+      ${mmIsSubscribed() ? `<p style="font-size:0.78rem;color:#718096;margin-bottom:8px;">${t(S.sub_expiry)}: ${new Date(localStorage.getItem(MM_KEYS.SUB_EXPIRY)).toLocaleDateString()}</p>` : ''}
+      ${!mmIsSubscribed() ? `
+        <button class="btn btn-primary" id="ip-sub-btn" style="width:100%;margin-top:4px;">${t(S.sub_btn)}</button>
+        <div class="donation-result" id="ip-sub-result"></div>
+      ` : ''}
+    </div>
+
     <div class="ip-section-title">${t(S.ip_donation_title)}</div>
     <div class="ip-card">
       <p class="ip-contact-desc" style="margin-bottom:8px;">${t(S.ip_donation_desc)}</p>
@@ -695,6 +790,31 @@ function renderInfoPanel() {
     <div class="alert info" style="margin-top:10px;">${t(S.ip_disclaimer)}</div>
 
   `;
+  const subBtn = document.getElementById('ip-sub-btn');
+  if (subBtn) {
+    subBtn.addEventListener('click', async () => {
+      const resultEl = document.getElementById('ip-sub-result');
+      subBtn.disabled = true;
+      resultEl.textContent = '';
+      resultEl.className = 'donation-result';
+      try {
+        await createSubscription();
+        resultEl.textContent = t(S.sub_ok);
+        resultEl.classList.add('donation-success');
+        updateHeaderSub();
+        setTimeout(() => renderInfoPanel(), 1500);
+      } catch (err) {
+        if (err.message === 'cancelled') {
+          resultEl.textContent = '';
+        } else {
+          resultEl.textContent = t(S.sub_err);
+          resultEl.classList.add('donation-error');
+        }
+        subBtn.disabled = false;
+      }
+    });
+  }
+
   document.getElementById('ip-copy-btn').addEventListener('click', () => {
     navigator.clipboard.writeText('youtube.com/@hiddenstrokes-j5w').then(() => {
       const btn = document.getElementById('ip-copy-btn');
@@ -1618,8 +1738,20 @@ function renderScanParamsStep(el, nav) {
     </div>
 
     <div id="scan-spread-opts">${sub==='orderbook' ? scanSpreadOptsHtml(p.spreadOptions) : ''}</div>
+
+    <div id="auto-quota-bar" style="margin-top:12px;padding:8px 12px;border-radius:8px;font-size:0.82rem;
+      background:${mmIsSubscribed() ? 'rgba(72,187,120,0.1)' : (mmRemainingAuto() > 0 ? 'rgba(102,126,234,0.1)' : 'rgba(252,129,129,0.1)')};
+      border:1px solid ${mmIsSubscribed() ? 'rgba(72,187,120,0.3)' : (mmRemainingAuto() > 0 ? 'rgba(102,126,234,0.3)' : 'rgba(252,129,129,0.3)')};">
+      ${mmIsSubscribed()
+        ? `<span style="color:#68d391">${t(S.sub_active_s)}: ${mmRemainingAuto()} / ${MM_SUB_LIMIT}</span>`
+        : mmRemainingAuto() > 0
+          ? `<span style="color:#90cdf4">${t(S.auto_quota)}: ${mmRemainingAuto()} / ${MM_FREE_LIMIT}</span>`
+          : `<span style="color:#fc8181">${t(S.auto_quota_over)}</span><br>
+             <button onclick="toggleInfo()" style="margin-top:6px;background:none;border:none;color:#90cdf4;cursor:pointer;font-size:0.8rem;padding:0;">${t(S.auto_sub_info)}</button>`
+      }
+    </div>
   `;
-  navBtns(nav, true, 'goToScanRun', `▶ ${t(S.btn_run)}`);
+  navBtns(nav, true, 'goToScanRun', `▶ ${t(S.btn_run)}`, !mmCanUseAuto());
 }
 
 function scanSpreadOptsHtml(selected) {
@@ -1673,6 +1805,15 @@ function renderAutoRunStep(el, nav) {
 }
 
 async function runAutoScan() {
+  if (!mmCanUseAuto()) {
+    document.getElementById('run-status').innerHTML = `<div class="alert">${t(S.auto_quota_over)}</div>`;
+    document.getElementById('nav-buttons').innerHTML = `
+      <button class="btn btn-secondary" onclick="goToStep(4)">${tl(S.btn_params)}</button>
+      <button class="btn btn-primary" onclick="toggleInfo()">${t(S.auto_sub_info)}</button>
+    `;
+    return;
+  }
+
   const { subStrategy, records, capital, spreadOptions } = state.scanParams;
   const log    = msg => { const el = document.getElementById('run-log');  if (el) el.innerHTML += `<div>${msg}</div>`; };
   const status = msg => { const el = document.getElementById('run-status'); if (el) el.innerHTML = msg; };
@@ -1681,6 +1822,7 @@ async function runAutoScan() {
     if (el) el.style.width = `${Math.min(100, cur/tot*100)}%`;
   };
 
+  mmIncrementAutoCount();
   const selected = state.pools.filter(p => scanSelectedIds.has(p.id));
   state.scanResults = [];
 
@@ -1820,11 +1962,11 @@ function doLogin() {
   btn.innerHTML = '연결 중... / Connecting...';
   errEl.style.display = 'none';
 
-  Pi.authenticate(['username'], payment => {
+  Pi.authenticate(['username', 'payments', 'wallet_address'], payment => {
     console.warn('미완료 결제:', payment.identifier);
   }).then(auth => {
     const username = auth.user?.username ?? 'Pioneer';
-    document.getElementById('header-username').textContent = username;
+    updateHeaderSub(username);
     document.getElementById('login-screen').style.display  = 'none';
     document.getElementById('app').style.display           = 'block';
     renderApp();
